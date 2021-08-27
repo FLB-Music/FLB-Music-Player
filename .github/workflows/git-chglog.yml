@@ -1,0 +1,27 @@
+name: Update CHANGELOG.md
+
+on:
+  push:
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+
+
+jobs:
+  git-chglog:
+    name: Setup Go
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          stable: 'true'
+          go-version: '^1.16.5'
+      - name: Update CHANGELOG.md with git-chglog
+        run: |
+          go get -u github.com/git-chglog/git-chglog/cmd/git-chglog
+          git fetch --prune --unshallow --tags
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git config user.name github-actions[bot]
+          git-chglog -o CHANGELOG.md
+          git commit -am "Update CHANGELOG.md"
+          git push origin master
+

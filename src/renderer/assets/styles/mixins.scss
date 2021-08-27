@@ -1,0 +1,41 @@
+@mixin grid-column($columns, $gap) {
+  display: grid;
+  grid-template-columns: $columns;
+  gap: $gap;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin flex-wrap {
+  flex-wrap: wrap;
+}
+
+@mixin center-flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin center-absolute {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@mixin scroll-y {
+  overflow: hidden;
+  overflow-y: scroll;
+}
+
+@mixin scroll-x {
+  overflow: hidden;
+  overflow-x: scroll;
+}
+
+@mixin blur-bg($value) {
+  backdrop-filter: blur($value);
+}

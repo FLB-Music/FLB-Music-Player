@@ -1,0 +1,230 @@
+// @font-face {
+//   font-family: 'Quicksand';
+//   src: url('/font/Quicksand.ttf') format('tff');
+// }
+
+html,
+body {
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+* {
+  user-select: none;
+  color: white;
+  transition: 0.2s ease;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  font-family: inherit;
+}
+root {
+  --baseFontSize: 1rem;
+}
+
+
+
+body {
+  background: rgb(0, 1, 14);
+  perspective: 70em;
+}
+.tab {
+  overflow: hidden;
+  height: 100%;
+}
+img {
+  -webkit-user-drag: none;
+}
+a {
+  text-decoration: none;
+}
+
+#backToUnfilteredItems {
+  position: absolute;
+  z-index: 4;
+  top: 10px;
+  left: 10px;
+}
+.dangerBt:hover {
+  background: #ff0015;
+}
+.centerContents {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.switch {
+  background: rgba(255, 255, 255, 0.158);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 10px;
+  cursor: pointer;
+  padding: 10px;
+}
+.switch:hover {
+  background: var(--accentColor) !important;
+}
+hr {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.377);
+  border: none;
+  margin-bottom: 5px;
+}
+pre {
+  font-family: inherit;
+}
+input {
+  background: rgba(0, 0, 0, 0.158);
+  padding: 5px 8px;
+  border: none;
+  font-size: 1em;
+  font-family: inherit;
+  color: white;
+  border-radius: 10px;
+}
+textarea {
+  background: rgba(0, 0, 0, 0.158);
+  padding: 5px 8px;
+  border: none;
+  font-size: 1em;
+  font-family: inherit;
+  color: white;
+  border-radius: 10px;
+}
+.roundImage {
+  border-radius: 50%;
+}
+.sectionHeading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sectionHeading p {
+  font-family: inherit;
+  white-space: nowrap;
+}
+.sectionHeading div {
+  height: 10px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--accentColor),
+    transparent
+  );
+  width: 100%;
+}
+
+.modalClose {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+}
+.loadingArea {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.loadingIndicator {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+.loadingIndicator:after {
+  content: ' ';
+  display: block;
+  width: 30px;
+  height: 30px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  border-color: #fff transparent #fff transparent;
+  animation: loadingIndicator 1.2s linear infinite;
+}
+@keyframes loadingIndicator {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.tool {
+  position: relative;
+}
+
+/*== common styles for both parts of tool tip ==*/
+.tool::before,
+.tool::after {
+  left: 50%;
+  opacity: 0;
+  position: absolute;
+  z-index: -100;
+}
+
+.tool:hover::before,
+.tool:focus::before,
+.tool:hover::after,
+.tool:focus::after {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  z-index: 100;
+}
+/*  */
+
+/*== speech bubble ==*/
+.tool::after {
+  background: #ffffff;
+  border-radius: 20px;
+  bottom: 15%;
+  color: #000000;
+  content: attr(data-tip);
+  font-family: inherit;
+  font-weight: 800;
+  margin-left: -8.75em;
+  padding: 5px;
+  transform: scale(0.6);
+}
+
+.tool:hover::after,
+.tool:focus::after {
+  transition: all 0.2s ease;
+}
+input::placeholder {
+  color: rgba(255, 255, 255, 0.548);
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+.fullScreenPlayingPane .widget {
+  right: initial;
+  left: 100px;
+}
+.miniMode .widget {
+  opacity: 0;
+  pointer-events: none;
+}
+.widget {
+  position: fixed;
+  bottom: 108px;
+  width: 240px;
+  right: 13px;
+  border-radius: 20px;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.315);
+  .widget_header {
+    position: relative;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .widget_title {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+  .widget_close {
+    position: absolute;
+    right: -5px;
+    top: -5px;
+  }
+}

@@ -1,0 +1,146 @@
+.accent_0 {
+  --accentColor: #0066ff;
+}
+.accent_1 {
+  --accentColor: #7a86cb;
+}
+.accent_2 {
+  --accentColor: #ba68c6;
+}
+.accent_3 {
+  --accentColor: #fd8b64;
+}
+.accent_4 {
+  --accentColor: #acd580;
+}
+.accent_5 {
+  --accentColor: #fcd450;
+}
+.accent_6 {
+  --accentColor: #4db6ac;
+}
+.accent_7 {
+  --accentColor: #ee6390;
+}
+.accent_8 {
+  --accentColor: #e57375;
+}
+.accent_9 {
+  --accentColor: #ff8a66;
+}
+
+.fancy_theme p,
+h1,
+h2,
+h3,
+h4,
+div,
+a,
+pre {
+  color: white;
+}
+
+.dark_theme .bg1 {
+  background: rgb(17, 17, 17);
+}
+.dark_theme .bg2 {
+  background: rgb(14, 14, 14);
+}
+.dark_theme .blurred_bg {
+  background: rgb(26, 26, 26) !important;
+}
+.dark_theme .trackOptions {
+  background: rgb(17, 17, 17) !important;
+}
+.dark_theme .PlaylistCard {
+  background: rgba(26, 26, 26, 0.301) !important;
+}
+.dark_theme .sliverBar #blurred {
+  display: none !important;
+}
+.dark_theme .sliverBarFooter {
+  background: transparent;
+}
+
+.black_theme .bg1 {
+  background: rgb(5, 5, 5);
+}
+.black_theme .bg2 {
+  background: rgb(8, 8, 8);
+}
+.black_theme .blurred_bg {
+  background: rgb(8, 8, 8) !important;
+}
+.black_theme .PlaylistCard {
+  background: rgb(8, 8, 8) !important;
+}
+.black_theme .sliverBar #blurred {
+  display: none !important;
+}
+.black_theme .sliverBarFooter {
+  background: transparent;
+}
+
+.light_theme {
+  background: rgb(243, 243, 243) !important;
+}
+.light_theme p {
+  color: black;
+}
+.light_theme h1 {
+  color: black;
+}
+.light_theme h2 {
+  color: black;
+}
+.light_theme h3 {
+  color: black;
+}
+.light_theme div {
+  color: black;
+}
+.light_theme a {
+  color: black;
+}
+.light_theme pre {
+  color: black;
+}
+.light_theme .TrackCard p {
+  font-family: inherit;
+  color: black;
+}
+.light_theme .TrackCard:hover {
+  background: var(--accentColor) !important;
+}
+.light_theme .playingTrack {
+  background: var(--accentColor);
+}
+.light_theme .playingTrack .trackTitle {
+  transform: translateX(0px);
+}
+.light_theme ::placeholder {
+  color: black;
+}
+.light_theme button img {
+  filter: invert(1);
+}
+.light_theme .icon {
+  filter: invert(1);
+}
+.light_theme .bg1 {
+  background: rgb(255, 255, 255);
+}
+.light_theme .bg2 {
+  background: rgb(255, 255, 255);
+}
+.light_theme .blurred_bg {
+  background: rgb(248, 248, 248);
+}
+.light_theme .PlaylistCard {
+}
+.light_theme .sliverBar #blurred {
+  display: none !important;
+}
+.light_theme .sliverBarFooter {
+  background: transparent;
+}

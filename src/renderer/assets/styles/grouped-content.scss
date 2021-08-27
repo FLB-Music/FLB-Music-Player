@@ -1,0 +1,121 @@
+.groupedContentTab {
+  position: relative;
+  height: 100%;
+  padding-bottom: 30px;
+}
+.groupCards {
+  height: 100%;
+  overflow: hidden;
+  overflow-y: scroll;
+  padding: 10px;
+}
+
+.groupCard:hover {
+  background: rgba(255, 255, 255, 0.11);
+}
+
+.groupedContentTab .tracksCount {
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 15px;
+  right: 15px;
+  font-family: inherit;
+  border-radius: 10px;
+  font-size: 0.8em;
+  background-color: rgba(0, 0, 0, 0.39);
+  backdrop-filter: blur(10px);
+}
+
+.selectedGroup {
+  position: absolute;
+  background: rgba(85, 85, 85, 0.219);
+  height: 100%;
+  width: 100%;
+  border-radius: 20px;
+  /* border-bottom-right-radius: 0px; */
+  overflow: hidden;
+}
+
+.selectedGroup .cardsWrapper {
+  position: relative;
+  z-index: 5;
+  overflow: hidden;
+  overflow-y: scroll;
+  height: 56%;
+  padding: 10px;
+}
+
+.sliverBar {
+  position: relative;
+  height: 35%;
+  max-height: 200px;
+  width: 100%;
+  margin-bottom: 10px;
+  background: linear-gradient(rgba(8, 8, 8, 0.219), transparent);
+}
+.sliverBarFooter {
+  position: absolute;
+  z-index: 4;
+  left: 0px;
+  bottom: 0px;
+  width: 98%;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.63));
+}
+.sliverBar .sliverBarActions {
+  display: flex;
+  gap: 10px;
+}
+.sliverBar .groupedCard_info {
+  /* something might come up */
+}
+
+.sliverBar .groupedCard_info .groupedInfo_title {
+  font-size: 1.2rem;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sliverBar .groupedCard_info .groupedInfo_subtitle {
+  font-size: 0.9rem;
+  font-family: inherit;
+  width: 100%;
+}
+.sliverBar .groupedCard_info .groupedInfo_subtitle:hover {
+  text-decoration: underline;
+}
+
+.sliverBar .coverArt {
+  position: absolute;
+  height: 90%;
+  top: 50%;
+  width: auto !important;
+  left: 50%;
+  z-index: 3;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%) translateY(-50%);
+}
+
+.sliverBar #blurred {
+  position: absolute;
+  -webkit-transform: none !important;
+  transform: none !important;
+  width: 100% !important;
+  height: 90% !important;
+  z-index: -1;
+  filter: blur(20px);
+  top: 0;
+  left: 0;
+  opacity: 0.7;
+}
+/*# sourceMappingURL=test.css.map */
