@@ -2,11 +2,6 @@
   <div class="playingPane bg2">
     <div class="flex split">
       <div class="left_pane_section">
-        <!-- <img
-          class="album_art"
-          :src="playingTrack.albumArt || require('@img/flbdefault-cover.png')"
-          @click="expandPlayingPane"
-        /> -->
         <album-art-wrapper v-on:togglePlayerMode="togglePlayerMode" />
         <img
           class="album_art_blurred"
@@ -684,17 +679,23 @@ export default {
     top: 50%;
     transform: translateX(-50%) translateY(-50%);
   }
-  #shuffle_bt,
+  #shuffle_bt {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+  }
   #repeat_bt {
-    transform: translateX(-10px) scale(0.8) translateY(15px);
+    position: fixed;
+    top: 10px;
+    left: 80px;
   }
 
   #miniMode_bt {
     display: block;
     position: fixed;
-    top: 20px;
+    top: 10px;
     right: 10px;
-    transform: scale(0.75);
+    // transform: scale(0.75);
     opacity: 0;
   }
 }

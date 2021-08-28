@@ -3,7 +3,7 @@
     <img
       class="album_art"
       id="playing_track_album_art"
-      :src="playingTrack.albumArt || require('@img/flbdefault-cover.png')"
+      :src="albumArt"
       @click="$emit('togglePlayerMode')"
     />
   </div>
@@ -15,15 +15,21 @@ import ColorThief from './color-thief.min.js';
 
 export default {
   computed: {
-    playingTrack() {
-      return this.$store.state.PlaybackManger.playingTrackInfo.track;
+    albumArt() {
+      const playingTrackAlbumArt =
+        this.$store.state.PlaybackManger.playingTrackInfo.track.albumArt;
+      if (playingTrackAlbumArt) {
+        return 'file://' + playingTrackAlbumArt;
+      } else {
+        return require('@img/flbdefault-cover.png');
+      }
     },
     dynamicAccentColor() {
       return this.$store.state.SettingsManager.settings.dynamicAccentColor;
     }
   },
   watch: {
-    playingTrack() {
+    albumArt() {
       this.setThemeColor();
     }
   },
@@ -32,7 +38,7 @@ export default {
       if (this.dynamicAccentColor) {
         setTimeout(() => {
           const palette = ColorThief.prototype.getPalette(
-            document.querySelector('.album_art_blurred')
+            document.querySelector('#playing_track_album_art')
           );
           const app = document.querySelector('#app');
           app.style.setProperty(

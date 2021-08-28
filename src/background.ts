@@ -41,6 +41,8 @@ import { DownloadManager } from './main/modules/BingDownloader';
 import { UsageManager } from './main/modules/UsageStatistics';
 import isOnline from 'is-online';
 
+console.log(paths.appFolder);
+
 dialog.showErrorBox = function (title, content) {
   sendMessageToRenderer(`dangerMsg`, `⚠Error⚠ 👉${title} ${content}`);
   console.log(`An Error Occurred ⚠`);
