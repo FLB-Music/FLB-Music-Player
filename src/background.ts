@@ -3,7 +3,7 @@
 import {
   app,
   BrowserWindow,
-  dialog,
+  dialog, 
   ipcMain,
   protocol,
   screen,

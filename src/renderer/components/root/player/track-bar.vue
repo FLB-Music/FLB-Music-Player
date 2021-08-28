@@ -167,6 +167,7 @@ export default {
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
+  transition:none;
   input {
     position: absolute;
     width: 100%;

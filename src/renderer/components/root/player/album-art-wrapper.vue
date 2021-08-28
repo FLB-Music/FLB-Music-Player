@@ -15,15 +15,6 @@ import ColorThief from './color-thief.min.js';
 
 export default {
   computed: {
-    albumArt() {
-      const playingTrackAlbumArt =
-        this.$store.state.PlaybackManger.playingTrackInfo.track.albumArt;
-      if (playingTrackAlbumArt) {
-        return 'file://' + playingTrackAlbumArt;
-      } else {
-        return require('@img/flbdefault-cover.png');
-      }
-    },
     dynamicAccentColor() {
       return this.$store.state.SettingsManager.settings.dynamicAccentColor;
     }
@@ -48,21 +39,30 @@ export default {
         }, 100);
       }
     }
+  },
+  props:{
+    albumArt: String
   }
 };
 </script>
 
 <style lang="scss">
 .album_art_wrapper {
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 70px;
+  height:70px;
+  overflow:hidden;
+  position:relative;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: none;
   .album_art {
-    width: 70px;
-    border-radius: 15px;
-    cursor: pointer;
-    transition: none;
+    position:absolute;
+    height:100%;
+    left:50%;
+    transform:translateX(-50%);
   }
 }
 </style>

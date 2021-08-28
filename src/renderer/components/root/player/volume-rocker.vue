@@ -18,96 +18,96 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
-import { gainNode } from '../equalizer/equalizer';
+  import { mapMutations } from 'vuex';
+  import { gainNode } from '../equalizer/equalizer';
 
-export default {
-  name: 'VolumeRocker',
+  export default {
+    name: 'VolumeRocker',
 
-  data() {
-    return {
-      volume: 0.5,
-      mute: false
-    };
-  },
-  computed: {
-    progressBarWidth() {
-      return `${Math.trunc(this.userSetVolume * 100)}%`;
+    data() {
+      return {
+        volume: 0.5,
+        mute: false
+      };
     },
-    userSetVolume() {
-      return this.$store.state.SettingsManager.settings.volume;
-    }
-  },
-  watch: {
-    volume() {
-      gainNode.gain.value = this.volume;
-      this.setSettingValue({ property: 'volume', newValue: this.volume });
-    }
-  },
-  methods: {
-    ...mapMutations(['setSettingValue']),
-    toggleMute() {
-      this.mute = !this.mute;
-      if (this.mute) {
-        this.volume = 0;
-      } else {
-        this.volume = 0.5;
+    computed: {
+      progressBarWidth() {
+        return `${Math.trunc(this.userSetVolume * 100)}%`;
+      },
+      userSetVolume() {
+        return this.$store.state.SettingsManager.settings.volume;
       }
+    },
+    watch: {
+      volume() {
+        gainNode.gain.value = this.volume;
+        this.setSettingValue({ property: 'volume', newValue: this.volume });
+      }
+    },
+    methods: {
+      ...mapMutations(['setSettingValue']),
+      toggleMute() {
+        this.mute = !this.mute;
+        if (this.mute) {
+          this.volume = 0;
+        } else {
+          this.volume = 0.5;
+        }
+      }
+    },
+    mounted() {
+      this.volume = this.userSetVolume;
+      setTimeout(() => {
+        gainNode.gain.value = this.volume;
+      }, 0);
     }
-  },
-  mounted() {
-    this.volume = this.userSetVolume;
-    setTimeout(() => {
-      gainNode.gain.value = this.volume;
-    }, 0);
-  }
-};
+  };
 </script>
 
 <style lang="scss">
-.VolumeRocker {
-  position: relative;
-  width: 135px;
-  height: 6px;
-  border-radius: 10px;
-  cursor: pointer;
+  .VolumeRocker {
+    position: relative;
+    width: 135px;
+    height: 6px;
+    border-radius: 10px;
+    cursor: pointer;
 
-  .rocker_wrapper {
-    width: 100%;
-    height: 100%;
-    &:active {
-      height: 12px;
-    }
-    &:hover {
-      .base_slider_progress {
-        background: var(--accentColor);
+    .rocker_wrapper {
+      width: 100%;
+      height: 100%;
+      &:active {
+        height: 12px;
+      }
+      &:hover {
+        .base_slider_progress {
+          background: var(--accentColor);
+        }
       }
     }
+    .rocker_icons {
+      width: 20px;
+    }
+    input {
+      cursor: pointer;
+      -webkit-appearance: none;
+      opacity: 0;
+      position: absolute;
+      z-index: 2;
+      top: -10px;
+      left: -5px;
+      height: 20px;
+      width: 100%;
+    }
+    .base_slider_progress {
+      position: absolute;
+      border-radius: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 0px;
+      height: 150%;
+      background: white;
+      width: 100%;
+      max-width: 100%;
+    }
   }
-  .rocker_icons {
-    width: 20px;
-  }
-  input {
-    cursor: pointer;
-    -webkit-appearance: none;
-    opacity: 0;
-    position: absolute;
-    z-index: 2;
-    top: -10px;
-    left: -5px;
-    height: 20px;
-    width: 100%;
-  }
-  .base_slider_progress {
-    position: absolute;
-    border-radius: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    left: 0px;
-    height: 150%;
-    background: white;
-    width: 100%;
-    max-width: 100%;
-  }
-}
 </style>
