@@ -1,6 +1,6 @@
 <template>
   <div class="FoldersTab groupedContentTab tab">
-    <div v-if="!selectedGroup" class="folderCards grid_auto">
+    <div v-if="!selectedGroup" class="folderCards flex_auto">
       <div
         v-for="folder in folders"
         :key="folder.path"
@@ -10,7 +10,7 @@
         <div class="silv">
           <img class="folderIcon" src="@icon/folder.svg" />
           <div class="top3">
-            <img
+            <!-- <img
               v-if="folder.tracks[0]"
               :src="'file://' + folder.tracks[0].albumArt"
             />
@@ -21,7 +21,7 @@
             <img
               v-if="folder.tracks[2]"
               :src="'file://' + folder.tracks[2].albumArt"
-            />
+            /> -->
           </div>
         </div>
         <p>{{ folder.name }}</p>

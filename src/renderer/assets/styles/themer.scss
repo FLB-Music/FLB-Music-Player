@@ -61,6 +61,9 @@ pre {
 .dark_theme .sliverBarFooter {
   background: transparent;
 }
+.dark_theme .album_art_blurred {
+  display: none;
+}
 
 .black_theme .bg1 {
   background: rgb(5, 5, 5);
@@ -79,6 +82,9 @@ pre {
 }
 .black_theme .sliverBarFooter {
   background: transparent;
+}
+.black_theme .album_art_blurred {
+  display: none;
 }
 
 .light_theme {

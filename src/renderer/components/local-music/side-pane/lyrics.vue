@@ -85,135 +85,136 @@
 </template>
 
 <script>
-  import { mapActions } from 'vuex';
+import { mapActions } from 'vuex';
 
-  export default {
-    name: 'Lyrics',
+export default {
+  name: 'Lyrics',
 
-    methods: {
-      ...mapActions(['getLyrics']),
-      verseLines(verse) {
-        return verse.replace(/\[.*\].*/gi, '').split(/\n/);
-      },
-      autoScrollContainer() {
-        if (this.autoScroll) {
-          const audio = document.querySelector('audio');
-          const percent = audio.currentTime / audio.duration;
-          const container = document.querySelector('.LyricsContainer .lyrics');
-          if (!container) return;
-          const scrollTo = Math.floor(percent * container.scrollHeight);
-          container.scrollTo(0, scrollTo - this.offset);
-        }
-      },
-      toggleWidgetSize() {
-        //
+  methods: {
+    ...mapActions(['getLyrics']),
+    verseLines(verse) {
+      return verse.replace(/\[.*\].*/gi, '').split(/\n/);
+    },
+    autoScrollContainer() {
+      if (this.autoScroll) {
+        const audio = document.querySelector('audio');
+        const percent = audio.currentTime / audio.duration;
+        const container = document.querySelector('.LyricsContainer .lyrics');
+        if (!container) return;
+        const scrollTo = Math.floor(percent * container.scrollHeight);
+        container.scrollTo(0, scrollTo - this.offset);
       }
     },
-    data() {
-      return {
-        offset: 50,
-        autoScroll: false,
-        bigLyrics: false
-      };
-    },
-    computed: {
-      playingTrack() {
-        return this.$store.state.PlaybackManger.playingTrackInfo.track;
-      },
-      playingTrackLyrics() {
-        return (
-          this.$store.state.PlaybackManger.allLyrics.filter(
-            trackLyricInfo =>
-              // eslint-disable-next-line implicit-arrow-linebreak
-              trackLyricInfo.trackName === this.playingTrack.defaultTitle
-          )[0]?.lyrics || false
-        );
-      },
-      allLyrics() {
-        return this.$store.state.PlaybackManger.allLyrics;
-      }
-    },
-    mounted() {
-      this.autoScroll = false;
-      this.getLyrics();
-      const audio = document.querySelector('audio');
-      audio.addEventListener('timeupdate', e => {
-        if (this.autoScroll) {
-          this.autoScrollContainer();
-        }
-      });
+    toggleWidgetSize() {
+      //
     }
-    //TODO clear set interval
-  };
+  },
+  data() {
+    return {
+      offset: 50,
+      autoScroll: false,
+      bigLyrics: false
+    };
+  },
+  computed: {
+    playingTrack() {
+      return this.$store.state.PlaybackManger.playingTrackInfo.track;
+    },
+    playingTrackLyrics() {
+      return (
+        this.$store.state.PlaybackManger.allLyrics.filter(
+          trackLyricInfo =>
+            // eslint-disable-next-line implicit-arrow-linebreak
+            trackLyricInfo.trackName === this.playingTrack.defaultTitle
+        )[0]?.lyrics || false
+      );
+    },
+    allLyrics() {
+      return this.$store.state.PlaybackManger.allLyrics;
+    }
+  },
+  mounted() {
+    this.autoScroll = false;
+    this.getLyrics();
+    const audio = document.querySelector('audio');
+    audio.addEventListener('timeupdate', e => {
+      if (this.autoScroll) {
+        this.autoScrollContainer();
+      }
+    });
+  }
+  //TODO clear set interval
+};
 </script>
 
 <style lang="scss">
-  .bigLyrics {
-    top: 38px;
-    height: 80vh !important;
-    width: 98.5vw !important;
-    z-index: 60;
+.bigLyrics {
+  top: 38px;
+  height: 80vh !important;
+  width: 98.5vw !important;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  .lyrics {
+    width: 120%;
+    text-align: center !important;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    .lyrics {
-      width: 120%;
-      text-align: center !important;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      height: 88%;
-      .verse {
-        width: 100%;
-        margin-bottom: 20px;
-        .line {
-          line-height: initial;
-          font-size: 2rem;
-        }
-      }
-    }
-    .lyr_controls {
-      position: relative;
-      width: initial;
-      border-radius: 15px;
-    }
-  }
-  .LyricsContainer {
-    scroll-behavior: smooth;
-    width: 100%;
-    height: 92%;
-  }
-  .lyrics {
-    font-family: inherit;
-    text-align: left;
-    overflow: hidden;
-    height: 90%;
-    overflow-y: scroll;
+    height: 88%;
     .verse {
-      padding: 10px;
-      line-height: 1.5rem;
-      text-align: center;
+      width: 100%;
+      margin-bottom: 20px;
       .line {
-        text-align: center;
+        line-height: initial;
+        font-size: 2rem;
       }
     }
-    // width: 100px;
   }
   .lyr_controls {
-    width: 92%;
-    z-index: 5;
-    #off_add {
-      transform: scale(0.6);
-      img {
-        transform: scale(0.8);
-      }
-    }
-    #off_minus {
-      transform: scale(0.6);
-      img {
-        transform: rotate(-45deg);
-      }
+    position: relative;
+    width: initial;
+    border-radius: 15px;
+  }
+}
+.LyricsContainer {
+  scroll-behavior: smooth;
+  width: 100%;
+  height: 92%;
+}
+.lyrics {
+  font-family: inherit;
+  text-align: left;
+  overflow: hidden;
+  height: 90%;
+  width: 105%;
+  overflow-y: scroll;
+  .verse {
+    padding: 10px;
+    line-height: 1.5rem;
+    text-align: center;
+    .line {
+      text-align: center;
     }
   }
+  // width: 100px;
+}
+.lyr_controls {
+  width: 92%;
+  z-index: 5;
+  #off_add {
+    transform: scale(0.6);
+    img {
+      transform: scale(0.8);
+    }
+  }
+  #off_minus {
+    transform: scale(0.6);
+    img {
+      transform: rotate(-45deg);
+    }
+  }
+}
 </style>
