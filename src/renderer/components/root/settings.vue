@@ -370,7 +370,7 @@ export default {
         font-family: inherit;
       }
       .folderBoxWrapper {
-        max-height: 140px;
+        max-height: 70px;
         overflow: hidden;
         overflow-y: scroll;
         padding: 10px;

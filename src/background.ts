@@ -3,7 +3,7 @@
 import {
   app,
   BrowserWindow,
-  dialog, 
+  dialog,
   ipcMain,
   protocol,
   screen,
@@ -394,7 +394,7 @@ ipcMain.on('toggleMiniMode', (e, payload) => {
   console.log('MiniMode ' + payload);
   if (payload) {
     win.unmaximize();
-    win.setSize(250, 300);
+    win.setSize(240, 300);
     win.setPosition(width - 250, height - 300, true);
     win.setAlwaysOnTop(true);
   } else {
@@ -519,10 +519,10 @@ export async function writeTags(
   }
   const isSuccessFull = NodeID3.update(tagChanges, filePath);
   console.log('Just Wrote');
-  console.log(tagChanges);
   if (isSuccessFull && !silent) {
     sendMessageToRenderer('normalMsg', 'Tags Successfully changed');
-    sendMessageToRenderer('updateTrack', { filePath, tagChanges });
+    console.log(filePath);
+    // sendMessageToRenderer('updateTrack', { filePath, tagChanges });
   } else {
     sendMessageToRenderer('errorMsg', 'An Error occurred while changing tags');
   }

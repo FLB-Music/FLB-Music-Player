@@ -19,11 +19,11 @@
           currentPage === 'FLBing' ? 'active-sideNav-group' : '',
           'sideNav-group'
         ]"
-        @click="switchPage('FLBing')"
+        @click="giveHope()"
       >
-        <router-link to="/flbing">
+        <router-link to="/">
           <img title="FLBing" class="icon" src="@icon/meld.svg" />
-          <p v-if="!isCollapsed">Meld (Beta)</p>
+          <p v-if="!isCollapsed">Meld</p>
         </router-link>
       </div>
     </div>
@@ -72,12 +72,20 @@ export default {
   methods: {
     ...mapMutations([
       'UIcontrollerToggleProperty',
-      'UIcontrollerSetPropertyValue'
+      'UIcontrollerSetPropertyValue',
+      'pushNotification'
     ]),
     switchPage(page) {
       this.UIcontrollerSetPropertyValue({
         property: 'currentPage',
         newValue: page
+      });
+    },
+    giveHope() {
+      this.pushNotification({
+        title: `Meld is still under development`,
+        subTitle: 'Coming in the next Release',
+        type: 'danger'
       });
     },
     refresh() {

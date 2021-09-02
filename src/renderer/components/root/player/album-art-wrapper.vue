@@ -1,7 +1,7 @@
 <template>
   <div class="album_art_wrapper">
     <img
-      class="album_art"
+      class="album_art round15"
       id="playing_track_album_art"
       :src="albumArt"
       @click="$emit('togglePlayerMode')"
@@ -40,7 +40,7 @@ export default {
       }
     }
   },
-  props:{
+  props: {
     albumArt: String
   }
 };
@@ -52,17 +52,17 @@ export default {
   align-items: center;
   justify-content: center;
   width: 70px;
-  height:70px;
-  overflow:hidden;
-  position:relative;
+  height: 70px;
+  overflow: hidden;
+  position: relative;
   border-radius: 15px;
   cursor: pointer;
   transition: none;
   .album_art {
-    position:absolute;
-    height:100%;
-    left:50%;
-    transform:translateX(-50%);
+    position: absolute;
+    height: 100%;
+    left: 50%;
+    transform: translateX(-50%);
   }
 }
 </style>

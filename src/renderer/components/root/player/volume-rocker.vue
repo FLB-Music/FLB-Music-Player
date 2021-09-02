@@ -11,7 +11,6 @@
     </div>
     <div class="rocker_wrapper bg1 pos-rel round10">
       <input min="0" v-model="volume" max="1" step="0.05" type="range" />
-      <!-- <div class="base_slider_progress"></div> -->
       <div :style="{ width: progressBarWidth }" class="base_slider_progress" />
     </div>
   </div>

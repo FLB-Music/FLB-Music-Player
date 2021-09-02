@@ -14,9 +14,7 @@ if (!fs.existsSync(ALBUM_ART_FOLDER)) {
 if (!fs.existsSync(ARTIST_PICTURE_FOLDER)) {
   fs.mkdirSync(ARTIST_PICTURE_FOLDER);
 }
-if (!fs.existsSync(FLBING_FOLDER)) {
-  fs.mkdirSync(FLBING_FOLDER);
-}
+
 export const paths = {
   appFolder: APP_DATA_FOLDER,
   albumArtFolder: ALBUM_ART_FOLDER,

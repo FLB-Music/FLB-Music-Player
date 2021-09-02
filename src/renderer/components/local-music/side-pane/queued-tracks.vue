@@ -1,10 +1,10 @@
 <template>
   <div class="QueuedTracks animated faster disable__options round20 pos-rel">
     <div
+      v-if="customQueue.length > 1"
       class="queue-actions pos-abs bottom0 bg2 pa10 zIndex2 w-100 flex center-a"
     >
       <base-button
-        v-if="customQueue.length !== 0"
         text="Clear Queue"
         :active="autoScroll"
         @click.native="clearCustomQueue"

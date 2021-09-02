@@ -121,8 +121,11 @@
       title="Lyrics"
       @click.native="showLyrics = !showLyrics"
     />
-    <transition enter-active-class="animated fadeInRight">
-      <div v-if="playingPaneExpanded && !showLyrics" class="que_wrappers">
+    <transition enter-active-class="animated fadeInUp faster">
+      <div
+        v-if="playingPaneExpanded && !showLyrics"
+        class="que_wrappers bg2 round15"
+      >
         <h1>Queue</h1>
         <queued-tracks />
       </div>
@@ -550,24 +553,28 @@ export default {
 }
 .que_wrappers {
   position: absolute;
+  top: 10px;
   right: 10px;
-  height: 82%;
-  padding-top: 10px;
-  width: 300px;
+  height: 85%;
+  width: 280px;
+  padding: 10px;
+  padding-top: 5px;
+  overflow: hidden;
   h1 {
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
   }
   .QueuedTracks {
-    width: 100%;
+    width: 97%;
     .centerContents {
       display: none;
     }
     .QueuedTracksWrapper {
       padding-top: 0px;
     }
-    .clearQueueBt {
-      display: none;
+    .queue-actions {
+      padding: 15px;
+      bottom: -5px;
     }
   }
 }
@@ -599,7 +606,7 @@ export default {
     position: absolute;
     width: 90%;
     height: 200px;
-    left: 50%;
+    left: 50.5%;
     top: 15px;
     transform: translateX(-50%);
   }
@@ -646,8 +653,8 @@ export default {
   }
   .VolumeRocker {
     position: fixed;
-    top: 10px;
-    left: 10px;
+    top: 20px;
+    left: 20px;
     padding: 10px;
     width: 15px;
     height: 15px;
@@ -685,19 +692,19 @@ export default {
   }
   #shuffle_bt {
     position: fixed;
-    top: 10px;
-    right: 150px;
+    top: 20px;
+    left: 80px;
   }
   #repeat_bt {
     position: fixed;
-    top: 10px;
-    right: 100px;
+    top: 20px;
+    right: 90px;
   }
 
   #miniMode_bt {
     display: block;
     position: fixed;
-    top: 10px;
+    top: 20px;
     right: 10px;
     // transform: scale(0.75);
     opacity: 0;
