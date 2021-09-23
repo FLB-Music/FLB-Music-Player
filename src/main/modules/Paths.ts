@@ -27,5 +27,5 @@ export const paths = {
   playlistsLocation: path.join(APP_DATA_FOLDER, 'Playlists.json'),
   playbackStatsLocation: path.join(APP_DATA_FOLDER, 'PlaybackStats.json'),
   settingsLocation: path.join(APP_DATA_FOLDER, 'Settings.json'),
-  usageData: path.join(APP_DATA_FOLDER, 'UsageData.json'),
+  usageData: path.join(APP_DATA_FOLDER, 'UsageData.json')
 };

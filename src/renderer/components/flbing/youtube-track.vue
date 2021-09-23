@@ -1,19 +1,35 @@
 <template>
   <div class="yt_card bg2">
-    <img class="yt_thumbnail" :src="ytTrack.thumbnails[0]" />
+    <img
+      class="yt_thumbnail"
+      :src="ytTrack.thumbnails[0]"
+    >
     <div class="card_body">
-      <p class="yt_title">{{ ytTrack.title }}</p>
-      <div v-if="ytTrack.publish_time === 0" class="live_indicator">
-        <p class="weight300 text-small-1">🎙 {{ ytTrack.channel }}</p>
+      <p class="yt_title">
+        {{ ytTrack.title }}
+      </p>
+      <div
+        v-if="ytTrack.publish_time === 0"
+        class="live_indicator"
+      >
+        <p class="weight300 text-small-1">
+          🎙 {{ ytTrack.channel }}
+        </p>
         <h4>Live 🔴</h4>
       </div>
       <div v-if="ytTrack.publish_time !== 0">
         <div class="flex fade_to_8 flex_between">
-          <p class="weight300 text-small-1">🎙 {{ ytTrack.channel }}</p>
-          <p class="weight300 text-small-1">📅 {{ ytTrack.publish_time }}</p>
+          <p class="weight300 text-small-1">
+            🎙 {{ ytTrack.channel }}
+          </p>
+          <p class="weight300 text-small-1">
+            📅 {{ ytTrack.publish_time }}
+          </p>
         </div>
         <div class="flex fade_to_8 flex_between">
-          <p class="weight300 text-small-1">⏳ {{ ytTrack.duration }}</p>
+          <p class="weight300 text-small-1">
+            ⏳ {{ ytTrack.duration }}
+          </p>
           <p class="weight300 text-small-1">
             {{ ytTrack.views }}
           </p>
@@ -22,14 +38,20 @@
       </div>
     </div>
     <div class="card_actions">
-      <base-button icon="play" @click.native="playVideo" />
+      <base-button
+        icon="play"
+        @click.native="playVideo"
+      />
       <base-button
         v-if="!trackAlreadyDownloaded && ytTrack.publish_time !== 0"
         icon="cloud-arrow-down"
         :loading="isBeingDownloaded"
         @click.native="downloadVideoAudioFeed"
       />
-      <base-button v-if="trackAlreadyDownloaded" icon="check" />
+      <base-button
+        v-if="trackAlreadyDownloaded"
+        icon="check"
+      />
     </div>
   </div>
 </template>
@@ -45,12 +67,10 @@ export default {
 
   computed: {
     trackAlreadyDownloaded() {
-      const index =
-        this.$store.state.TabsManager.tabsData.addedTracks.findIndex(
-          track =>
-            track.defaultTitle === cleanUpText(this.ytTrack.title) &&
-            track.defaultArtist === this.ytTrack.artist
-        );
+      const index = this.$store.state.TabsManager.tabsData.addedTracks.findIndex(
+        track => track.defaultTitle === cleanUpText(this.ytTrack.title)
+            && track.defaultArtist === this.ytTrack.artist
+      );
       if (index > -1) {
         return true;
       }
@@ -102,7 +122,7 @@ export default {
           console.log(linkInfo);
         } else {
           this.pushNotification({
-            title: `Error`,
+            title: 'Error',
             subTitle: 'Unable to download this file',
             type: 'danger'
           });

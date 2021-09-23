@@ -13,11 +13,6 @@ import { pascalCase } from 'scule';
 
 export default {
   name: 'BaseIcon',
-  computed: {
-    is() {
-      return pascalCase(`ph-${this.icon}`);
-    }
-  },
   props: {
     icon: {
       type: String,
@@ -34,6 +29,11 @@ export default {
     color: {
       type: String,
       default: '#fff'
+    }
+  },
+  computed: {
+    is() {
+      return pascalCase(`ph-${this.icon}`);
     }
   }
 };

@@ -66,13 +66,13 @@ Go to the project directory
 Install dependencies
 
 ```bash
-  npm install
+  yarn # install all dependencies and devDependencies
 ```
 
 Run 
 
 ```bash
-  npm start
+  yarn start # launch app
 ```
 
   

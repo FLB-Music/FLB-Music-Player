@@ -1,8 +1,4 @@
-const isDev = process.env.NODE_ENV !== 'production';
-
-const rules = {
-  '@typescript-eslint/explicit-module-boundary-types': 'off',
-  '@typescript-eslint/no-explicit-any': 'off',
+const defaultRules = {
   'arrow-parens': ['error', 'as-needed'],
   'brace-style': [
     'error',
@@ -27,8 +23,8 @@ const rules = {
   'max-len': 'off',
   'no-alert': 0,
   'no-bitwise': 0,
-  'no-console': !isDev ? 'warn' : 0,
-  'no-debuger': !isDev ? 'warn' : 0,
+  'no-console': 0,
+  'no-debuger': 0,
   'no-duplicate-imports': 'error',
   'no-empty': [
     'error',
@@ -87,12 +83,21 @@ const rules = {
   'space-infix-ops': 'error',
   'space-unary-ops': 'error',
   'spaced-comment': 'error',
-  'template-curly-spacing': 'error',
+  'template-curly-spacing': 'error'
+}
+const rules = {
+  ...defaultRules,
+  '@typescript-eslint/explicit-module-boundary-types': 'off',
+  '@typescript-eslint/no-explicit-any': 'off'
+}
+const vueRules = {
+  ...defaultRules,
+  'global-require': 0,
   'vue/component-name-in-template-casing': ['error', 'kebab-case', {
     registeredComponentsOnly: false
   }],
-  'vue/order-in-components': !isDev ? 'warn' : 'off',
-  'vue/require-default-prop': !isDev ? 'warn' : 'off'
+  'vue/order-in-components': 'off',
+  'vue/require-default-prop': 'off'
 };
 
 module.exports = {
@@ -113,14 +118,13 @@ module.exports = {
       },
       extends: [
         '@vue/airbnb',
-        '@vue/typescript/recommended',
         'plugin:vue/essential',
         'plugin:vue/recommended'
       ],
       files: ['*.vue'],
       parser: 'vue-eslint-parser',
       plugins: ['vue'],
-      rules
+      rules: vueRules
     }
   ],
   // end config for Vue components

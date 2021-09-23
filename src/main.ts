@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { pascalCase } from 'scule';
+// import { pascalCase } from 'scule';
 import vuedraggable from 'vuedraggable';
 import VueVirtualScroller from 'vue-virtual-scroller';
 import router from './renderer/router';

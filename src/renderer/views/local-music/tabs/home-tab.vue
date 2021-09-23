@@ -5,7 +5,10 @@
         <h1>Library Stats</h1>
       </div>
       <div class="statsWrapper">
-        <div class="statCard" @click="routeTo('Tracks')">
+        <div
+          class="statCard"
+          @click="routeTo('Tracks')"
+        >
           <h2>{{ tabsData.addedTracks.length }}</h2>
           <p>Tracks</p>
           <base-icon
@@ -14,17 +17,34 @@
             :size="40"
           />
         </div>
-        <div class="statCard" @click="routeTo('Albums')">
+        <div
+          class="statCard"
+          @click="routeTo('Albums')"
+        >
           <h2>{{ tabsData.albums.length }}</h2>
           <p>Albums</p>
-          <base-icon class="fade_to_7 stat_icon" :size="40" icon="disc" />
+          <base-icon
+            class="fade_to_7 stat_icon"
+            :size="40"
+            icon="disc"
+          />
         </div>
-        <div class="statCard stat_icon" @click="routeTo('Artists')">
+        <div
+          class="statCard stat_icon"
+          @click="routeTo('Artists')"
+        >
           <h2>{{ tabsData.artists.length }}</h2>
           <p>Artists</p>
-          <base-icon icon="user" :size="40" class="stat_icon fade_to_7" />
+          <base-icon
+            icon="user"
+            :size="40"
+            class="stat_icon fade_to_7"
+          />
         </div>
-        <div class="statCard" @click="routeTo('Folders')">
+        <div
+          class="statCard"
+          @click="routeTo('Folders')"
+        >
           <h2>{{ tabsData.folders.length }}</h2>
           <p>Folders</p>
           <base-icon
@@ -35,7 +55,7 @@
         </div>
       </div>
     </div>
-    <hr />
+    <hr>
     <div class="stats">
       <div class="stats_title">
         <h1>Daily Mixes</h1>

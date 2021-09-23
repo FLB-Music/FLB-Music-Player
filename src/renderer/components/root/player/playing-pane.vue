@@ -3,10 +3,13 @@
     <div class="flex split">
       <div class="left_pane_section">
         <album-art-wrapper
-          :albumArt="albumArt"
-          v-on:togglePlayerMode="togglePlayerMode"
+          :album-art="albumArt"
+          @togglePlayerMode="togglePlayerMode"
         />
-        <img class="album_art_blurred" :src="albumArt" />
+        <img
+          class="album_art_blurred"
+          :src="albumArt"
+        >
 
         <div class="track_info">
           <p class="track_title">
@@ -36,7 +39,10 @@
             :small="true"
             @click.native="determineNextTrack('prev')"
           />
-          <div id="toggle_play" @click="toggleIsPlaying">
+          <div
+            id="toggle_play"
+            @click="toggleIsPlaying"
+          >
             <base-button
               v-if="!audioState.playing"
               id="play_bt"
@@ -122,11 +128,17 @@
       @click.native="showLyrics = !showLyrics"
     />
     <transition enter-active-class="animated fadeInRight">
-      <div v-if="playingPaneExpanded && !showLyrics" class="que_wrappers">
+      <div
+        v-if="playingPaneExpanded && !showLyrics"
+        class="que_wrappers"
+      >
         <h1>Queue</h1>
         <queued-tracks />
       </div>
-      <div v-if="playingPaneExpanded && showLyrics" class="lyrics_wrappers">
+      <div
+        v-if="playingPaneExpanded && showLyrics"
+        class="lyrics_wrappers"
+      >
         <h1>Lyrics</h1>
         <lyrics />
       </div>
@@ -179,19 +191,16 @@ export default {
     playingTrackLyrics() {
       return (
         this.$store.state.PlaybackManger.allLyrics.filter(
-          trackLyricInfo =>
-            trackLyricInfo.trackName === this.playingTrack.defaultTitle
+          trackLyricInfo => trackLyricInfo.trackName === this.playingTrack.defaultTitle
         )[0]?.lyrics || false
       );
     },
     albumArt() {
-      const playingTrackAlbumArt =
-        this.$store.state.PlaybackManger.playingTrackInfo.track.albumArt;
+      const playingTrackAlbumArt = this.$store.state.PlaybackManger.playingTrackInfo.track.albumArt;
       if (playingTrackAlbumArt) {
-        return 'file://' + playingTrackAlbumArt;
-      } else {
-        return require('@img/flbdefault-cover.png');
+        return `file://${playingTrackAlbumArt}`;
       }
+      return require('@img/flbdefault-cover.png');
     }
   },
   watch: {
@@ -255,14 +264,14 @@ export default {
       if (this.isInFavorites) {
         this.deleteSelectedTrackFromPlaylist(this.playingTrack);
         this.pushNotification({
-          title: `Removed from Favorites`,
+          title: 'Removed from Favorites',
           subTitle: `${this.playingTrack.defaultTitle}`,
           type: 'danger'
         });
       } else {
         this.addSelectedTracksToPlaylist('Favorites');
         this.pushNotification({
-          title: `Added to Favorites`,
+          title: 'Added to Favorites',
           subTitle: `${this.playingTrack.defaultTitle}`,
           type: 'normal'
         });
@@ -330,7 +339,7 @@ export default {
       ]
     ];
 
-    for (const [action, handler] of actionHandlers) {
+    actionHandlers.forEach(([action, handler]) => {
       try {
         navigator.mediaSession.setActionHandler(action, handler);
       } catch (error) {
@@ -338,7 +347,7 @@ export default {
           `The media session action "${action}" is not supported yet.`
         );
       }
-    }
+    });
   }
 };
 </script>

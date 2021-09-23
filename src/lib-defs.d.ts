@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // declare global {
 //     let __static: string;
 // }

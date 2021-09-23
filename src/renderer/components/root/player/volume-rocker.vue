@@ -1,18 +1,38 @@
 <template>
   <div class="VolumeRocker flex center-v gap10 pl5 bg1">
-    <div class="rocker_icons flex center-a" @click="toggleMute">
-      <base-icon v-if="volume > 0.6" icon="speaker-simple-high" :size="18" />
+    <div
+      class="rocker_icons flex center-a"
+      @click="toggleMute"
+    >
+      <base-icon
+        v-if="volume > 0.6"
+        icon="speaker-simple-high"
+        :size="18"
+      />
       <base-icon
         v-if="volume <= 0.6 && volume > 0"
         icon="speaker-simple-low"
         :size="18"
       />
-      <base-icon v-if="volume == 0" icon="speaker-slash" :size="18" />
+      <base-icon
+        v-if="volume == 0"
+        icon="speaker-slash"
+        :size="18"
+      />
     </div>
     <div class="rocker_wrapper bg1 pos-rel round10">
-      <input min="0" v-model="volume" max="1" step="0.05" type="range" />
+      <input
+        v-model="volume"
+        min="0"
+        max="1"
+        step="0.05"
+        type="range"
+      >
       <!-- <div class="base_slider_progress"></div> -->
-      <div :style="{ width: progressBarWidth }" class="base_slider_progress" />
+      <div
+        :style="{ width: progressBarWidth }"
+        class="base_slider_progress"
+      />
     </div>
   </div>
 </template>

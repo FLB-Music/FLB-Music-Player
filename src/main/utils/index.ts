@@ -4,11 +4,11 @@ import { DownloaderHelper } from 'node-downloader-helper';
 import { ipcMain, Notification } from 'electron';
 import isOnline from 'is-online';
 
-export function writeImageBuffer(imageBuffer: string, savePath: string) {
+export function writeImageBuffer (imageBuffer: string, savePath: string) {
   fs.writeFileSync(savePath, imageBuffer);
 }
 
-export async function downloadFile(
+export async function downloadFile (
   url: string,
   targetFolder: string,
   fileName: string
@@ -26,7 +26,7 @@ export async function downloadFile(
   });
 }
 
-export function deleteFile(path: string, quiet: boolean) {
+export function deleteFile (path: string, quiet: boolean) {
   if (fs.existsSync(path)) {
     fs.unlink(path.replace('file://', ''), err => {
       if (err) {
@@ -44,7 +44,7 @@ export function deleteFile(path: string, quiet: boolean) {
   }
 }
 
-export function extractTitleAndArtist(trackName: string): any {
+export function extractTitleAndArtist (trackName: string): any {
   const split = trackName.split('-');
   let artist;
   let title;
@@ -67,15 +67,15 @@ export function extractTitleAndArtist(trackName: string): any {
   return { artist, title };
 }
 
-export function isValidFileType(path: string) {
+export function isValidFileType (path: string) {
   return path.match(/\.mp3|\.webm|\.m4a|\.ogg/gi);
 }
 
-export function removeMIME(str: string) {
+export function removeMIME (str: string) {
   return str.replace(/(\.mp3)|(\.m4a)|(\.ogg)|(\.wav)/gi, '');
 }
 
-export function sendNativeNotification(
+export function sendNativeNotification (
   title: string,
   text: string,
   image: string
@@ -95,12 +95,11 @@ export function sendNativeNotification(
   });
 }
 
-export function sendMessageToRenderer(listener: string, msg: any) {
+export function sendMessageToRenderer (listener: string, msg: any) {
   win.webContents.send(listener, msg);
 }
 
 
-
 ipcMain.handle('checkOnline', async () => {
-  return isOnline()
-})
+  return isOnline();
+});

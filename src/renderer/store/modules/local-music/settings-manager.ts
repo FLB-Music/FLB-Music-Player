@@ -19,14 +19,14 @@ const state = {
   }
 };
 const mutations = {
-  setSettingValue(state: any, payload: SettingPayloadType) {
+  setSettingValue (state: any, payload: SettingPayloadType) {
     state.settings[payload.property] = payload.newValue;
     sendMessageToNode('updateSettings', state.settings);
   },
-  restoreSettings(state: any, payload: SettingsType) {
+  restoreSettings (state: any, payload: SettingsType) {
     state.settings = payload;
   },
-  setScannedFolders(state: any, payload: Array<FolderInfoType>) {
+  setScannedFolders (state: any, payload: Array<FolderInfoType>) {
     state.settings.scannedFolders = payload;
   }
 };

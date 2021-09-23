@@ -7,8 +7,12 @@
       type="text"
       class="BigSearch inputElem"
       @keyup.enter="searchInYTMusic"
+    >
+    <p
+      id="bingEnter"
+      style="opacity: 0"
+      @click="sendSearchQuery"
     />
-    <p id="bingEnter" style="opacity: 0" @click="sendSearchQuery" />
     <base-button
       v-if="searchIsComplete"
       id="clearResultsIcon"
@@ -56,7 +60,7 @@ export default {
       if (!this.query) return;
       if (!this.appIsOnline) {
         this.pushNotification({
-          title: `No internet connection detected`,
+          title: 'No internet connection detected',
           subTitle: null,
           type: 'danger'
         });

@@ -13,7 +13,7 @@ import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import fs from 'fs';
 import path from 'path';
 import { autoUpdater } from 'electron-updater';
-import os from 'os';
+// import os from 'os';
 import NodeID3 from 'node-id3';
 import { paths } from './main/modules/Paths';
 import { PlaylistsTracker } from './main/modules/PlaylistTracker';
@@ -26,20 +26,20 @@ import {
   downloadFile,
   isValidFileType,
   sendMessageToRenderer,
-  sendNativeNotification,
+  sendNativeNotification
 } from './main/utils';
 import {
   FolderInfoType,
   FolderType,
   SettingsType,
   TagChangesType,
-  TrackType,
+  TrackType
 } from '@/types';
 import { downloadArtistPicture } from './main/services';
 import { SUPPORTED_FORMATS } from './main/utils/constants';
 import { DownloadManager } from './main/modules/BingDownloader';
 import { UsageManager } from './main/modules/UsageStatistics';
-import isOnline from 'is-online';
+// import isOnline from 'is-online';
 
 console.log(paths.appFolder);
 
@@ -55,7 +55,7 @@ const playlistsTracker = new PlaylistsTracker();
 const playbackStats = new PlaybackStats();
 const settings = new Settings();
 const downloaderManager = new DownloadManager();
-const usageTracker = new UsageManager()
+const usageTracker = new UsageManager();
 
 console.log(paths.appFolder);
 console.log(__dirname);
@@ -68,7 +68,7 @@ protocol.registerSchemesAsPrivileged([
 // Globally accessible window object
 
 export let win: BrowserWindow;
-async function createWindow() {
+async function createWindow () {
   const primaryDisplay = screen.getPrimaryDisplay();
   const { width, height } = primaryDisplay.workAreaSize;
   // Create the browser window.
@@ -367,8 +367,8 @@ ipcMain.on('downloadBingTrack', (e, payload) => {
 });
 
 ipcMain.on('sendUsageStats', () => {
-  usageTracker.sendUsageData()
-})
+  usageTracker.sendUsageData();
+});
 // ipcMain.on('cancelBingDownload', (e) => {
 //     downloaderManager.cancelCurrentDownload()
 // })
@@ -403,13 +403,13 @@ ipcMain.on('toggleMiniMode', (e, payload) => {
   }
 });
 
-async function parseFolder(
+async function parseFolder (
   folderPath: string,
   subFolders: Array<string>,
   foldersFinalData: Array<FolderType>
 ) {
   return new Promise<any>(resolve => {
-    (function recursiveReader(
+    (function recursiveReader (
       folderPath: string,
       subFolders: Array<string>,
       foldersFinalData: Array<FolderType>
@@ -454,7 +454,7 @@ interface dataParamObj {
   filePath: string;
   folder: FolderInfoType;
 }
-async function prepareTracksForProcessing(foldersFinalData: Array<FolderType>) {
+async function prepareTracksForProcessing (foldersFinalData: Array<FolderType>) {
   const data: Array<dataParamObj> = [];
   foldersFinalData.forEach(folder => {
     folder.tracks.forEach(fileName => {
@@ -471,7 +471,7 @@ async function prepareTracksForProcessing(foldersFinalData: Array<FolderType>) {
     processTracks(data, 0);
   }
 }
-async function processTracks(data: Array<dataParamObj>, index: number) {
+async function processTracks (data: Array<dataParamObj>, index: number) {
   console.log('Beginning to parse ' + data[index].fileName);
   const newTrack = await createParsedTrack(data[index].filePath);
   win.webContents.send('newTrack', newTrack);
@@ -486,12 +486,12 @@ async function processTracks(data: Array<dataParamObj>, index: number) {
   }
 }
 
-function refreshTracks() {
+function refreshTracks () {
   const folders = settings.getSettings.foldersToScan;
   console.log(folders);
   let superFolder: FolderType[] = [];
   handleAllFolders(folders, folders.length, 0);
-  function handleAllFolders(folders: string[], length: number, index: number) {
+  function handleAllFolders (folders: string[], length: number, index: number) {
     parseFolder(folders[index], [], []).then(data => {
       superFolder = [...superFolder, ...data];
       index += 1;
@@ -504,7 +504,7 @@ function refreshTracks() {
   }
 }
 
-export async function writeTags(
+export async function writeTags (
   filePath: string,
   tagChanges: TagChangesType,
   silent = false
@@ -529,13 +529,13 @@ export async function writeTags(
   return isSuccessFull;
 }
 
-function saveAppData() {
+function saveAppData () {
   fileTracker.saveChanges();
   settings.saveSettings();
   playbackStats.saveChanges();
 }
 
-function checkForUpdates() {
+function checkForUpdates () {
   autoUpdater.checkForUpdatesAndNotify();
 }
 

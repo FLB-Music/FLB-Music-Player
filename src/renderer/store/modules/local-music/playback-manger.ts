@@ -65,7 +65,7 @@ const mutations = {
       updateMediaInfo(payload.track);
     }
   },
-  setSelectedTrackToPlayNext(state: PlaybackManagerStateInterface) {
+  setSelectedTrackToPlayNext (state: PlaybackManagerStateInterface) {
     const indexOfPlayingTrack = state.customQueue.findIndex(
       track => track.fileLocation === state.playingTrackInfo.track?.fileLocation
     );
@@ -79,27 +79,27 @@ const mutations = {
     );
     TrackSelector.state.selectedTracks.shift();
   },
-  addSelectedTrackToCustomQueue(state: any) {
+  addSelectedTrackToCustomQueue (state: any) {
     TrackSelector.state.selectedTracks.forEach((track: TrackType) => {
       state.customQueue.push(track);
     });
     state.customQueue = removeDuplicates(state.customQueue, 'fileLocation');
   },
-  removeTrackFromCustomQueue(state: any, index: number) {
+  removeTrackFromCustomQueue (state: any, index: number) {
     state.customQueue.splice(index - 1, 1);
   },
-  clearCustomQueue(state: any) {
+  clearCustomQueue (state: any) {
     state.customQueue = [];
   },
-  overWriteCustomQueue(state: any, payload: Array<TrackType>) {
+  overWriteCustomQueue (state: any, payload: Array<TrackType>) {
     const copyOfPayload = [...payload];
     state.customQueue = copyOfPayload;
   },
-  reorderQueue(state: any, payload: Array<TrackType>) {
+  reorderQueue (state: any, payload: Array<TrackType>) {
     const copyOfPayload = [...payload];
     state.customQueue = copyOfPayload;
   },
-  setPlayState(state: any, payload: 'play' | 'pause') {
+  setPlayState (state: any, payload: 'play' | 'pause') {
     if (payload === 'play') {
       state.audioState.playing = true;
       document.querySelector('audio')?.play();
@@ -110,7 +110,7 @@ const mutations = {
   }
 };
 const actions: ActionTree<PlaybackManagerStateInterface, any> = {
-  toggleIsPlaying({ state }) {
+  toggleIsPlaying ({ state }) {
     state.audioState.playing = !state.audioState.playing;
     if (state.audioState.playing) {
       document.querySelector('audio')?.play();
@@ -118,15 +118,15 @@ const actions: ActionTree<PlaybackManagerStateInterface, any> = {
       document.querySelector('audio')?.pause();
     }
   },
-  toggleRepeat({ state }) {
+  toggleRepeat ({ state }) {
     state.audioState.repeat = !state.audioState.repeat;
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     document.querySelector('audio')!.loop = state.audioState.repeat;
   },
-  toggleShuffler({ state }) {
+  toggleShuffler ({ state }) {
     state.audioState.shuffle = !state.audioState.shuffle;
   },
-  getLyrics({ state }) {
+  getLyrics ({ state }) {
     const dbLyrics = localStorage.getItem('lyrics');
     if (dbLyrics) {
       const allLyrics: TrackLyricsType[] = JSON.parse(dbLyrics);
@@ -157,7 +157,7 @@ const actions: ActionTree<PlaybackManagerStateInterface, any> = {
       }
     });
   },
-  determineNextTrack({ state, commit }, direction) {
+  determineNextTrack ({ state, commit }, direction) {
     const indexOfPlayingTrack = state.customQueue.findIndex(
       track => track.fileLocation === state.playingTrackInfo.track?.fileLocation
     );

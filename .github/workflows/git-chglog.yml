@@ -23,5 +23,5 @@ jobs:
           git config user.name github-actions[bot]
           git-chglog -o CHANGELOG.md
           git commit -am "Update CHANGELOG.md"
-          git push origin master
+          git push origin main
 

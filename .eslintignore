@@ -2,3 +2,5 @@
 .prettierrc.js
 babel.config.js
 vue.config.js
+glob.js
+color-thief.min.js

@@ -7,7 +7,11 @@
       :class="[currentTab === tab.name ? 'activeTab' : '', 'tabBtn bg1']"
       @click="routeTo(tab)"
     >
-      <base-icon :icon="tab.icon" class="icon" :size="16" />
+      <base-icon
+        :icon="tab.icon"
+        class="icon"
+        :size="16"
+      />
       <p>{{ tab.name }}</p>
     </div>
   </div>
@@ -20,17 +24,16 @@ import { ipcRenderer } from 'electron';
 export default {
   name: 'TabSwitcher',
 
-
   data() {
     return {
       tabs: [
-          { name: 'Home', path: '/', icon: 'house' },
-          { name: 'Tracks', path: '/Tracks', icon: 'music-note-simple' },
-          { name: 'Recents', path: '/Recents', icon: 'clock-clockwise' },
-          { name: 'Playlists', path: '/Playlists', icon: 'playlist' },
-          { name: 'Artists', path: '/Artists', icon: 'user' },
-          { name: 'Albums', path: '/Albums', icon: 'disc' },
-          { name: 'Folders', path: '/Folders', icon: 'folder-simple' }
+        { name: 'Home', path: '/', icon: 'house' },
+        { name: 'Tracks', path: '/Tracks', icon: 'music-note-simple' },
+        { name: 'Recents', path: '/Recents', icon: 'clock-clockwise' },
+        { name: 'Playlists', path: '/Playlists', icon: 'playlist' },
+        { name: 'Artists', path: '/Artists', icon: 'user' },
+        { name: 'Albums', path: '/Albums', icon: 'disc' },
+        { name: 'Folders', path: '/Folders', icon: 'folder-simple' }
       ]
     };
   },
@@ -52,7 +55,7 @@ export default {
     }
   },
   mounted() {
-    ipcRenderer.on('userSettings', (e, payload) => {
+    ipcRenderer.on('userSettings', (/* e, payload */) => {
       setTimeout(() => {
         const defaultTabIndex = this.tabs.findIndex(tab => tab.name === this.defaultTab);
         this.routeTo(this.tabs[defaultTabIndex]);

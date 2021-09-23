@@ -1,11 +1,11 @@
 <template>
   <div class="album_art_wrapper">
     <img
-      class="album_art"
       id="playing_track_album_art"
+      class="album_art"
       :src="albumArt"
       @click="$emit('togglePlayerMode')"
-    />
+    >
   </div>
 </template>
 
@@ -14,6 +14,9 @@
 import ColorThief from './color-thief.min.js';
 
 export default {
+  props: {
+    albumArt: String
+  },
   computed: {
     dynamicAccentColor() {
       return this.$store.state.SettingsManager.settings.dynamicAccentColor;
@@ -39,9 +42,6 @@ export default {
         }, 100);
       }
     }
-  },
-  props:{
-    albumArt: String
   }
 };
 </script>

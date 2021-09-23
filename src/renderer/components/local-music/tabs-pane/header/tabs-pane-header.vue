@@ -8,7 +8,7 @@
         placeholder="Search"
         class="inputElem bg1"
         @keyup="search(searchQuery)"
-      />
+      >
       <base-button
         v-if="searchQuery"
         class="shrink_icon shrink7 abs-center-y right5 round20"
@@ -18,7 +18,10 @@
       />
     </div>
     <sort-widget />
-    <search-results v-if="searchQuery" @closeSearch="searchQuery = ''" />
+    <search-results
+      v-if="searchQuery"
+      @closeSearch="searchQuery = ''"
+    />
   </div>
 </template>
 

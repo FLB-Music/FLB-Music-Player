@@ -5,8 +5,13 @@
       class="centerContents"
       style="height: 100%"
     >
-      <img width="300px" src="@img/no_recents.svg" />
-      <p style="font-family: inherit">You still haven't played anything</p>
+      <img
+        width="300px"
+        src="@img/no_recents.svg"
+      >
+      <p style="font-family: inherit">
+        You still haven't played anything
+      </p>
     </div>
     <div @click="addTracksToQueue">
       <track-card
@@ -20,6 +25,7 @@
 </template>
 <script>
 import { mapMutations } from 'vuex';
+
 export default {
   name: 'RecentsTab',
 

@@ -44,7 +44,7 @@ export default {
     barHeightForVolumeBoost() {
       const h = this.userSetVolume * 100 - 100;
       if (h < 1) {
-        return `0%`;
+        return '0%';
       }
       return `${h}%`;
     },

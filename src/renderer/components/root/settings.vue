@@ -1,7 +1,9 @@
 <template>
   <div class="Settings blurred_bg blur40">
     <div class="widget_header">
-      <h1 class="widget_title">Settings</h1>
+      <h1 class="widget_title">
+        Settings
+      </h1>
       <base-button
         icon="x"
         extra-class="shrink8 shrink8 pos-abs top5 right5"
@@ -61,7 +63,10 @@
                   })
                 "
               >
-                <base-icon class="icon" :icon="tab.icon" />
+                <base-icon
+                  class="icon"
+                  :icon="tab.icon"
+                />
                 <p>{{ tab.name }}</p>
               </div>
             </ul>
@@ -102,8 +107,12 @@
           @click="toggleDynamicAccentColor"
         >
           <p>Dynamic Accent Color</p>
-          <p v-if="settings.dynamicAccentColor">On</p>
-          <p v-else>Off</p>
+          <p v-if="settings.dynamicAccentColor">
+            On
+          </p>
+          <p v-else>
+            Off
+          </p>
         </div>
       </section>
       <section>
@@ -147,25 +156,37 @@
         </article>
         <div class="grid2">
           <article class="bg1">
-            <h3 class="mb5">Shortcuts ✂</h3>
+            <h3 class="mb5">
+              Shortcuts ✂
+            </h3>
             <div class="pb5 mb5 border_split">
-              <p class="text-small-0">Pause and Play</p>
+              <p class="text-small-0">
+                Pause and Play
+              </p>
               <pre class="text-small-1">Space🔘</pre>
             </div>
             <div class="pb5 mb5 border_split">
-              <p class="text-small-0">Next and Previous Track</p>
+              <p class="text-small-0">
+                Next and Previous Track
+              </p>
               <pre class="text-small-1">Arrows ◀▶   </pre>
             </div>
             <div class="pb5 mb5 border_split">
-              <p class="text-small-0">Search Tracks</p>
+              <p class="text-small-0">
+                Search Tracks
+              </p>
               <pre class="text-small-1">Tab 🧈</pre>
             </div>
           </article>
           <article class="bg1">
-            <h3 class="mb5">About 🐲</h3>
+            <h3 class="mb5">
+              About 🐲
+            </h3>
             <div class="infos">
               <div class="pb5 border_split mb5">
-                <p class="text-small-0">App Version 💽</p>
+                <p class="text-small-0">
+                  App Version 💽
+                </p>
                 <p class="text-small-1">
                   {{ appVersion }}
                 </p>
@@ -175,22 +196,24 @@
               <p class="text-small-1">Patrick Waweru</p>
             </div> -->
               <div class="pb5 border_split mb5">
-                <p class="text-small-0">Twitter🐦</p>
+                <p class="text-small-0">
+                  Twitter🐦
+                </p>
                 <a
                   target="_blank"
                   class="text-small-1"
                   href="https://twitter.com/PnTX10"
-                  >@PnTX10</a
-                >
+                >@PnTX10</a>
               </div>
               <div class="">
-                <p class="text-small-0">Email📬</p>
+                <p class="text-small-0">
+                  Email📬
+                </p>
                 <a
                   target="_blank"
                   class="text-small-1"
                   href="https://mail.google.com"
-                  >pntx200@gmail.com</a
-                >
+                >pntx200@gmail.com</a>
               </div>
             </div>
           </article>
@@ -209,31 +232,51 @@
             "
           >
             <p>Notifications💬</p>
-            <p v-if="settings.desktopNotifications">On</p>
-            <p v-if="!settings.desktopNotifications">Off</p>
+            <p v-if="settings.desktopNotifications">
+              On
+            </p>
+            <p v-if="!settings.desktopNotifications">
+              Off
+            </p>
           </div>
           <div
             :class="[settings.videoSupport ? 'activeBtn' : '', 'switch bg1']"
             @click="toggleVideoSupport"
           >
             <p>Video Support ß</p>
-            <p v-if="settings.videoSupport">On</p>
-            <p v-if="!settings.videoSupport">Off</p>
+            <p v-if="settings.videoSupport">
+              On
+            </p>
+            <p v-if="!settings.videoSupport">
+              Off
+            </p>
           </div>
         </div>
         <div class="grid2 gap10 pa10">
-          <div class="switch bg1" @click="checkForUpdate">
+          <div
+            class="switch bg1"
+            @click="checkForUpdate"
+          >
             <p>Check for Update 🚀</p>
           </div>
           <div class="switch bg1">
-            <a target="_blank" href="https://t.me/flbmusiccommunity">
+            <a
+              target="_blank"
+              href="https://t.me/flbmusiccommunity"
+            >
               <p>Join us on Telegram 🦅</p>
             </a>
           </div>
-          <div class="switch bg1" @click="selectFeedbackType('request')">
+          <div
+            class="switch bg1"
+            @click="selectFeedbackType('request')"
+          >
             <p>Request a Feature 💎</p>
           </div>
-          <div class="switch bg1" @click="selectFeedbackType('issue')">
+          <div
+            class="switch bg1"
+            @click="selectFeedbackType('issue')"
+          >
             <p>Report a Bug 🐜</p>
           </div>
         </div>
@@ -243,15 +286,18 @@
       </section>
     </main>
     <transition enter-active-class="animated fadeInUp extrafaster">
-      <feedback-widget v-if="showFeedbackWidget" :feedbackType="feedbackType" />
+      <feedback-widget
+        v-if="showFeedbackWidget"
+        :feedback-type="feedbackType"
+      />
     </transition>
   </div>
 </template>
 
 <script>
-import { sendMessageToNode } from '@/renderer/utils/index';
 import { mapMutations } from 'vuex';
 import { ipcRenderer } from 'electron';
+import { sendMessageToNode } from '@/renderer/utils/index';
 
 export default {
   name: 'Settings',
@@ -327,7 +373,7 @@ export default {
       });
       if (!this.settings.dynamicAccentColor) {
         const app = document.querySelector('#app');
-        app.style.removeProperty('--accentColor', `#0066ff`);
+        app.style.removeProperty('--accentColor', '#0066ff');
       }
     },
     selectFeedbackType(type) {

@@ -72,8 +72,8 @@
 </template>
 
 <script>
-import { sendMessageToNode } from '@/renderer/utils/index';
 import { mapMutations } from 'vuex';
+import { sendMessageToNode } from '@/renderer/utils/index';
 
 export default {
   name: 'TrackContextMenu',
@@ -120,14 +120,14 @@ export default {
     playNext() {
       this.setSelectedTrackToPlayNext();
       this.pushNotification({
-        title: `Playing that track Next`,
+        title: 'Playing that track Next',
         subTitle: null,
         type: 'normal'
       });
       this.close();
     },
     close() {
-      document.querySelector('.trackOptions').style.height = `0px`;
+      document.querySelector('.trackOptions').style.height = '0px';
       this.UIcontrollerSetPropertyValue({
         property: 'multiSelectMode',
         newValue: false
@@ -152,7 +152,7 @@ export default {
     addToFavorites() {
       this.addSelectedTracksToPlaylist('Favorites');
       this.pushNotification({
-        title: `Added to Favorites`,
+        title: 'Added to Favorites',
         subTitle: `${this.selectedTracks[0].defaultTitle}`,
         type: 'normal'
       });

@@ -70,7 +70,7 @@ export class FLBing {
         });
 
         response.on('readable', () => {
-          fileSize = parseInt(response.headers['content-length']!);
+          fileSize = parseInt(response?.headers['content-length'] ?? '0', 10);
           let chunk;
           while ((chunk = response.read(2048))) {
             if (this.downloadCanceled) {
@@ -168,7 +168,7 @@ export class FLBing {
           win.webContents.send('downloadedTrack', track);
           win.webContents.send('newTrack', track);
         })
-        .catch(err => {
+        .catch(err => { // eslint-disable-line @typescript-eslint/no-unused-vars
           console.log('Some error while parsing the downloaded track');
         });
     }

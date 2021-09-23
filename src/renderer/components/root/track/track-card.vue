@@ -72,11 +72,11 @@ export default {
       };
       if (cordinates.y > 500) cordinates.y = 500;
       const trackOptions = document.querySelector('.trackOptions');
-      trackOptions.style.height = `0px`;
+      trackOptions.style.height = '0px';
       trackOptions.style.top = `${cordinates.y}px`;
       trackOptions.style.left = `${cordinates.x}px`;
       setTimeout(() => {
-        trackOptions.style.height = `225px`;
+        trackOptions.style.height = '225px';
       }, 100);
       this.clearSelectedTracks();
       this.addToSelectedTracks(this.source);

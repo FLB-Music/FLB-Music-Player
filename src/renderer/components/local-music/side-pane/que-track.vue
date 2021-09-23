@@ -24,27 +24,27 @@
 </template>
 
 <script>
-  import { mapMutations } from 'vuex';
+import { mapMutations } from 'vuex';
 
-  export default {
-    name: 'QueTrack',
-    props: {
-      track: Object,
-      index: Number
-    },
-    computed: {
-      currentlyPlayingTrackPath() {
-        return this.$store.state.PlaybackManger.playingTrackInfo.track
-          .fileLocation;
-      }
-    },
-    methods: {
-      ...mapMutations(['setPlayingTrack', 'removeTrackFromCustomQueue']),
-      playQueuedTrack(track) {
-        this.setPlayingTrack({ track, index: 0 });
-      }
+export default {
+  name: 'QueTrack',
+  props: {
+    track: Object,
+    index: Number
+  },
+  computed: {
+    currentlyPlayingTrackPath() {
+      return this.$store.state.PlaybackManger.playingTrackInfo.track
+        .fileLocation;
     }
-  };
+  },
+  methods: {
+    ...mapMutations(['setPlayingTrack', 'removeTrackFromCustomQueue']),
+    playQueuedTrack(track) {
+      this.setPlayingTrack({ track, index: 0 });
+    }
+  }
+};
 </script>
 
 <style lang="scss">

@@ -80,7 +80,8 @@ export default {
     scrollToPlayingTrack() {
       setTimeout(() => {
         const index = parseInt(
-          document.querySelector('.playing_track').getAttribute('data-index')
+          document.querySelector('.playing_track').getAttribute('data-index'),
+          10
         );
         console.log(index);
       }, 100);

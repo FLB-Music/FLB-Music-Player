@@ -1,6 +1,9 @@
 <template>
   <div class="bg">
-    <img id="bg_fancy" :src="albumArt" />
+    <img
+      id="bg_fancy"
+      :src="albumArt"
+    >
   </div>
 </template>
 
@@ -17,7 +20,7 @@ export default {
     },
     albumArt() {
       if (this.playingTrack?.albumArt) {
-        return 'file://' + this.playingTrack.albumArt;
+        return `file://${this.playingTrack.albumArt}`;
       }
       return require('@img/flbdefault-cover.png');
     }

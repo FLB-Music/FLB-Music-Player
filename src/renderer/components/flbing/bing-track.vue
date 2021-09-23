@@ -1,12 +1,22 @@
 <template>
   <div class="bingTrack">
     <div class="info">
-      <img class="coverArt" :src="trackInfo.album.cover" />
+      <img
+        class="coverArt"
+        :src="trackInfo.album.cover"
+      >
       <div class="flex-col">
-        <p style="font-family: inherit" class="trackTitle">
+        <p
+          style="font-family: inherit"
+          class="trackTitle"
+        >
           {{ trackInfo.title }}
         </p>
-        <p style="font-size: 0.9rem" class="artist" @click="getArtistData">
+        <p
+          style="font-size: 0.9rem"
+          class="artist"
+          @click="getArtistData"
+        >
           {{ trackInfo.artist.name }}
         </p>
       </div>
@@ -24,7 +34,11 @@
         :loading="isBeingDownloaded"
         @click.native="getTrackDownloadURL"
       />
-      <base-button v-else icon="check" :small="true" />
+      <base-button
+        v-else
+        icon="check"
+        :small="true"
+      />
     </div>
   </div>
 </template>
@@ -32,8 +46,9 @@
 <script>
 import { mapMutations } from 'vuex';
 import { ipcRenderer } from 'electron';
-import { cleanUpText } from '@/shared-utils';
 import searchYoutube from 'youtube-api-v3-search';
+import { cleanUpText } from '@/shared-utils';
+
 export default {
   name: 'BingTrack',
 
@@ -61,12 +76,10 @@ export default {
       );
     },
     trackAlreadyDownloaded() {
-      const index =
-        this.$store.state.TabsManager.tabsData.addedTracks.findIndex(
-          track =>
-            track.defaultTitle === this.trackInfo.title &&
-            track.defaultArtist === this.trackInfo.artist.name
-        );
+      const index = this.$store.state.TabsManager.tabsData.addedTracks.findIndex(
+        track => track.defaultTitle === this.trackInfo.title
+            && track.defaultArtist === this.trackInfo.artist.name
+      );
       if (index > -1) {
         return true;
       }
@@ -191,7 +204,7 @@ export default {
             this.sendTrackForDownload();
           }
         })
-        .catch(error => {
+        .catch(error => { // eslint-disable-line @typescript-eslint/no-unused-vars
           this.updatePendingTrackState({
             id: this.trackInfo.id,
             stateCode: 2

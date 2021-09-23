@@ -34,20 +34,16 @@ export default {
     ...mapMutations(['pushNotification'])
   },
   mounted() {
-    ipcRenderer.on('normalMsg', (e, msg) =>
-      this.pushNotification({
-        title: msg,
-        subTitle: null,
-        type: 'normal'
-      })
-    );
-    ipcRenderer.on('errorMsg', (e, msg) =>
-      this.pushNotification({
-        title: msg,
-        subTitle: null,
-        type: 'danger'
-      })
-    );
+    ipcRenderer.on('normalMsg', (e, msg) => this.pushNotification({
+      title: msg,
+      subTitle: null,
+      type: 'normal'
+    }));
+    ipcRenderer.on('errorMsg', (e, msg) => this.pushNotification({
+      title: msg,
+      subTitle: null,
+      type: 'danger'
+    }));
     ipcRenderer.on('parsingProgress', (e, [currentIndex, total]) => {
       if (!this.progressNotificationSent) {
         this.progressNotificationSent = true;

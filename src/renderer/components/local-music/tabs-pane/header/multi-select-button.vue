@@ -30,14 +30,14 @@ export default {
       this.clearSelectedTracks();
       const trackOptions = document.querySelector('.trackOptions');
       if (this.multiSelectOn) {
-        trackOptions.style.height = `0px`;
-        trackOptions.style.top = `300px`;
-        trackOptions.style.left = `600px`;
+        trackOptions.style.height = '0px';
+        trackOptions.style.top = '300px';
+        trackOptions.style.left = '600px';
         setTimeout(() => {
-          trackOptions.style.height = `225px`;
+          trackOptions.style.height = '225px';
         }, 100);
       } else {
-        trackOptions.style.height = `0px`;
+        trackOptions.style.height = '0px';
       }
     }
   }
