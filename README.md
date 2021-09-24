@@ -2,7 +2,10 @@
 ![Logo](https://i.ibb.co/ry3w6cw/flb-website-min.jpg)
 
     
-# FLB Music
+<h1 align="center">FLB Music</h1>
+
+![build](https://img.shields.io/github/workflow/status/FLB-Music/FLB-Music-Player/Build%20release?style=for-the-badge)
+![version](https://img.shields.io/github/package-json/v/FLB-Music/FLB-Music-Player?style=for-the-badge)
 
 A Beautiful🌹 and Feature Rich💎 Cross Platform Music Player and Downloader.
 Visit 🔗https://fellthebeat.xyz to download ⬇
@@ -24,7 +27,6 @@ Visit 🔗https://fellthebeat.xyz to download ⬇
   
 ## Screenshots 😎
 
-​
 ![albums](https://i.ibb.co/ChZDKqf/albums-1-min.jpg)
 ![albums](https://i.ibb.co/P1JHBgp/albums-2-min.jpg)
 ![artists](https://i.ibb.co/6yBt2hZ/artists-1-min.jpg)
@@ -54,13 +56,13 @@ Visit 🔗https://fellthebeat.xyz to download ⬇
 Clone the project
 
 ```bash
-  git clone https://github.com/Patrick-web/FLB-Music-Player-Official
+  git clone https://github.com/FLB-Music/FLB-Music-Player
 ```
 
 Go to the project directory
 
 ```bash
-  cd FLB-Music-Player-Official
+  cd FLB-Music-Player
 ```
 
 Install dependencies
@@ -87,7 +89,7 @@ Please adhere to this project's `code of conduct`.
   
 ## Feedback
 
-If you have any feedback, please reach out to us at https://t.me/flbmusiccommunity
+If you have any feedback, please reach out to us at [![Telegram Group](https://genx.vercel.app/api/icon/telegram)](https://t.me/flbmusiccommunity)
 
   
 
