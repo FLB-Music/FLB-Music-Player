@@ -1,5 +1,5 @@
 <template>
-  <div class="tab addedTracksTab">
+  <div @scroll="virtualize($event)" class="tab addedTracksTab">
     <div
       v-if="addedTracks.length === 0"
       class="flex-col center-a"
@@ -9,7 +9,7 @@
       <p>
         💬 Head over to ⚙Settings⚙ and Add➕ the Folder📂 where your music is at
       </p>
-      <p>💬 Or Just Download⬇ some with FLBing💎</p>
+      <!-- <p>💬 Or Just Download⬇ some with FLBing💎</p> -->
     </div>
     <virtual-list
       v-if="0"
@@ -20,11 +20,8 @@
       :data-component="card"
       :estimate-size="280"
     />
-    <div
-      class="tracksWrapper"
-      @click="addTracksToQueue"
-      @scroll="virtualize($event)"
-    >
+    <div :style="{ height: compHeight }" class="filler"></div>
+    <div class="tracksWrapper" @click="addTracksToQueue">
       <track-card
         v-for="(track, index) in tracksToRender"
         :key="track.fileLocation"
@@ -33,21 +30,15 @@
       />
     </div>
     <div class="customScrollBar">
-      <div
-        class="l"
-        :style="{ top: scrollPercent }"
-      />
-      <div
-        class="wrpper"
-        style="height: 100%"
-      >
+      <div class="l" :style="{ top: scrollPercent }" />
+      <div class="wrapper" style="height: 100%">
         <input
           type="range"
           value="0"
           min="0"
           max="100"
           @input="scrollContainer($event)"
-        >
+        />
       </div>
     </div>
     <track-card v-if="0" />
@@ -55,8 +46,8 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
-import { removeDuplicates } from '@/shared-utils';
+import { mapMutations, mapState } from 'vuex';
+import { removeDuplicates, sortArrayOfObjects } from '@/shared-utils';
 import TrackCard from '@/renderer/components/root/track/track-card.vue';
 
 export default {
@@ -71,12 +62,36 @@ export default {
       scrollDirection: 'Down',
       removedChucks: [],
       scrollAmountNotRepeated: 0,
-      scrollPercent: '0%'
+      scrollPercent: '0%',
+      offset: 0
     };
   },
   computed: {
     addedTracks() {
-      return this.$store.state.TabsManager.tabsData.addedTracks;
+      const sortParameter = this.$store.state.sortParameter;
+      const tracks = [...this.$store.state.TabsManager.tabsData.addedTracks];
+      sortArrayOfObjects(tracks, sortParameter);
+      return tracks;
+    },
+    flipSortOrder() {
+      return this.$store.state.flipSortOrder;
+    },
+    sortParameter() {
+      return this.$store.state.sortParameter;
+    },
+    compHeight() {
+      const number = this.addedTracks.length + 9;
+      const height = number * 20;
+      return `${height}px`;
+    }
+  },
+  watch: {
+    sortParameter() {
+      this.virtualize();
+    },
+    flipSortOrder() {
+      this.addedTracks.reverse();
+      this.virtualize();
     }
   },
   methods: {
@@ -88,82 +103,29 @@ export default {
     addTracksToQueue() {
       this.overWriteCustomQueue(this.addedTracks);
     },
-    virtualize(e) {
-      const scrollInfo = {
-        scrollHeight: e.srcElement.scrollHeight,
-        scrollTop: e.srcElement.scrollTop
-      };
-      const scrollAmount = Math.trunc(
-        (scrollInfo.scrollTop / scrollInfo.scrollHeight) * 100
-      );
-      if (this.scrollAmountNotRepeated === scrollAmount) {
-        return;
-      }
-      this.scrollAmountNotRepeated = scrollAmount;
-
-      if (scrollInfo.scrollTop > this.scrollTop) {
-        if (scrollAmount > 50) {
-          // 1. Remove top Ten items from  tracksToRender
-          this.removedChucks.unshift([...this.tracksToRender.slice(0, 5)]);
-          this.tracksToRender.splice(0, 5);
-
-          // 2. Get 5 items from addedTracks and add them to the end of tracksRendered
-          const tenNotRenderedTracks = this.addedTracks.slice(
-            this.startingIndexForTracksNotRendered,
-            this.startingIndexForTracksNotRendered + 5
-          );
-          this.startingIndexForTracksNotRendered += 5;
-          setTimeout(() => {
-            this.tracksToRender = removeDuplicates(
-              [...this.tracksToRender, ...tenNotRenderedTracks],
-              'fileLocation'
-            );
-          }, 0);
-        }
-      } else if (scrollAmount < 20 && this.removedChucks.length) {
-        // 1. Remove last Ten items from  tracksToRender
-        this.tracksToRender.splice(40, 5);
-
-        // 2. Get the last removed chunk of ten and add it to the start of tracksRendered
-        // setTimeout(() => {
-        const tracksToReturnBack = this.removedChucks[0];
-        this.removedChucks.shift();
-        this.startingIndexForTracksNotRendered -= 5;
-        this.tracksToRender = removeDuplicates(
-          [...tracksToReturnBack, ...this.tracksToRender],
-          'fileLocation'
-        );
-        // }, 0);
-      }
-      this.scrollTop = scrollInfo.scrollTop;
-      if (this.tracksToRender.length > 50) {
-        this.tracksToRender.splice(50, this.tracksToRender.length);
-      }
-      this.percentageOfRenderedTracks();
-    },
-    percentageOfRenderedTracks() {
-      let am = Math.trunc(
-        (this.startingIndexForTracksNotRendered / this.addedTracks.length) * 100
-      );
-      am += 10;
-      this.scrollPercent = `${am - 25}%`;
+    virtualize() {
+      const container = document.querySelector('.addedTracksTab');
+      const scrollTop = Math.trunc(container.scrollTop / 20);
+      let start = scrollTop;
+      let end = scrollTop + 16;
+      this.tracksToRender = this.addedTracks.slice(start, end);
     }
   },
   mounted() {
-    this.tracksToRender = this.addedTracks.slice(0, 50);
+    this.tracksToRender = this.addedTracks.slice(0, 16);
   }
 };
 </script>
 
 <style lang="scss">
 .customScrollBar {
-  height: 100%;
+  height: 90%;
   width: 8px;
   position: absolute;
   right: 0px;
   top: 0px;
-  cursor: f;
-  .wrpper {
+  display: none;
+  .wrapper {
     position: relative;
   }
   .l {
@@ -185,15 +147,26 @@ export default {
   }
 }
 .addedTracksTab {
-  position: relative;
+  // position: relative;
   overflow: hidden;
+  overflow-y: scroll !important;
+  width: 102%;
+  margin-left: -10px;
   #tracksTabVirtualList,
   .tracksWrapper {
-    height: 99%;
     overflow: hidden;
-    overflow-y: scroll;
-    margin-right: -20px;
-    padding-right: 30px;
+    position: absolute;
+
+    bottom: 5px;
+    top: 100px;
+    left: 10px;
+    right: 20px;
+    &:last-child {
+      border-bottom: none !important;
+    }
+    .filler {
+      width: 100%;
+    }
   }
   .showHiddenActions {
     background: #0062ff !important;

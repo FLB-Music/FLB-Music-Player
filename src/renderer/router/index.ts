@@ -8,7 +8,7 @@ import RecentsTab from '../views/local-music/tabs/recents-tab.vue';
 import ArtistsTab from '../views/local-music/tabs/artists-tab.vue';
 import AlbumsTab from '../views/local-music/tabs/albums-tab.vue';
 import FoldersTab from '../views/local-music/tabs/folders-tab.vue';
-import PlaylistsTab from '../views/local-music/tabs/playlists-tab.vue';
+import PlaylistsTab from '../views/local-music/tabs/playlist/playlists-tab.vue';
 
 Vue.use(VueRouter);
 

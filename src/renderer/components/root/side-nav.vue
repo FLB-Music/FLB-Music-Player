@@ -21,7 +21,7 @@
         ]"
         @click="giveHope()"
       >
-        <router-link to="/">
+        <router-link to="">
           <img title="FLBing" class="icon" src="@icon/meld.svg" />
           <p v-if="!isCollapsed">Meld</p>
         </router-link>

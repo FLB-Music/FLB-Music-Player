@@ -19,16 +19,30 @@
   </div>
 </template>
 <script>
+import { sortArrayOfObjects } from '@/shared-utils';
 import { mapMutations } from 'vuex';
 export default {
   name: 'RecentsTab',
-
   data() {
     return {};
   },
+  watch: {
+    flipSortOrder() {
+      //Make It Work
+      this.recentlyPlayedTracks.reverse();
+    }
+  },
   computed: {
     recentlyPlayedTracks() {
-      return this.$store.state.TabsManager.tabsData.recentlyPlayedTracks;
+      const sortParameter = this.$store.state.sortParameter;
+      const tracks = [
+        ...this.$store.state.TabsManager.tabsData.recentlyPlayedTracks
+      ];
+      sortArrayOfObjects(tracks, sortParameter);
+      return tracks;
+    },
+    flipSortOrder() {
+      return this.$store.state.flipSortOrder;
     }
   },
   methods: {

@@ -106,7 +106,7 @@ async function createWindow() {
     appIsFocused = true;
   });
   win.on('close', () => {
-    saveAppData();
+    // do some stuff
   });
 
   win.webContents.on('new-window', function (e, url) {
@@ -145,7 +145,6 @@ app.on('window-all-closed', () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
-    saveAppData();
     app.quit();
   }
 });
@@ -188,11 +187,13 @@ ipcMain.on('getFirstTracks', async () => {
   refreshTracks();
 });
 ipcMain.on('initializeApp', async () => {
+  //Handle Open With FLB. Parse the files that is called as a second argument when running FLB
   if (process.argv[1] && isValidFileType(process.argv[1])) {
     const newTrack = await createParsedTrack(process.argv[1]);
     win.webContents.send('newTrack', newTrack);
     win.webContents.send('playThisTrack', newTrack);
   }
+  //Remember to fix
   const processedFiles = fileTracker.getTracks;
   const playlists = playlistsTracker.getPlaylists;
   const recentlyPlayedTracks = playbackStats.recentlyPlayedTracks;
@@ -291,6 +292,9 @@ ipcMain.on('updateSettings', async (e, payload: SettingsType) => {
 
 ipcMain.on('updateTags', async (e, payload) => {
   win.webContents.send('removeSelectedTracks', '');
+  console.log("---------Payload----------");
+  console.log(payload);
+  console.log("---------Payload----------");
   const isSuccess = await writeTags(
     payload.track.fileLocation,
     payload.tagChanges
@@ -324,8 +328,7 @@ ipcMain.on('maximize', () => {
   }
 });
 ipcMain.on('closeWindow', () => {
-  saveAppData();
-  win.close();
+  app.quit()
 });
 
 ipcMain.on('downloadArtistPicture', (e, payload) => {
@@ -369,18 +372,6 @@ ipcMain.on('downloadBingTrack', (e, payload) => {
 ipcMain.on('sendUsageStats', () => {
   usageTracker.sendUsageData()
 })
-// ipcMain.on('cancelBingDownload', (e) => {
-//     downloaderManager.cancelCurrentDownload()
-// })
-
-// ipcMain.on('removeFromDownloadQueue', (e, payload) => {
-//     downloaderManager.removeFromDownloadQueue(payload)
-// })
-
-// ipcMain.on('internetConnectionLost', (e) => {
-//     console.log("internetConnectionLost");
-//     downloaderManager.handleInternetLost()
-// })
 
 ipcMain.on('checkForUpdate', () => {
   sendMessageToRenderer('normalMsg', 'Checking For Update');
@@ -529,11 +520,7 @@ export async function writeTags(
   return isSuccessFull;
 }
 
-function saveAppData() {
-  fileTracker.saveChanges();
-  settings.saveSettings();
-  playbackStats.saveChanges();
-}
+
 
 function checkForUpdates() {
   autoUpdater.checkForUpdatesAndNotify();

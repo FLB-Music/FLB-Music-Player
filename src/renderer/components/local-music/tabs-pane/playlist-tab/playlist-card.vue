@@ -6,23 +6,15 @@
       class="centerContents"
       @click="openPlaylist"
     >
-      <img
-        style="width: 140px"
-        src="@img/add-illustration.svg"
-      >
-      <p style="font-family: inherit">
-        Empty Playlist
-      </p>
+      <img style="width: 140px" src="@img/add-illustration.svg" />
+      <p style="font-family: inherit">Empty Playlist</p>
     </div>
     <div class="playlist_header">
       <p class="playlist_name bg1">
         {{ playlist.name }}
       </p>
 
-      <div
-        v-if="playlist.tracks.length !== 0"
-        class="playlist_actions"
-      >
+      <div v-if="playlist.tracks.length !== 0" class="playlist_actions">
         <base-button
           icon="book-open"
           title="Open Playlist"
@@ -92,7 +84,7 @@ export default {
 
 <style lang="scss">
 .PlaylistCard {
-  align-self: center;
+  align-self: start;
   justify-self: center;
   border-radius: 20px;
   .playlist_name {

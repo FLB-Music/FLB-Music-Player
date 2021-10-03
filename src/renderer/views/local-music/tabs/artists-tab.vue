@@ -91,7 +91,7 @@
               </div>
               <div class="content">
                 <track-card
-                  v-for="(track, index) in selectedGroup.tracks"
+                  v-for="(track, index) in artistTracks"
                   :key="track.path"
                   :index="index"
                   :source="track"
@@ -107,7 +107,7 @@
 
 <script>
 import { mapActions, mapMutations } from 'vuex';
-import { removeDuplicates } from '@/shared-utils';
+import { removeDuplicates, sortArrayOfObjects } from '@/shared-utils';
 import { bingAnArtist } from '@/renderer/global-activities/bing-artist';
 
 export default {
@@ -132,6 +132,7 @@ export default {
       'setDownloadedArtistInfo'
     ]),
     ...mapActions(['generateArtistsData']),
+
     addTracksToQueue() {
       this.UIcontrollerSetPropertyValue({
         property: 'currentSidePaneTab',
@@ -188,6 +189,15 @@ export default {
     },
     selectedGroup() {
       return this.$store.state.TrackSelector.selectedGroup;
+    },
+    artistTracks() {
+      const sortParameter = this.$store.state.sortParameter;
+      const tracks = this.selectedGroup.tracks;
+      sortArrayOfObjects(tracks, sortParameter);
+      return tracks;
+    },
+    flipSortOrder() {
+      return this.$store.state.flipSortOrder;
     },
     artistPicture() {
       return (

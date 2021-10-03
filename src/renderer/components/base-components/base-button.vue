@@ -72,7 +72,8 @@ button {
     white-space: nowrap;
   }
   &:active {
-    border: 2px solid rgb(255, 255, 255);
+    padding: 10px;
+    // border: 2px solid rgb(255, 255, 255);
   }
   .btnLoaderWrapper {
     width: 100%;

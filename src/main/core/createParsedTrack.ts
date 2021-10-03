@@ -6,7 +6,7 @@ import { paths } from '../modules/Paths';
 import { fileTracker, win } from '../../background';
 import { extractTitleAndArtist, removeMIME, writeImageBuffer } from '../utils';
 
-export function createParsedTrack (fileLocation: string) {
+export function createParsedTrack(fileLocation: string) {
   return new Promise<TrackType>((resolve, reject) => {
     const track: TrackType = {
       r_fileLocation: '',
@@ -28,10 +28,10 @@ export function createParsedTrack (fileLocation: string) {
         path: path.parse(fileLocation).dir
       }
     };
-    console.log('Parsing ' + fileLocation);
     track.fileLocation = fileLocation;
     track.r_fileLocation = 'file://' + fileLocation;
     track.fileName = path.parse(fileLocation).name;
+    console.log('Parsing: ' + track.fileName);
     NodeID3.read(fileLocation, async (err: any, tags: any) => {
       if (tags && tags.image && tags.image.imageBuffer) {
         tags.image.mime = tags.image.mime
@@ -43,9 +43,6 @@ export function createParsedTrack (fileLocation: string) {
         );
         writeImageBuffer(tags.image.imageBuffer, albumArtPath);
         track.albumArt = albumArtPath;
-        // track.albumArt = `data:${tags.image.mime
-        // 	};base64,${tags.image.imageBuffer.toString("base64")}`;
-        // code to write image
       }
       track.title = tags.title;
       track.extractedTitle = extractTitleAndArtist(track.fileName).title;

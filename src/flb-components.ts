@@ -65,7 +65,8 @@ export { default as albumsTab } from './renderer/views/local-music/tabs/albums-t
 export { default as artistsTab } from './renderer/views/local-music/tabs/artists-tab.vue';
 export { default as foldersTab } from './renderer/views/local-music/tabs/folders-tab.vue';
 export { default as homeTab } from './renderer/views/local-music/tabs/home-tab.vue';
-export { default as playlistsTab } from './renderer/views/local-music/tabs/playlists-tab.vue';
+export { default as playlistsTab } from './renderer/views/local-music/tabs/playlist/playlists-tab.vue';
+export { default as PlaylistSliverbarActions } from './renderer/views/local-music/tabs/playlist/playlist-sliverbar-actions.vue';
 export { default as recentsTab } from './renderer/views/local-music/tabs/recents-tab.vue';
 export { default as tracksTab } from './renderer/views/local-music/tabs/tracks-tab.vue';
 

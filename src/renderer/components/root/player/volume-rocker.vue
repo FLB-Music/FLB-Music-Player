@@ -70,7 +70,7 @@ export default {
   height: 6px;
   border-radius: 10px;
   cursor: pointer;
-
+  padding: 10px;
   .rocker_wrapper {
     width: 100%;
     height: 100%;

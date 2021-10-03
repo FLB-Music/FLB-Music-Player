@@ -18,22 +18,30 @@ Vue.use(Vuex);
 
 const store: StoreOptions<any> = {
   state: {
-    appIsOnline: false
+    appIsOnline: false,
+    sortParameter: "dateAdded",
+    flipSortOrder: false,
   },
   mutations: {
-    seIstOnlineState (state: any, payload: boolean) {
+    seIstOnlineState(state: any, payload: boolean) {
       state.appIsOnline = payload;
+    },
+    changeSortParameter(state: any, payload) {
+      state.sortParameter = payload
+    },
+    reverseSortOrder(state: any) {
+      state.flipSortOrder = !state.flipSortOrder
     }
   },
   actions: {
-    sortTracks ({ state }, payload: string) {
+    sortTracks({ state }, payload: string) {
       sortArrayOfObjects(TabsManager.state.tabsData.addedTracks, payload);
       console.log(state);
     },
-    toggleSortMode () {
+    toggleSortMode() {
       TabsManager.state.tabsData.addedTracks.reverse();
     },
-    removeSelectedTracksFromAppState ({ state }) {
+    removeSelectedTracksFromAppState({ state }) {
       TrackSelector.state.selectedTracks.forEach((selectedTrack: TrackType) => {
         state.tabsData.addedTracks.filter(
           (track: TrackType) => track.fileLocation === selectedTrack.fileLocation

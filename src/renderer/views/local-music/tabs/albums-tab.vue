@@ -1,15 +1,9 @@
 <template>
   <div class="tab groupedContentTab">
-    <div
-      v-if="albums.length === 0"
-      class="loadingArea"
-    >
+    <div v-if="albums.length === 0" class="loadingArea">
       <div class="loadingIndicator" />
     </div>
-    <div
-      v-if="!selectedGroup"
-      class="groupCards grid_auto"
-    >
+    <div v-if="!selectedGroup" class="groupCards grid_auto">
       <album-card
         v-for="album in albums"
         :key="album.name"
@@ -21,10 +15,7 @@
       enter-active-class="animated fadeInUp extrafaster"
       leave-active-class="animated fadeOutDown extrafaster"
     >
-      <div
-        v-if="selectedGroup"
-        class="selectedGroup bg1"
-      >
+      <div v-if="selectedGroup" class="selectedGroup bg1">
         <base-button
           id="backToUnfilteredItems"
           icon-weight="regular"
@@ -47,11 +38,7 @@
               </p>
             </div>
             <div class="sliverBarActions">
-              <base-button
-                icon="play"
-                text="Play"
-                @click.native="playAll"
-              />
+              <base-button icon="play" text="Play" @click.native="playAll" />
               <base-button
                 icon="queue"
                 text="Queue"
@@ -62,15 +49,15 @@
           <img
             class="coverArt"
             :src="'file://' + selectedGroup.tracks[0].albumArt"
-          >
+          />
           <img
             id="blurred"
             :src="'file://' + selectedGroup.tracks[0].albumArt"
-          >
+          />
         </div>
         <div class="cardsWrapper">
           <track-card
-            v-for="(track, index) in selectedGroup.tracks"
+            v-for="(track, index) in albumTracks"
             :key="track.path"
             :index="index"
             :source="track"
@@ -82,6 +69,7 @@
 </template>
 
 <script>
+import { sortArrayOfObjects } from '@/shared-utils';
 import { mapActions, mapMutations } from 'vuex';
 
 export default {
@@ -139,12 +127,26 @@ export default {
       this.findAndGoToArtist(artist);
     }
   },
+  watch: {
+    flipSortOrder() {
+      this.albumTracks.reverse();
+    }
+  },
   computed: {
     albums() {
       return this.$store.state.TabsManager.tabsData.albums;
     },
     selectedGroup() {
       return this.$store.state.TrackSelector.selectedGroup;
+    },
+    albumTracks() {
+      const sortParameter = this.$store.state.sortParameter;
+      const tracks = this.selectedGroup.tracks;
+      sortArrayOfObjects(tracks, sortParameter);
+      return tracks;
+    },
+    reverseSortOrder() {
+      return this.$store.state.reverseSortOrder;
     }
   },
   mounted() {

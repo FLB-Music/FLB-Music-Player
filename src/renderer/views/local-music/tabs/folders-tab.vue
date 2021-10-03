@@ -71,7 +71,7 @@
         </div>
         <div class="cardsWrapper">
           <track-card
-            v-for="(track, index) in selectedGroup.tracks"
+            v-for="(track, index) in folderTracks"
             :key="track.path"
             :index="index"
             :source="track"
@@ -83,6 +83,7 @@
 </template>
 
 <script>
+import { sortArrayOfObjects } from '@/shared-utils';
 import { mapActions, mapMutations } from 'vuex';
 
 export default {
@@ -125,12 +126,26 @@ export default {
       });
     }
   },
+  watch: {
+    flipSortOrder() {
+      this.folderTracks.reverse();
+    }
+  },
   computed: {
     folders() {
       return this.$store.state.TabsManager.tabsData.folders;
     },
     selectedGroup() {
       return this.$store.state.TrackSelector.selectedGroup;
+    },
+    folderTracks() {
+      const sortParameter = this.$store.state.sortParameter;
+      const tracks = this.selectedGroup.tracks;
+      sortArrayOfObjects(tracks, sortParameter);
+      return tracks;
+    },
+    flipSortOrder() {
+      return this.$store.state.flipSortOrder;
     },
     renderedTracks() {
       return this.$store.state.renderedTracks;

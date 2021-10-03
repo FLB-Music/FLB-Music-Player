@@ -12,16 +12,16 @@
         :key="option.name"
         extra-class="param"
         :text="option.name"
-        :active="selectedSortOption === option.name"
+        :active="sortParameter === option.value"
         :transparent="true"
-        @click.native.stop="sortBy(option.value)"
+        @click.native.stop="changeSortParameter(option.value)"
       />
       <base-button
         extra-class="param"
         text="Flip"
         :active="tracksAreReversed"
         :transparent="true"
-        @click.native.stop="reverseTracks"
+        @click.native.stop="reverseSortOrder"
       />
     </section>
   </div>
@@ -44,18 +44,13 @@ export default {
       tracksAreReversed: false
     };
   },
-  methods: {
-    ...mapMutations(['reverseAddedTracksArray']),
-    ...mapActions(['sortTracks', 'toggleSortMode']),
-    reverseTracks() {
-      this.tracksAreReversed = !this.tracksAreReversed;
-      this.toggleSortMode();
-    },
-    sortBy(param) {
-      console.log(param);
-      this.selectedSortOption = param;
-      this.sortTracks(param);
+  computed: {
+    sortParameter() {
+      return this.$store.state.sortParameter;
     }
+  },
+  methods: {
+    ...mapMutations(['changeSortParameter', 'reverseSortOrder'])
   }
 };
 </script>

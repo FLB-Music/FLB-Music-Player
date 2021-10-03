@@ -1,9 +1,6 @@
 <template>
   <div class="PlaylistsTab tab">
-    <div
-      v-if="!selectedGroup"
-      class="playlistCards"
-    >
+    <div v-if="!selectedGroup" class="playlistCards">
       <playlist-card
         v-for="playlist in playlists"
         :key="playlist.name"
@@ -14,10 +11,7 @@
       enter-active-class="animated fadeInUp extrafaster"
       leave-active-class="animated fadeOutDown extrafaster"
     >
-      <div
-        v-if="selectedGroup"
-        class="selectedGroup bg1"
-      >
+      <div v-if="selectedGroup" class="selectedGroup bg1">
         <base-button
           id="backToUnfilteredItems"
           extra-class="blurred_bg"
@@ -26,16 +20,14 @@
           @click.native="deSelectGroup"
         />
         <div class="sliverBar">
+          <letter-card :text="selectedGroup.name.charAt(0)" />
           <div class="images_flex">
             <div
               v-for="albumArt in imageFlex"
               :key="albumArt"
               class="flex_image_wrapper"
             >
-              <img
-                class="flexImage"
-                :src="'file://' + albumArt"
-              >
+              <img class="flexImage" :src="'file://' + albumArt" />
             </div>
           </div>
 
@@ -46,42 +38,25 @@
           />
           <div class="sliverBarFooter">
             <div class="groupedCard_info">
-              <p
-                style="margin-bottom: 10px"
-                class="groupedInfo_title"
-              >
+              <p style="margin-bottom: 10px" class="groupedInfo_title">
                 {{ selectedGroup.name }}
               </p>
             </div>
 
-            <div class="sliverBarActions">
-              <base-button
-                icon="queue"
-                text="Queue"
-                extra-class="blurred_bg"
-                @click.native="addPlaylistToQueue"
-              />
-              <base-button
-                v-if="selectedGroup.name !== 'Favorites'"
-                icon="pencil-simple"
-                text="Edit"
-                extra-class="blurred_bg"
-                @click.native="showPlaylistEditor = !showPlaylistEditor"
-              />
-              <base-button
-                v-if="selectedGroup.name !== 'Favorites'"
-                icon="trash-simple"
-                text="Delete"
-                extra-class="blurred_bg"
-                @click.native="deleteCurrentPlaylist"
-              />
-            </div>
+            <playlist-sliverbar-actions
+              :playlistName="selectedGroup.name"
+              :editorOn="showPlaylistEditor"
+              v-on:showPlaylistEditor="showPlaylistEditor = true"
+              v-on:closePlaylistEditor="showPlaylistEditor = false"
+              v-on:deleteCurrentPlaylist="deleteCurrentPlaylist"
+              v-on:addPlaylistToQueue="addPlaylistToQueue"
+            />
           </div>
         </div>
         <div class="cardsWrapper">
           <transition-group leave-active-class="animated slideOutDown fast">
             <track-card
-              v-for="(track, index) in selectedGroup.tracks"
+              v-for="(track, index) in playlistsTracks"
               :key="track.fileLocation"
               :index="index"
               :source="track"
@@ -95,7 +70,7 @@
 
 <script>
 import { mapMutations } from 'vuex';
-import { removeDuplicates } from '@/shared-utils';
+import { removeDuplicates, sortArrayOfObjects } from '@/shared-utils';
 
 export default {
   name: 'PlaylistsTab',
@@ -139,9 +114,23 @@ export default {
       this.showPlaylistEditor = false;
     }
   },
+  watch: {
+    flipSortOrder() {
+      this.playlistsTracks.reverse();
+    }
+  },
   computed: {
     playlists() {
       return this.$store.state.TabsManager.tabsData.playlists;
+    },
+    playlistsTracks() {
+      const sortParameter = this.$store.state.sortParameter;
+      const tracks = this.selectedGroup.tracks;
+      sortArrayOfObjects(tracks, sortParameter);
+      return tracks;
+    },
+    flipSortOrder() {
+      return this.$store.state.flipSortOrder;
     },
     selectedTracks() {
       return this.$store.state.TrackSelector.selectedTracks;
@@ -153,6 +142,9 @@ export default {
       return removeDuplicates(this.selectedGroup.tracks, 'album')
         .filter(track => track.albumArt)
         .map(track => track.albumArt);
+    },
+    defaultAlbumArt() {
+      return `url(${require('@img/flbdefault-cover.png')})`;
     }
   }
 };
@@ -177,13 +169,23 @@ export default {
     overflow: hidden;
     overflow-y: scroll;
   }
+  .LetterCard {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    h1 {
+      font-size: 8rem;
+    }
+  }
   .images_flex {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.151);
     // display: grid;
     // grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
     display: flex;

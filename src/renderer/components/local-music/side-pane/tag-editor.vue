@@ -1,9 +1,7 @@
 <template>
   <div class="TagEditor widget blurred_bg blur10">
     <div class="widget_header">
-      <h1 class="widget_title">
-        Tag Editor
-      </h1>
+      <h1 class="widget_title">Tag Editor</h1>
       <base-button
         icon="x"
         extra-class="widget_close shrink_icon circle shrink8"
@@ -13,21 +11,12 @@
     </div>
     <div class="trackTags">
       <div class="tag flex-col center-a">
-        <img
-          id="coverArtTag"
-          :src="'file://' + targetTrack.albumArt"
-        >
-        <p
-          v-if="!targetTrack.albumArt"
-          style="margin-top: 10px"
-        >
+        <img id="coverArtTag" :src="'file://' + targetTrack.albumArt" />
+        <p v-if="!targetTrack.albumArt" style="margin-top: 10px">
           No Album Art 🖼
         </p>
         <div class="grid2 gap10">
-          <base-button
-            text="Import Picture"
-            @click.native="importCover"
-          />
+          <base-button text="Import Picture" @click.native="importCover" />
           <base-button
             text="Search Online"
             @click.native="UIcontrollerToggleProperty('showImageSearcher')"
@@ -54,7 +43,7 @@
           v-model="newTitle"
           placeholder="New Title"
           class="inputElem"
-        >
+        />
       </div>
       <div class="tag bg1">
         <div class="flex-col gap10">
@@ -68,7 +57,7 @@
           v-model="newArtist"
           placeholder="New Artist"
           class="inputElem"
-        >
+        />
       </div>
       <div class="tag bg1">
         <div class="flex-col gap10">
@@ -82,7 +71,7 @@
           v-model="newAlbum"
           placeholder="New Album"
           class="inputElem"
-        >
+        />
       </div>
     </div>
     <base-button
@@ -131,7 +120,9 @@ export default {
       const newAlbumArt = document.querySelector('#coverArtTag');
       let newAlbumArtSrc;
       if (newAlbumArt) {
-        newAlbumArtSrc = newAlbumArt.src;
+        newAlbumArtSrc = decodeURI(newAlbumArt.src)
+          .replace('file:///', '')
+          .replace(/\//g, '\\');
       }
       const tags = {};
       if (this.newTitle) {
@@ -144,8 +135,7 @@ export default {
         tags.album = this.newAlbum;
       }
       if (newAlbumArtSrc && this.targetTrack.albumArt !== newAlbumArtSrc) {
-        tags.APIC = newAlbumArtSrc.replace('file:///', '');
-        console.log(tags.APIC);
+        tags.APIC = newAlbumArtSrc;
       }
       const data = {
         track: this.targetTrack,

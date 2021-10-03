@@ -5,15 +5,11 @@
       class="inputElem"
       type="text"
       placeholder="New Playlist Name"
-    >
+    />
     <base-button
       v-if="newPlaylistName"
       text="Save"
       @click.native="emitNewPlaylistName"
-    />
-    <base-button
-      text="Cancel"
-      @click.native="closeWidget"
     />
   </div>
 </template>
@@ -43,7 +39,7 @@ export default {
   position: absolute;
   border-radius: 20px;
   bottom: 50px;
-  right: 100px;
+  right: 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;

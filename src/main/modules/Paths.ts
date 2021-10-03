@@ -7,12 +7,17 @@ const ALBUM_ART_FOLDER = path.join(APP_DATA_FOLDER, 'Album Art');
 const ARTIST_PICTURE_FOLDER = path.join(APP_DATA_FOLDER, 'Artist Pictures');
 const MUSIC_FOLDER = path.join(os.homedir(), 'Music');
 const FLBING_FOLDER = path.join(MUSIC_FOLDER, 'FLBing');
+try {
 
-if (!fs.existsSync(ALBUM_ART_FOLDER)) {
-  fs.mkdirSync(ALBUM_ART_FOLDER);
-}
-if (!fs.existsSync(ARTIST_PICTURE_FOLDER)) {
-  fs.mkdirSync(ARTIST_PICTURE_FOLDER);
+  if (!fs.existsSync(ALBUM_ART_FOLDER)) {
+    fs.mkdirSync(ALBUM_ART_FOLDER);
+  }
+  if (!fs.existsSync(ARTIST_PICTURE_FOLDER)) {
+    fs.mkdirSync(ARTIST_PICTURE_FOLDER);
+  }
+} catch (error) {
+  console.log("Error Creating Folders");
+  console.log(error);
 }
 
 export const paths = {
