@@ -1,11 +1,11 @@
 {
   "name": "flbmusic",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "private": true,
   "description": "A Beautiful and Feature Rich Music Player",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Patrick-web/FLB-Music-Player-Official.git"
+    "url": "git+https://github.com/FLB-Music/FLB-Music-Player.git"
   },
   "author": {
     "name": "Patrick Waweru (Just Patrick)",
