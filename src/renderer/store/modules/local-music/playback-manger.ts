@@ -86,7 +86,7 @@ const mutations = {
     state.customQueue = removeDuplicates(state.customQueue, 'fileLocation');
   },
   removeTrackFromCustomQueue(state: any, index: number) {
-    state.customQueue.splice(index - 1, 1);
+    state.customQueue.splice(index, 1);
   },
   clearCustomQueue(state: any) {
     state.customQueue = [];
