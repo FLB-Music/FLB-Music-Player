@@ -1,8 +1,15 @@
 <template>
   <div class="groupedContentTab bingPage blurred_bg blur30 bingAlbumPage">
     <div class="sliverBar">
-      <img id="blurred" class="coverArt" :src="albumInfo.cover" />
-      <img class="coverArt" :src="albumInfo.cover" />
+      <img
+        id="blurred"
+        class="coverArt"
+        :src="albumInfo.cover"
+      >
+      <img
+        class="coverArt"
+        :src="albumInfo.cover"
+      >
       <div class="sliverBarFooter">
         <div class="groupedCard_info">
           <p class="groupedInfo_title">

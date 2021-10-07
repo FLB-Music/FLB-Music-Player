@@ -9,7 +9,10 @@
         {{ currentNotification.subTitle }}
       </p>
     </div>
-    <base-icon class="closeNotification" icon="x" />
+    <base-icon
+      class="closeNotification"
+      icon="x"
+    />
   </div>
 </template>
 

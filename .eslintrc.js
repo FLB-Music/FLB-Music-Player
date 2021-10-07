@@ -12,7 +12,7 @@ const rules = {
     }
   ],
   'comma-dangle': ['error', 'never'],
-  'eqeqeq': 'warn',
+  eqeqeq: 'warn',
   'func-names': 0,
   'import/no-named-as-default': 0,
   indent: 'off',
@@ -88,9 +88,13 @@ const rules = {
   'space-unary-ops': 'error',
   'spaced-comment': 'error',
   'template-curly-spacing': 'error',
-  'vue/component-name-in-template-casing': ['error', 'kebab-case', {
-    registeredComponentsOnly: false
-  }],
+  'vue/component-name-in-template-casing': [
+    'error',
+    'kebab-case',
+    {
+      registeredComponentsOnly: false
+    }
+  ],
   'vue/order-in-components': !isDev ? 'warn' : 'off',
   'vue/require-default-prop': !isDev ? 'warn' : 'off'
 };

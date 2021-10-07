@@ -7,7 +7,11 @@
       :class="[currentTab === tab.name ? 'activeTab' : '', 'tabBtn bg1']"
       @click="routeTo(tab)"
     >
-      <base-icon :icon="tab.icon" class="icon" :size="16" />
+      <base-icon
+        :icon="tab.icon"
+        class="icon"
+        :size="16"
+      />
       <p>{{ tab.name }}</p>
     </div>
   </div>
@@ -52,7 +56,7 @@ export default {
     }
   },
   mounted() {
-    ipcRenderer.on('userSettings', (e, payload) => {
+    ipcRenderer.on('userSettings', () => {
       setTimeout(() => {
         const defaultTabIndex = this.tabs.findIndex(tab => tab.name === this.defaultTab);
         this.routeTo(this.tabs[defaultTabIndex]);

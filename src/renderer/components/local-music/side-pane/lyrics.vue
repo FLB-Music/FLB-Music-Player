@@ -5,8 +5,15 @@
       bigLyrics ? 'bigLyrics pos-fix left0 blurred_bg blur40 round15 ml10' : ''
     ]"
   >
-    <div v-if="!playingTrackLyrics" class="centerContents" style="height: 90%">
-      <img width="200px" src="@img/no_lyrics.svg" />
+    <div
+      v-if="!playingTrackLyrics"
+      class="centerContents"
+      style="height: 90%"
+    >
+      <img
+        width="200px"
+        src="@img/no_lyrics.svg"
+      >
       <p
         v-if="allLyrics.length === 0"
         style="text-align: center; font-family: inherit"
@@ -14,17 +21,27 @@
         Comeback here for lyrics. A small dose of internet and bam💥 I'll have
         all the lyrics
       </p>
-      <p v-else style="text-align: center; font-family: inherit">
+      <p
+        v-else
+        style="text-align: center; font-family: inherit"
+      >
         I haven't found the lyrics for this one, yet
       </p>
     </div>
-    <div v-if="playingTrackLyrics" class="lyrics">
+    <div
+      v-if="playingTrackLyrics"
+      class="lyrics"
+    >
       <div
         v-for="(verse, index) in playingTrackLyrics"
         :key="index"
         class="verse"
       >
-        <p class="line" v-for="(line, index) in verseLines(verse)" :key="index">
+        <p
+          v-for="(line, lineIndex) in verseLines(verse)"
+          :key="lineIndex"
+          class="line"
+        >
           {{ line }}
         </p>
       </div>
@@ -53,7 +70,9 @@
           />
         </div>
         <div class="flex flex-col center-a">
-          <p class="text-small-2">Offset</p>
+          <p class="text-small-2">
+            Offset
+          </p>
           <div class="flex_evenly center-v">
             <base-button
               id="off_minus"
@@ -137,13 +156,13 @@ export default {
     this.autoScroll = false;
     this.getLyrics();
     const audio = document.querySelector('audio');
-    audio.addEventListener('timeupdate', e => {
+    audio.addEventListener('timeupdate', () => {
       if (this.autoScroll) {
         this.autoScrollContainer();
       }
     });
   }
-  //TODO clear set interval
+  // TODO clear set interval
 };
 </script>
 

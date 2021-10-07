@@ -1,5 +1,8 @@
 <template>
-  <div class="sideNav bg2" :class="[isCollapsed ? 'collapsed' : '', 'sideNav']">
+  <div
+    class="sideNav bg2"
+    :class="[isCollapsed ? 'collapsed' : '', 'sideNav']"
+  >
     <div>
       <div
         :class="[
@@ -9,8 +12,14 @@
         @click="switchPage('My Music')"
       >
         <router-link to="/">
-          <base-icon :size="24" class="icon" icon="music-notes-simple" />
-          <p v-if="!isCollapsed">My Music</p>
+          <base-icon
+            :size="24"
+            class="icon"
+            icon="music-notes-simple"
+          />
+          <p v-if="!isCollapsed">
+            My Music
+          </p>
         </router-link>
       </div>
       <div
@@ -22,8 +31,14 @@
         @click="giveHope()"
       >
         <router-link to="">
-          <img title="FLBing" class="icon" src="@icon/meld.svg" />
-          <p v-if="!isCollapsed">Meld</p>
+          <img
+            title="FLBing"
+            class="icon"
+            src="@icon/meld.svg"
+          >
+          <p v-if="!isCollapsed">
+            Meld
+          </p>
         </router-link>
       </div>
     </div>
@@ -33,11 +48,18 @@
         @click="UIcontrollerToggleProperty('showSettings')"
       >
         <a>
-          <base-icon :size="24" class="icon" icon="gear-six" />
+          <base-icon
+            :size="24"
+            class="icon"
+            icon="gear-six"
+          />
           <p v-if="!isCollapsed">Settings</p>
         </a>
       </div>
-      <div class="sideNav-group" @click="refresh">
+      <div
+        class="sideNav-group"
+        @click="refresh"
+      >
         <a>
           <base-icon
             id="refreshLib"

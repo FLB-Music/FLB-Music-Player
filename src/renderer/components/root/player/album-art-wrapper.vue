@@ -1,11 +1,11 @@
 <template>
   <div class="album_art_wrapper">
     <img
-      class="album_art round15"
       id="playing_track_album_art"
+      class="album_art round15"
       :src="albumArt"
       @click="$emit('togglePlayerMode')"
-    />
+    >
   </div>
 </template>
 
@@ -27,16 +27,18 @@ export default {
   methods: {
     setThemeColor() {
       if (this.dynamicAccentColor) {
-        setTimeout(() => {
-          const palette = ColorThief.prototype.getPalette(
+        setTimeout(async () => {
+          const palette = await ColorThief.prototype.getPalette(
             document.querySelector('#playing_track_album_art')
           );
           const app = document.querySelector('#app');
-          app.style.setProperty(
-            '--accentColor',
-            `linear-gradient(120deg,rgba(${palette[0]}),rgba(${palette[1]}))`
-          );
-        }, 100);
+          if (palette[0] && palette[1]) {
+            app.style.setProperty(
+              '--accentColor',
+              `linear-gradient(120deg,rgba(${palette[0]}),rgba(${palette[1]}))`
+            );
+          }
+        }, 50);
       }
     }
   },

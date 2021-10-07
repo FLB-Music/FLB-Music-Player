@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex';
+import { mapMutations } from 'vuex';
 
 export default {
   name: 'SortWidget',

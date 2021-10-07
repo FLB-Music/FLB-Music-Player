@@ -16,7 +16,7 @@ try {
     fs.mkdirSync(ARTIST_PICTURE_FOLDER);
   }
 } catch (error) {
-  console.log("Error Creating Folders");
+  console.log('Error Creating Folders');
   console.log(error);
 }
 
@@ -30,5 +30,5 @@ export const paths = {
   playlistsLocation: path.join(APP_DATA_FOLDER, 'Playlists.json'),
   playbackStatsLocation: path.join(APP_DATA_FOLDER, 'PlaybackStats.json'),
   settingsLocation: path.join(APP_DATA_FOLDER, 'Settings.json'),
-  usageData: path.join(APP_DATA_FOLDER, 'UsageData.json'),
+  usageData: path.join(APP_DATA_FOLDER, 'UsageData.json')
 };

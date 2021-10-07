@@ -5,8 +5,13 @@
       class="centerContents"
       style="height: 100%"
     >
-      <img width="300px" src="@img/no_recents.svg" />
-      <p style="font-family: inherit">You still haven't played anything</p>
+      <img
+        width="300px"
+        src="@img/no_recents.svg"
+      >
+      <p style="font-family: inherit">
+        You still haven't played anything
+      </p>
     </div>
     <div @click="addTracksToQueue">
       <track-card
@@ -21,6 +26,7 @@
 <script>
 import { sortArrayOfObjects } from '@/shared-utils';
 import { mapMutations } from 'vuex';
+
 export default {
   name: 'RecentsTab',
   data() {
@@ -28,13 +34,13 @@ export default {
   },
   watch: {
     flipSortOrder() {
-      //Make It Work
+      // Make It Work
       this.recentlyPlayedTracks.reverse();
     }
   },
   computed: {
     recentlyPlayedTracks() {
-      const sortParameter = this.$store.state.sortParameter;
+      const { sortParameter } = this.$store.state;
       const tracks = [
         ...this.$store.state.TabsManager.tabsData.recentlyPlayedTracks
       ];

@@ -3,11 +3,11 @@ import path from 'path';
 import NodeID3 from 'node-id3';
 import { TrackType } from '@/types';
 import { paths } from '../modules/Paths';
-import { fileTracker, win } from '../../background';
+import { fileTracker } from '../../background';
 import { extractTitleAndArtist, removeMIME, writeImageBuffer } from '../utils';
 
-export function createParsedTrack(fileLocation: string) {
-  return new Promise<TrackType>((resolve, reject) => {
+export function createParsedTrack (fileLocation: string) {
+  return new Promise<TrackType>(resolve => {
     const track: TrackType = {
       r_fileLocation: '',
       fileLocation: '',

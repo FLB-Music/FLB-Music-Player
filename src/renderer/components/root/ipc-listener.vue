@@ -9,24 +9,31 @@
     >
       <defs>
         <filter id="goo">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
+          <feGaussianBlur
+            in="SourceGraphic"
+            stdDeviation="8"
+            result="blur"
+          />
           <feColorMatrix
             in="blur"
             mode="matrix"
             values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9"
             result="goo"
           />
-          <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+          <feComposite
+            in="SourceGraphic"
+            in2="goo"
+            operator="atop"
+          />
         </filter>
       </defs>
     </svg>
   </div>
 </template>
 <script>
-import { ipcRenderer, ipc } from 'electron';
+import { ipcRenderer } from 'electron';
 import { mapActions, mapMutations } from 'vuex';
 import { removeDuplicates } from '@/shared-utils';
-import { sendMessageToNode } from '@/renderer/utils';
 
 export default {
   name: 'IpcListener',
@@ -187,7 +194,7 @@ export default {
       });
     }, 3000);
     setTimeout(() => {
-      console.log('App is ' + this.appIsOnline);
+      console.log(`App is ${this.appIsOnline}`);
       if (this.appIsOnline) {
         // sendMessageToNode('sendUsageStats');
       }

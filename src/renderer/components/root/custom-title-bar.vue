@@ -1,17 +1,43 @@
 <template>
   <div class="customTitleBar bg1">
     <div class="leftSide">
-      <p class="text-small-1 ml10 weight300">FLB Music</p>
+      <p class="text-small-1 ml10 weight300">
+        FLB Music
+      </p>
     </div>
     <div class="ctrls">
-      <div class="ctrl" @click="sendMessage('minimize')">
-        <base-icon class="icon" icon="caret-down" weight="regular" :size="18" />
+      <div
+        class="ctrl"
+        @click="sendMessage('minimize')"
+      >
+        <base-icon
+          class="icon"
+          icon="caret-down"
+          weight="regular"
+          :size="18"
+        />
       </div>
-      <div class="ctrl" @click="sendMessage('maximize')">
-        <base-icon class="icon" icon="caret-up" weight="regular" :size="18" />
+      <div
+        class="ctrl"
+        @click="sendMessage('maximize')"
+      >
+        <base-icon
+          class="icon"
+          icon="caret-up"
+          weight="regular"
+          :size="18"
+        />
       </div>
-      <div id="closeWindow" class="ctrl" @click="sendMessage('closeWindow')">
-        <base-icon class="icon" icon="x" :size="18" />
+      <div
+        id="closeWindow"
+        class="ctrl"
+        @click="sendMessage('closeWindow')"
+      >
+        <base-icon
+          class="icon"
+          icon="x"
+          :size="18"
+        />
       </div>
     </div>
   </div>

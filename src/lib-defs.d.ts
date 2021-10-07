@@ -8,8 +8,7 @@ declare module 'genius-lyrics-api' {
   export function getSong({
     title: string,
     artist: string,
-    apiKey: string,
-    optimizeQuery: boolean
+    apiKey: string
   });
 }
 
@@ -31,7 +30,7 @@ declare module 'vue-virtual-scroller' {
   export const DynamicScrollerItem: Component<any, any, any, any>;
 
   export function IdState(options?: {
-    idProp?: (vm: any) => any;
+    idProp?: () => any;
   }): ComponentOptions<Vue> | typeof Vue;
 
   export default plugin;

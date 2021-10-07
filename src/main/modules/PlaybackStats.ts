@@ -1,6 +1,5 @@
 import { paths } from './Paths';
 import fs from 'fs';
-import { win } from '../../background';
 import { TrackStatType, TrackType } from '@/types';
 import { removeDuplicates, sortArrayOfObjects } from '@/shared-utils';
 export class PlaybackStats {

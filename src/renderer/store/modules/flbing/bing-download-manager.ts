@@ -13,20 +13,20 @@ const state: BingDownloadManagerState = {
   completedDownloads: []
 };
 const mutations = {
-  addTrackToPendingDownloads(
+  addTrackToPendingDownloads (
     state: BingDownloadManagerState,
     payload: BingPendingTrack
   ) {
     payload.state = states[0];
     state.pendingDownloads.push(payload);
   },
-  removeTrackFromPendingDownloads(
+  removeTrackFromPendingDownloads (
     state: BingDownloadManagerState,
     payload: number
   ) {
     state.pendingDownloads.filter(track => track.id !== payload);
   },
-  setTrackDownloadURL(
+  setTrackDownloadURL (
     state: BingDownloadManagerState,
     payload: BingTrackURLPayload
   ) {
@@ -36,7 +36,7 @@ const mutations = {
     state.pendingDownloads[indexOfTrack].downloadURL = payload.url;
     state.pendingDownloads[indexOfTrack].state = states[3];
   },
-  updateTrackDownloadProgress(
+  updateTrackDownloadProgress (
     state: BingDownloadManagerState,
     payload: BingTrackDownloadProgress
   ) {
@@ -49,7 +49,7 @@ const mutations = {
       state.pendingDownloads.splice(indexOfTrack, 1);
     }
   },
-  updatePendingTrackState(
+  updatePendingTrackState (
     state: BingDownloadManagerState,
     payload: BingTrackStatePayload
   ) {
@@ -57,10 +57,10 @@ const mutations = {
     const indexOfTrack = state.pendingDownloads.findIndex(
       track => track.id === payload.id
     );
-    if (indexOfTrack === -1) return
+    if (indexOfTrack === -1) return;
     state.pendingDownloads[indexOfTrack].state = states[payload.stateCode];
   },
-  addToCompletedDownloads(state: BingDownloadManagerState, payload: TrackType) {
+  addToCompletedDownloads (state: BingDownloadManagerState, payload: TrackType) {
     state.completedDownloads.unshift(payload);
   }
 };

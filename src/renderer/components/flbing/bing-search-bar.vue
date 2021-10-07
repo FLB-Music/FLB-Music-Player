@@ -7,8 +7,12 @@
       type="text"
       class="BigSearch inputElem"
       @keyup.enter="searchInYTMusic"
+    >
+    <p
+      id="bingEnter"
+      style="opacity: 0"
+      @click="sendSearchQuery"
     />
-    <p id="bingEnter" style="opacity: 0" @click="sendSearchQuery" />
     <base-button
       v-if="searchIsComplete"
       id="clearResultsIcon"

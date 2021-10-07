@@ -1,6 +1,9 @@
 <template>
   <div class="PlaylistsTab tab">
-    <div v-if="!selectedGroup" class="playlistCards">
+    <div
+      v-if="!selectedGroup"
+      class="playlistCards"
+    >
       <playlist-card
         v-for="playlist in playlists"
         :key="playlist.name"
@@ -11,7 +14,10 @@
       enter-active-class="animated fadeInUp extrafaster"
       leave-active-class="animated fadeOutDown extrafaster"
     >
-      <div v-if="selectedGroup" class="selectedGroup bg1">
+      <div
+        v-if="selectedGroup"
+        class="selectedGroup bg1"
+      >
         <base-button
           id="backToUnfilteredItems"
           extra-class="blurred_bg"
@@ -27,7 +33,10 @@
               :key="albumArt"
               class="flex_image_wrapper"
             >
-              <img class="flexImage" :src="'file://' + albumArt" />
+              <img
+                class="flexImage"
+                :src="'file://' + albumArt"
+              >
             </div>
           </div>
 
@@ -38,18 +47,21 @@
           />
           <div class="sliverBarFooter">
             <div class="groupedCard_info">
-              <p style="margin-bottom: 10px" class="groupedInfo_title">
+              <p
+                style="margin-bottom: 10px"
+                class="groupedInfo_title"
+              >
                 {{ selectedGroup.name }}
               </p>
             </div>
 
             <playlist-sliverbar-actions
-              :playlistName="selectedGroup.name"
-              :editorOn="showPlaylistEditor"
-              v-on:showPlaylistEditor="showPlaylistEditor = true"
-              v-on:closePlaylistEditor="showPlaylistEditor = false"
-              v-on:deleteCurrentPlaylist="deleteCurrentPlaylist"
-              v-on:addPlaylistToQueue="addPlaylistToQueue"
+              :playlist-name="selectedGroup.name"
+              :editor-on="showPlaylistEditor"
+              @showPlaylistEditor="showPlaylistEditor = true"
+              @closePlaylistEditor="showPlaylistEditor = false"
+              @deleteCurrentPlaylist="deleteCurrentPlaylist"
+              @addPlaylistToQueue="addPlaylistToQueue"
             />
           </div>
         </div>
@@ -71,7 +83,9 @@
 <script>
 import { mapMutations } from 'vuex';
 import { removeDuplicates, sortArrayOfObjects } from '@/shared-utils';
-
+/* eslint-disable */
+const defaultCover = require('@img/flbdefault-cover.png');
+/* eslint-disable */
 export default {
   name: 'PlaylistsTab',
 
@@ -124,8 +138,8 @@ export default {
       return this.$store.state.TabsManager.tabsData.playlists;
     },
     playlistsTracks() {
-      const sortParameter = this.$store.state.sortParameter;
-      const tracks = this.selectedGroup.tracks;
+      const { sortParameter } = this.$store.state;
+      const { tracks } = this.selectedGroup;
       sortArrayOfObjects(tracks, sortParameter);
       return tracks;
     },
@@ -144,7 +158,7 @@ export default {
         .map(track => track.albumArt);
     },
     defaultAlbumArt() {
-      return `url(${require('@img/flbdefault-cover.png')})`;
+      return `url(${defaultCover})`;
     }
   }
 };

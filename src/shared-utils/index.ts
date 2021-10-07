@@ -1,5 +1,5 @@
-export function sortArrayOfObjects(targetArray: any[], param: string) {
-  function compare(a: any, b: any) {
+export function sortArrayOfObjects (targetArray: any[], param: string) {
+  function compare (a: any, b: any) {
     if (a[`${param}`] < b[`${param}`]) {
       return -1;
     }
@@ -11,7 +11,7 @@ export function sortArrayOfObjects(targetArray: any[], param: string) {
   targetArray.sort(compare);
 }
 
-export function shuffleArray(array: any[]) {
+export function shuffleArray (array: any[]) {
   const arrayCopy = [...array];
   let currentIndex = arrayCopy.length,
     temporaryValue,
@@ -32,13 +32,13 @@ export function shuffleArray(array: any[]) {
   return arrayCopy;
 }
 
-export function removeDuplicates(targetArray: any, prop: any) {
+export function removeDuplicates (targetArray: any, prop: any) {
   return targetArray.filter((obj: any, index: number, arr: any) => {
     return arr.map((mapObj: any) => mapObj[prop]).indexOf(obj[prop]) === index;
   });
 }
 
-export function cleanUpText(text: string) {
+export function cleanUpText (text: string) {
   // return text.replace(/[$-\\/:-?{-~!"^_`\\[\]()@#]/g, " ");
   return text.replace(/[\\/:*?<>|]/g, ' ');
 }

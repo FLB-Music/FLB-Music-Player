@@ -75,7 +75,7 @@ export default {
       this.seekBarWidth = `${this.seekPercent}%`;
       audio.currentTime = (this.seekPercent * audio.duration) / 100;
     },
-    seekBack(e) {
+    seekBack() {
       const audio = document.querySelector('#audioTag');
       audio.currentTime -= 30;
       const video = document.querySelector('video');
@@ -167,7 +167,7 @@ export default {
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
-  transition:none;
+  transition: none;
   input {
     position: absolute;
     width: 100%;

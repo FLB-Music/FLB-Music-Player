@@ -14,8 +14,8 @@
   "main": "background.js",
   "scripts": {
     "start": "vue-cli-service electron:serve --skip-plugins @vue/cli-plugin-eslint",
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "serve": "vue-cli-service electron:serve",
+    "build": "vue-cli-service electron:build --skip-plugins @vue/cli-plugin-eslint",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint --fix -f codeframe",
     "e:build": "vue-cli-service electron:build --skip-plugins @vue/cli-plugin-eslint",

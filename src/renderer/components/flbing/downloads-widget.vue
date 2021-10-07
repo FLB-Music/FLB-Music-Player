@@ -23,14 +23,20 @@
         </div>
       </div>
       <div class="tab_content">
-        <div v-if="tab === 'Pending'" class="pending_tracks tracks_wrapper">
+        <div
+          v-if="tab === 'Pending'"
+          class="pending_tracks tracks_wrapper"
+        >
           <bing-pending-track
             v-for="track in downloadQueue"
             :key="track.id"
             :track-info="track"
           />
         </div>
-        <div v-if="tab !== 'Pending'" class="tracks_wrapper downloadedTracks">
+        <div
+          v-if="tab !== 'Pending'"
+          class="tracks_wrapper downloadedTracks"
+        >
           <bing-completed-track
             v-for="track in flbingFolderTracks"
             :key="track.fileLocation"
@@ -64,8 +70,7 @@ export default {
         .filter(track => track.folderInfo?.name === 'FLBing')
         .slice(0, 20);
     }
-  },
-  mounted() {}
+  }
 };
 </script>
 

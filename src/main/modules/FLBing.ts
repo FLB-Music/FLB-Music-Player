@@ -168,7 +168,7 @@ export class FLBing {
           win.webContents.send('downloadedTrack', track);
           win.webContents.send('newTrack', track);
         })
-        .catch(err => {
+        .catch(() => {
           console.log('Some error while parsing the downloaded track');
         });
     }

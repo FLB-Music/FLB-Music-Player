@@ -8,7 +8,7 @@
       <img
         style="width: 19vw; margin: auto"
         src="@img/empty_illustration.svg"
-      />
+      >
       <pre
         style="
           text-align: center;
@@ -20,7 +20,11 @@
         if you started playing something
       </pre>
     </div>
-    <div v-if="playingTrack" class="Tabswitcher" style="margin-top: 0px">
+    <div
+      v-if="playingTrack"
+      class="Tabswitcher"
+      style="margin-top: 0px"
+    >
       <div
         v-for="tab in tabs"
         :id="tab.name"
@@ -31,7 +35,10 @@
         ]"
         @click.stop="switchAidePaneActiveTab(tab.name)"
       >
-        <base-icon :icon="tab.icon" class="icon" />
+        <base-icon
+          :icon="tab.icon"
+          class="icon"
+        />
         <p>{{ tab.name }}</p>
       </div>
     </div>
@@ -69,8 +76,7 @@ export default {
     playingTrackLyrics() {
       return (
         this.$store.state.PlaybackManger.allLyrics.filter(
-          trackLyricInfo =>
-            trackLyricInfo.trackName === this.playingTrack.defaultTitle
+          trackLyricInfo => trackLyricInfo.trackName === this.playingTrack.defaultTitle
         )[0]?.lyrics || false
       );
     }

@@ -55,7 +55,7 @@ export interface DownloadResponse {
     }
 }
 
-export async function getDownloadLink(ytLink: string, quality = '128kbs'): Promise<DownloadResponse | null> {
+export async function getDownloadLink (ytLink: string, quality = '128kbs'): Promise<DownloadResponse | null> {
 
     let videoID: string;
     const URLEncodedLink = encodeURI(ytLink);
@@ -83,7 +83,7 @@ export async function getDownloadLink(ytLink: string, quality = '128kbs'): Promi
     }
 }
 
-async function linkInfo(videoID: string, _9ConvertID: string): Promise<DownloadResponse | null> {
+async function linkInfo (videoID: string, _9ConvertID: string): Promise<DownloadResponse | null> {
     let data = `vid=${videoID}&k=0%2${_9ConvertID}%3D`;
     data = data.replace('0+', 'B').replace('=%', '%');
     const config: any = {

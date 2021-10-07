@@ -43,9 +43,9 @@ export default {
   methods: {
     selectTab(i) {
       this.selectedIndex = i;
-
       // loop over all the tabs
       this.tabs.forEach((tab, index) => {
+        /* eslint-disable no-param-reassign */
         tab.isActive = index === i;
       });
     }

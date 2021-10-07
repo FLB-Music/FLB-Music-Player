@@ -5,7 +5,7 @@
       class="inputElem"
       type="text"
       placeholder="New Playlist Name"
-    />
+    >
     <base-button
       v-if="newPlaylistName"
       text="Save"

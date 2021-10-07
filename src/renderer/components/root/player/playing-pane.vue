@@ -3,10 +3,13 @@
     <div class="flex split">
       <div class="left_pane_section">
         <album-art-wrapper
-          :albumArt="albumArt"
-          v-on:togglePlayerMode="togglePlayerMode"
+          :album-art="albumArt"
+          @togglePlayerMode="togglePlayerMode"
         />
-        <img class="album_art_blurred" :src="albumArt" />
+        <img
+          class="album_art_blurred"
+          :src="albumArt"
+        >
 
         <div class="track_info">
           <p class="track_title">
@@ -36,7 +39,10 @@
             :small="true"
             @click.native="determineNextTrack('prev')"
           />
-          <div id="toggle_play" @click="toggleIsPlaying">
+          <div
+            id="toggle_play"
+            @click="toggleIsPlaying"
+          >
             <base-button
               v-if="!audioState.playing"
               id="play_bt"
@@ -129,7 +135,10 @@
         <h1>Queue</h1>
         <queued-tracks />
       </div>
-      <div v-if="playingPaneExpanded && showLyrics" class="lyrics_wrappers">
+      <div
+        v-if="playingPaneExpanded && showLyrics"
+        class="lyrics_wrappers"
+      >
         <h1>Lyrics</h1>
         <lyrics />
       </div>
@@ -141,7 +150,9 @@
 import { mapActions, mapMutations } from 'vuex';
 import { sendMessageToNode } from '@/renderer/utils';
 import { setupEqualizer } from '../equalizer/equalizer';
-
+/* eslint-disable */
+const defaultCover = require('@img/flbdefault-cover.png');
+/* eslint-disable */
 export default {
   name: 'PlayingPane',
 
@@ -191,10 +202,9 @@ export default {
       const playingTrackAlbumArt =
         this.$store.state.PlaybackManger.playingTrackInfo.track.albumArt;
       if (playingTrackAlbumArt) {
-        return 'file://' + playingTrackAlbumArt;
-      } else {
-        return require('@img/flbdefault-cover.png');
+        return `file://${playingTrackAlbumArt}`;
       }
+      return defaultCover;
     }
   },
   watch: {
@@ -306,41 +316,20 @@ export default {
     });
     document.querySelector('body').classList.add('playingPaneLoaded');
 
-    const actionHandlers = [
-      [
-        'play',
-        () => {
-          this.toggleIsPlaying();
-        }
-      ],
-      [
-        'pause',
-        () => {
-          this.toggleIsPlaying();
-        }
-      ],
-      [
+    try {
+      navigator.mediaSession.setActionHandler('play', this.toggleIsPlaying());
+      navigator.mediaSession.setActionHandler('pause', this.toggleIsPlaying());
+      navigator.mediaSession.setActionHandler(
         'previoustrack',
-        () => {
-          this.determineNextTrack('prev');
-        }
-      ],
-      [
+        this.determineNextTrack('prev')
+      );
+      navigator.mediaSession.setActionHandler(
         'nexttrack',
-        () => {
-          this.determineNextTrack('next');
-        }
-      ]
-    ];
-
-    for (const [action, handler] of actionHandlers) {
-      try {
-        navigator.mediaSession.setActionHandler(action, handler);
-      } catch (error) {
-        console.log(
-          `The media session action "${action}" is not supported yet.`
-        );
-      }
+        this.determineNextTrack('next')
+      );
+    } catch (error) {
+      console.log('Unable to set media session listeners');
+      console.log(error);
     }
   }
 };

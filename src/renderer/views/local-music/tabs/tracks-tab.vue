@@ -1,5 +1,8 @@
 <template>
-  <div @scroll="virtualize($event)" class="tab addedTracksTab">
+  <div
+    class="tab addedTracksTab"
+    @scroll="virtualize($event)"
+  >
     <div
       v-if="addedTracks.length === 0"
       class="flex-col center-a"
@@ -20,8 +23,14 @@
       :data-component="card"
       :estimate-size="280"
     />
-    <div :style="{ height: compHeight }" class="filler"></div>
-    <div class="tracksWrapper" @click="addTracksToQueue">
+    <div
+      :style="{ height: compHeight }"
+      class="filler"
+    />
+    <div
+      class="tracksWrapper"
+      @click="addTracksToQueue"
+    >
       <track-card
         v-for="(track, index) in tracksToRender"
         :key="track.fileLocation"
@@ -30,15 +39,21 @@
       />
     </div>
     <div class="customScrollBar">
-      <div class="l" :style="{ top: scrollPercent }" />
-      <div class="wrapper" style="height: 100%">
+      <div
+        class="l"
+        :style="{ top: scrollPercent }"
+      />
+      <div
+        class="wrapper"
+        style="height: 100%"
+      >
         <input
           type="range"
           value="0"
           min="0"
           max="100"
           @input="scrollContainer($event)"
-        />
+        >
       </div>
     </div>
     <track-card v-if="0" />
@@ -46,8 +61,8 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
-import { removeDuplicates, sortArrayOfObjects } from '@/shared-utils';
+import { mapMutations } from 'vuex';
+import { sortArrayOfObjects } from '@/shared-utils';
 import TrackCard from '@/renderer/components/root/track/track-card.vue';
 
 export default {
@@ -68,7 +83,7 @@ export default {
   },
   computed: {
     addedTracks() {
-      const sortParameter = this.$store.state.sortParameter;
+      const { sortParameter } = this.$store.state;
       const tracks = [...this.$store.state.TabsManager.tabsData.addedTracks];
       sortArrayOfObjects(tracks, sortParameter);
       return tracks;
@@ -106,8 +121,8 @@ export default {
     virtualize() {
       const container = document.querySelector('.addedTracksTab');
       const scrollTop = Math.trunc(container.scrollTop / 20);
-      let start = scrollTop;
-      let end = scrollTop + 16;
+      const start = scrollTop;
+      const end = scrollTop + 16;
       this.tracksToRender = this.addedTracks.slice(start, end);
     }
   },

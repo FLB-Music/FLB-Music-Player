@@ -1,5 +1,8 @@
 <template>
-  <div v-if="!playingTrack.fileName.match(/mp4|mkv/)" class="TrackInfo">
+  <div
+    v-if="!playingTrack.fileName.match(/mp4|mkv/)"
+    class="TrackInfo"
+  >
     <div
       class="tag"
       style="display: flex; align-items: center; justify-content: center"
@@ -8,34 +11,61 @@
         v-if="playingTrack.albumArt"
         id="tag_albumArt"
         :src="'file://' + playingTrack.albumArt"
-      />
-      <p v-if="!playingTrack.albumArt">No Album Art</p>
+      >
+      <p v-if="!playingTrack.albumArt">
+        No Album Art
+      </p>
     </div>
     <div class="tag">
-      <p class="tag_name">Title</p>
-      <p class="tag_value">{{ playingTrack.title || 'unknown' }}</p>
+      <p class="tag_name">
+        Title
+      </p>
+      <p class="tag_value">
+        {{ playingTrack.title || 'unknown' }}
+      </p>
     </div>
     <div class="tag">
-      <p class="tag_name">Artist</p>
-      <p class="tag_value">{{ playingTrack.artist || 'unknown' }}</p>
+      <p class="tag_name">
+        Artist
+      </p>
+      <p class="tag_value">
+        {{ playingTrack.artist || 'unknown' }}
+      </p>
     </div>
     <div class="tag">
-      <p class="tag_name">Album</p>
-      <p class="tag_value">{{ playingTrack.album }}</p>
+      <p class="tag_name">
+        Album
+      </p>
+      <p class="tag_value">
+        {{ playingTrack.album }}
+      </p>
     </div>
-    <div v-if="playingTrack.duration" class="tag">
-      <p class="tag_name">Length</p>
-      <p class="tag_value">{{ playingTrack.formattedLength }}</p>
+    <div
+      v-if="playingTrack.duration"
+      class="tag"
+    >
+      <p class="tag_name">
+        Length
+      </p>
+      <p class="tag_value">
+        {{ playingTrack.formattedLength }}
+      </p>
     </div>
     <div class="tag">
-      <p class="tag_name">Date Added</p>
+      <p class="tag_name">
+        Date Added
+      </p>
       <p class="tag_value">
         {{ new Date(playingTrack.dateAdded).toDateString() }}
       </p>
     </div>
     <div class="tag">
-      <p class="tag_name">File name</p>
-      <p class="tag_value">{{ playingTrack.fileName }}</p>
+      <p class="tag_name">
+        File name
+      </p>
+      <p class="tag_value">
+        {{ playingTrack.fileName }}
+      </p>
     </div>
     <base-button
       id="toggleTagEditor"

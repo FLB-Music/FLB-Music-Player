@@ -1,10 +1,16 @@
 <template>
   <div class="bg">
-    <img id="bg_fancy" :src="albumArt" />
+    <img
+      id="bg_fancy"
+      :src="albumArt"
+    >
   </div>
 </template>
 
 <script>
+/* eslint-disable */
+const defaultCover = require('@img/flbdefault-cover.png');
+/* eslint-disable */
 export default {
   name: 'Bg',
 
@@ -17,9 +23,9 @@ export default {
     },
     albumArt() {
       if (this.playingTrack?.albumArt) {
-        return 'file://' + this.playingTrack.albumArt;
+        return `file://${this.playingTrack.albumArt}`;
       }
-      return require('@img/flbdefault-cover.png');
+      return defaultCover;
     }
   }
 };

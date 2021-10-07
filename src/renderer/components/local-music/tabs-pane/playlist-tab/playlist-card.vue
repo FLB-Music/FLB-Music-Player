@@ -6,15 +6,23 @@
       class="centerContents"
       @click="openPlaylist"
     >
-      <img style="width: 140px" src="@img/add-illustration.svg" />
-      <p style="font-family: inherit">Empty Playlist</p>
+      <img
+        style="width: 140px"
+        src="@img/add-illustration.svg"
+      >
+      <p style="font-family: inherit">
+        Empty Playlist
+      </p>
     </div>
     <div class="playlist_header">
       <p class="playlist_name bg1">
         {{ playlist.name }}
       </p>
 
-      <div v-if="playlist.tracks.length !== 0" class="playlist_actions">
+      <div
+        v-if="playlist.tracks.length !== 0"
+        class="playlist_actions"
+      >
         <base-button
           icon="book-open"
           title="Open Playlist"
@@ -40,7 +48,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex';
+import { mapMutations } from 'vuex';
 
 export default {
   name: 'PlaylistCard',
