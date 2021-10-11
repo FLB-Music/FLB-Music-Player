@@ -76,13 +76,13 @@ html {
   --secondaryColor: rgb(246, 248, 250);
   --diplomaColor: rgb(250, 250, 250);
   --degreeColor: rgb(255, 255, 255);
-}
-.light_theme svg {
-  filter: invert(1);
-}
-input {
-  color: black !important;
-}
-.light_theme input::placeholder {
-  color: black !important;
+  input {
+    color: black !important;
+  }
+  svg {
+    filter: invert(1);
+  }
+  input::placeholder {
+    color: black !important;
+  }
 }

@@ -1,18 +1,19 @@
 <template>
   <div
-    :class="[currentNotification.type, 'notificationCard', 'blurred_bg blur30']"
+    :class="[
+      `notification_${currentNotification.type}`,
+      'notificationCard',
+      'blurred_bg blur30'
+    ]"
     @click="popNotification"
   >
     <div class="notification_body">
-      <p>{{ currentNotification.title }}</p>
-      <p v-if="currentNotification.subTitle">
+      <p class="notification_title">{{ currentNotification.title }}</p>
+      <p class="notification_subtitle" v-if="currentNotification.subTitle">
         {{ currentNotification.subTitle }}
       </p>
     </div>
-    <base-icon
-      class="closeNotification"
-      icon="x"
-    />
+    <base-icon class="closeNotification" icon="x" />
   </div>
 </template>
 
@@ -33,13 +34,10 @@ export default {
   },
   mounted() {
     setTimeout(() => {
-      if (this.notification.type !== 'persist') {
+      if (!this.notification.isPersistent) {
         this.popNotification();
       }
     }, 3000);
-    ipcRenderer.on('parsingProgress', (e, [currentIndex, total]) => {
-      this.currentNotification.subTitle = `${currentIndex}/${total}`;
-    });
   },
   props: {
     notification: Object
@@ -55,13 +53,12 @@ export default {
   cursor: pointer;
   display: flex;
   align-items: center;
-  h4 {
-    font-family: inherit;
-    font-size: 0.9rem;
-  }
-  p {
-    font-family: inherit;
+  .notification_title {
     font-size: 0.8rem;
+  }
+  .notification_subtitle {
+    font-size: 0.75rem;
+    font-weight: 300;
   }
   .notification_body {
     padding: 10px;
@@ -73,15 +70,19 @@ export default {
     transform: scale(1.2);
   }
 }
-.normal {
+.notification_normal {
   border-bottom: 2px solid #0066ff;
   border-top: 2px solid #0066ff;
 }
-.danger {
+.notification_success {
+  border-top: 2px solid #00ff91;
+  border-bottom: 2px solid #00ff91;
+}
+.notification_danger {
   border-bottom: 2px solid crimson;
   border-top: 2px solid crimson;
 }
-.warning {
+.notification_warning {
   border-bottom: 2px solid orangered;
   border-top: 2px solid orangered;
 }

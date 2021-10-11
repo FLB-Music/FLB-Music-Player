@@ -1,4 +1,5 @@
 'use strict';
+require('dotenv').config()
 
 import {
   app,
@@ -23,13 +24,10 @@ import { createParsedTrack } from './main/core/createParsedTrack';
 import {
   deleteFile,
   downloadFile,
-  isValidFileType,
   sendMessageToRenderer,
   sendNativeNotification
 } from './main/utils';
 import {
-  FolderInfoType,
-  FolderType,
   SettingsType,
   TagChangesType,
   TrackType
@@ -38,6 +36,9 @@ import { downloadArtistPicture } from './main/services';
 import { SUPPORTED_FORMATS } from './main/utils/constants';
 import { DownloadManager } from './main/modules/BingDownloader';
 import { UsageManager } from './main/modules/UsageStatistics';
+import parseFolder from './main/core/parseFolder';
+import { sendNotificationToRenderer } from './main/reusables/messageToRenderer';
+import { initializeApp, resetApp } from './main/core/utils';
 
 console.log(paths.appFolder);
 
@@ -66,7 +67,7 @@ protocol.registerSchemesAsPrivileged([
 // Globally accessible window object
 
 export let win: BrowserWindow;
-async function createWindow () {
+async function createWindow() {
   const primaryDisplay = screen.getPrimaryDisplay();
   const { width, height } = primaryDisplay.workAreaSize;
   // Create the browser window.
@@ -112,22 +113,22 @@ async function createWindow () {
     shell.openExternal(url);
   });
   autoUpdater.on('checking-for-update', () => {
-    win.webContents.send('normalMsg', 'Checking for update...');
+    sendNotificationToRenderer('Checking for update...');
   });
   autoUpdater.on('update-available', () => {
-    win.webContents.send('normalMsg', 'Update available.');
+    sendNotificationToRenderer('Update available.');
     setTimeout(() => {
-      win.webContents.send('normalMsg', 'Downloading available.');
+      sendNotificationToRenderer('Downloading available.');
     }, 1000);
   });
   autoUpdater.on('update-not-available', () => {
-    win.webContents.send('normalMsg', 'No Update available.');
+    sendNotificationToRenderer('No Update available.');
   });
   autoUpdater.on('error', err => {
-    win.webContents.send('dangerMsg', 'Error in auto-updater. ' + err);
+    sendNotificationToRenderer('Error in auto-updater.', '', 'warning');
   });
   autoUpdater.on('update-downloaded', () => {
-    win.webContents.send('normalMsg', 'Update Downloaded 🚀');
+    sendNotificationToRenderer('Update Downloaded 🚀');
   });
   autoUpdater.on('download-progress', () => {
     win.webContents.send('downloadingUpdate', '');
@@ -182,38 +183,16 @@ ipcMain.on('initializeSettings', () => {
   win.webContents.send('userSettings', settings.getSettings);
 });
 ipcMain.on('getFirstTracks', async () => {
-  refreshTracks();
+  const tracks = await getParsedTracks(settings.getSettings.foldersToScan);
+  fileTracker.addMultipleTracks(tracks);
+  sendMessageToRenderer("addMultipleTracks", tracks)
 });
-ipcMain.on('initializeApp', async () => {
-  // Handle Open With FLB. Parse the files that is called as a second argument when running FLB
-  if (process.argv[1] && isValidFileType(process.argv[1])) {
-    const newTrack = await createParsedTrack(process.argv[1]);
-    win.webContents.send('newTrack', newTrack);
-    win.webContents.send('playThisTrack', newTrack);
-  }
-  // Remember to fix
-  const processedFiles = fileTracker.getTracks;
-  const playlists = playlistsTracker.getPlaylists;
-  const recentlyPlayedTracks = playbackStats.recentlyPlayedTracks;
-  if (processedFiles.length > 0) {
-    win.webContents.send('processedFiles', processedFiles);
-    win.webContents.send('userPlaylists', playlists);
-    win.webContents.send('recentlyPlayed', recentlyPlayedTracks);
-    refreshTracks();
-    win.webContents.send('playStats', playbackStats.getPlayStats);
-  }
+ipcMain.on('initializeApp', () => {
+  initializeApp(fileTracker, playlistsTracker, playbackStats)
 });
 
 ipcMain.on('resetApp', () => {
-  deleteFile(paths.filesTrackerLocation, true);
-  deleteFile(paths.playbackStatsLocation, true);
-  deleteFile(paths.playlistsLocation, true);
-  deleteFile(paths.settingsLocation, true);
-  win.webContents.send('dangerMsg', 'Resetting FLB');
-  setTimeout(() => {
-    app.relaunch();
-    app.quit();
-  }, 1000);
+  resetApp()
 });
 
 ipcMain.on('updatePlaylists', (e, payload) => {
@@ -221,14 +200,12 @@ ipcMain.on('updatePlaylists', (e, payload) => {
 });
 
 ipcMain.on('addScanFolder', () => {
-  dialog.showOpenDialog(win, { properties: ['openDirectory'] }).then(data => {
+  dialog.showOpenDialog(win, { properties: ['openDirectory'] }).then(async (data) => {
     if (!data.canceled) {
       settings.addFolderToScan(data.filePaths[0]);
       win.webContents.send('userSettings', settings.getSettings);
-      if (fileTracker.getTracks.length) {
-        refreshTracks();
-        win.webContents.send('normalMsg', 'Refreshing...');
-      }
+      const tracks = await getParsedTracks([data.filePaths[0]])
+      sendMessageToRenderer("addMultipleTracks", tracks)
     }
   });
 });
@@ -239,7 +216,8 @@ ipcMain.on('removeFromScannedFolders', (e, payload) => {
   win.webContents.send('userSettings', settings.getSettings);
 });
 ipcMain.on('refresh', () => {
-  refreshTracks();
+  sendNotificationToRenderer("Refreshing...", "", "success")
+  getParsedTracks(settings.getSettings.foldersToScan);
 });
 
 ipcMain.on('playingTrack', async (e, track: TrackType) => {
@@ -254,34 +232,29 @@ ipcMain.on('playingTrack', async (e, track: TrackType) => {
   // win.webContents.send("mostPlayedArtists", playbackStats.mostPlayedTracks);
 });
 
-ipcMain.on('processDroppedFiles', (e, droppedFiles) => {
-  console.log(droppedFiles);
-  win.webContents.send(
-    'normalMsg',
-    `Processing Dropped Files: ${droppedFiles}`
+ipcMain.on('processDroppedFiles', async (e, droppedFiles: string[]) => {
+  sendNotificationToRenderer(
+    `Processing Dropped Stuff: ${droppedFiles}`
   );
-  // User dropped an array of folders
+  // // User dropped an array of folders
   if (fs.lstatSync(droppedFiles[0]).isDirectory()) {
     console.log('User dropped folder(s)');
-    droppedFiles.forEach((folder: string) => {
-      parseFolder(folder, [], []).then(data => {
-        prepareTracksForProcessing(data);
-      });
-    });
+    const tracks = await getParsedTracks([droppedFiles[0]])
+    fileTracker.addMultipleTracks(tracks);
+    sendMessageToRenderer('addMultipleTracks', tracks);
   } else {
     // User dropped an array of files
     console.log('User dropped file(s)');
-    droppedFiles.forEach(async (file: string) => {
+    for (const file of droppedFiles) {
       const fileType = path.parse(file).ext;
       if (SUPPORTED_FORMATS.includes(fileType)) {
         const newTrack = await createParsedTrack(file);
+        fileTracker.addFile(newTrack);
         win.webContents.send('newTrack', newTrack);
-        fileTracker.saveChanges();
       }
-    });
-    setTimeout(() => {
-      win.webContents.send('playNow');
-    }, 1000);
+    }
+    fileTracker.saveChanges();
+    win.webContents.send('playNow');
   }
 });
 ipcMain.on('updateSettings', async (e, payload: SettingsType) => {
@@ -325,7 +298,8 @@ ipcMain.on('maximize', () => {
     win.maximize();
   }
 });
-ipcMain.on('closeWindow', () => {
+ipcMain.on('closeWindow', async () => {
+  await fileTracker.saveChanges()
   app.quit();
 });
 
@@ -372,7 +346,7 @@ ipcMain.on('sendUsageStats', () => {
 });
 
 ipcMain.on('checkForUpdate', () => {
-  sendMessageToRenderer('normalMsg', 'Checking For Update');
+  sendNotificationToRenderer('Checking For Update');
   checkForUpdates();
   console.log(app.getAppMetrics());
 });
@@ -392,124 +366,50 @@ ipcMain.on('toggleMiniMode', (e, payload) => {
   }
 });
 
-async function parseFolder (
-  folderPath: string,
-  subFolders: Array<string>,
-  foldersFinalData: Array<FolderType>
-) {
-  return new Promise<any>(resolve => {
-    (function recursiveReader (
-      folderPath: string,
-      subFolders: Array<string>,
-      foldersFinalData: Array<FolderType>
-    ) {
-      subFolders.shift();
-      const folderObject_notParsed: FolderType = {
-        name: folderPath.replace(/(.*)[/\\]/, '').split('.')[0],
-        path: folderPath,
-        tracks: []
-      };
-      fs.readdir(folderPath, async (err, files: Array<string>) => {
-        let newSubFolders = files.filter(file =>
-          fs.lstatSync(path.join(folderPath, file)).isDirectory()
-        );
-        newSubFolders = newSubFolders.map(item => path.join(folderPath, item));
-        subFolders = [...subFolders, ...newSubFolders];
-        const audioFiles = files.filter(file =>
-          SUPPORTED_FORMATS.includes(path.parse(file).ext)
-        );
-        const videoFiles = files.filter(file => file.match(/\.mp4|\.mkv/gi));
-        folderObject_notParsed.tracks = audioFiles;
-        if (settings.getSettings.includeVideo) {
-          folderObject_notParsed.tracks = [
-            ...folderObject_notParsed.tracks,
-            ...videoFiles
-          ];
-        }
-        foldersFinalData = [...foldersFinalData, folderObject_notParsed];
-        if (subFolders[0]) {
-          recursiveReader(subFolders[0], subFolders, foldersFinalData);
-        } else {
-          resolve(foldersFinalData);
-          console.log('Am Done Reading all the folders');
-        }
-      });
-    })(folderPath, subFolders, foldersFinalData);
-  });
+
+async function getParsedTracks(folders: string[] = []) {
+
+  let allTracks: string[] = [];
+  const allParsedTracks: TrackType[] = [];
+  for (const folder of folders) {
+    const tracks = parseFolder(folder);
+    allTracks = [...allTracks, ...tracks]
+  }
+  for (const [index, track] of allTracks.entries()) {
+    sendNotificationToRenderer("Loading songs", `${index + 1}/${allTracks.length}`, 'normal', true)
+    const parsedTrack = await createParsedTrack(track)
+    allParsedTracks.push(parsedTrack)
+  }
+  sendMessageToRenderer("closeNotification", 'Loading songs')
+  console.log(allParsedTracks.length + " tracks parsed");
+  return allParsedTracks
 }
 
-interface dataParamObj {
-  fileName: string;
-  filePath: string;
-  folder: FolderInfoType;
-}
-async function prepareTracksForProcessing (foldersFinalData: Array<FolderType>) {
-  const data: Array<dataParamObj> = [];
-  foldersFinalData.forEach(folder => {
-    folder.tracks.forEach(fileName => {
-      const filePath = path.join(folder.path, fileName);
-      const parsed = fileTracker.getTracks.some(
-        file => file.fileLocation === filePath
-      );
-      if (!parsed) {
-        data.push({ fileName, filePath, folder });
-      }
-    });
-  });
-  if (data.length !== 0) {
-    processTracks(data, 0);
-  }
-}
-async function processTracks (data: Array<dataParamObj>, index: number) {
-  console.log('Beginning to parse ' + data[index].fileName);
-  const newTrack = await createParsedTrack(data[index].filePath);
-  win.webContents.send('newTrack', newTrack);
-  console.log('Done parsing ' + data[index].fileName);
-  if (index !== data.length - 1) {
-    processTracks(data, index + 1);
-    win.webContents.send('parsingProgress', [index + 2, data.length]);
-  } else {
-    fileTracker.saveChanges();
-    win.webContents.send('parsingDone', data.length);
-    return;
-  }
-}
-
-function refreshTracks () {
-  const folders = settings.getSettings.foldersToScan;
-  console.log(folders);
-  let superFolder: FolderType[] = [];
-  handleAllFolders(folders, folders.length, 0);
-  function handleAllFolders (folders: string[], length: number, index: number) {
-    parseFolder(folders[index], [], []).then(data => {
-      superFolder = [...superFolder, ...data];
-      index += 1;
-      if (index <= length - 1) {
-        handleAllFolders(folders, length, index);
-      } else {
-        prepareTracksForProcessing(superFolder);
-      }
-    });
-  }
-}
-
-export async function writeTags (
+export async function writeTags(
   filePath: string,
   tagChanges: TagChangesType,
   silent = false
 ) {
   if (tagChanges.APIC && tagChanges.APIC.includes('http')) {
-    tagChanges.APIC = await downloadFile(
-      tagChanges.APIC,
-      paths.albumArtFolder,
-      path.parse(filePath).name
-    );
+    console.log("downloading file");
+    try {
+      tagChanges.APIC = await downloadFile(
+        tagChanges.APIC,
+        paths.albumArtFolder,
+        path.parse(filePath).name
+      );
+
+    } catch (error) {
+      console.log('errorobject');
+      console.log(error);
+    }
+    console.log("Done downloading file");
     tagChanges.APIC = decodeURI(tagChanges.APIC);
   }
   const isSuccessFull = NodeID3.update(tagChanges, filePath);
   console.log('Just Wrote');
   if (isSuccessFull && !silent) {
-    sendMessageToRenderer('normalMsg', 'Tags Successfully changed');
+    sendNotificationToRenderer('Tags Successfully changed', '', 'success');
     console.log(filePath);
     // sendMessageToRenderer('updateTrack', { filePath, tagChanges });
   } else {
@@ -519,7 +419,7 @@ export async function writeTags (
 }
 
 
-function checkForUpdates () {
+function checkForUpdates() {
   autoUpdater.checkForUpdatesAndNotify();
 }
 

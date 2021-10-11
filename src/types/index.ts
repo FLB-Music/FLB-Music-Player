@@ -102,8 +102,10 @@ export interface SearchResultsType {
 export interface NotificationType {
   title: string;
   subTitle: string | null;
-  type: 'normal' | 'success' | 'warning';
+  type: NotificationTypes;
+  isPersistent: true;
 }
+export type NotificationTypes = 'normal' | 'success' | 'warning';
 export type UIcontrollerPropertiesType =
   | 'showSettings'
   | 'showTagEditor'

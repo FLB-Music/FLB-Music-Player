@@ -6,10 +6,7 @@
           :album-art="albumArt"
           @togglePlayerMode="togglePlayerMode"
         />
-        <img
-          class="album_art_blurred"
-          :src="albumArt"
-        >
+        <img class="album_art_blurred" :src="albumArt" />
 
         <div class="track_info">
           <p class="track_title">
@@ -39,10 +36,7 @@
             :small="true"
             @click.native="determineNextTrack('prev')"
           />
-          <div
-            id="toggle_play"
-            @click="toggleIsPlaying"
-          >
+          <div id="toggle_play" @click="toggleIsPlaying">
             <base-button
               v-if="!audioState.playing"
               id="play_bt"
@@ -135,10 +129,7 @@
         <h1>Queue</h1>
         <queued-tracks />
       </div>
-      <div
-        v-if="playingPaneExpanded && showLyrics"
-        class="lyrics_wrappers"
-      >
+      <div v-if="playingPaneExpanded && showLyrics" class="lyrics_wrappers">
         <h1>Lyrics</h1>
         <lyrics />
       </div>
@@ -316,20 +307,40 @@ export default {
     });
     document.querySelector('body').classList.add('playingPaneLoaded');
 
-    try {
-      navigator.mediaSession.setActionHandler('play', this.toggleIsPlaying());
-      navigator.mediaSession.setActionHandler('pause', this.toggleIsPlaying());
-      navigator.mediaSession.setActionHandler(
+    const actionHandlers = [
+      [
+        'play',
+        () => {
+          this.toggleIsPlaying();
+        }
+      ],
+      [
+        'pause',
+        () => {
+          this.toggleIsPlaying();
+        }
+      ],
+      [
         'previoustrack',
-        this.determineNextTrack('prev')
-      );
-      navigator.mediaSession.setActionHandler(
+        () => {
+          this.determineNextTrack('prev');
+        }
+      ],
+      [
         'nexttrack',
-        this.determineNextTrack('next')
-      );
-    } catch (error) {
-      console.log('Unable to set media session listeners');
-      console.log(error);
+        () => {
+          this.determineNextTrack('next');
+        }
+      ]
+    ];
+    for (const [action, handler] of actionHandlers) {
+      try {
+        navigator.mediaSession.setActionHandler(action, handler);
+      } catch (error) {
+        console.log(
+          `The media session action "${action}" is not supported yet.`
+        );
+      }
     }
   }
 };

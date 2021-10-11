@@ -9,22 +9,14 @@
     >
       <defs>
         <filter id="goo">
-          <feGaussianBlur
-            in="SourceGraphic"
-            stdDeviation="8"
-            result="blur"
-          />
+          <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
           <feColorMatrix
             in="blur"
             mode="matrix"
             values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9"
             result="goo"
           />
-          <feComposite
-            in="SourceGraphic"
-            in2="goo"
-            operator="atop"
-          />
+          <feComposite in="SourceGraphic" in2="goo" operator="atop" />
         </filter>
       </defs>
     </svg>
@@ -34,12 +26,19 @@
 import { ipcRenderer } from 'electron';
 import { mapActions, mapMutations } from 'vuex';
 import { removeDuplicates } from '@/shared-utils';
+import { sendMessageToNode } from '@/renderer/utils';
 
 export default {
   name: 'IpcListener',
+  data() {
+    return {
+      statsSent: false
+    };
+  },
   methods: {
     ...mapMutations([
       'addTrack',
+      'addMultipleTracks',
       'updateTrack',
       'deleteTrack',
       'restoreTracks',
@@ -48,6 +47,7 @@ export default {
       'restoreSettings',
       'setPlayStats',
       'popNotification',
+      'pushNotification',
       'setDownloadedArtistInfo',
       'removeTrackFromPendingDownloads',
       'updateTrackDownloadProgress',
@@ -82,6 +82,10 @@ export default {
         document.querySelector('audio').muted = false;
       }
       this.setPlayingTrack({ track, index: 0 });
+    });
+
+    ipcRenderer.on('addMultipleTracks', (e, payload) => {
+      this.addMultipleTracks(payload);
     });
 
     ipcRenderer.on('updateTrack', (e, updatedTrack) => {
@@ -135,6 +139,11 @@ export default {
         this.hideOnboard = true;
         console.log(total);
       }
+      this.pushNotification({
+        title: 'Adding tracks',
+        subTitle: `${currentIndex}/${total}`,
+        type: 'persist'
+      });
     });
     const dbInfo = localStorage.getItem('downloadedArtists');
     let downloadedArtists = [];
@@ -174,13 +183,6 @@ export default {
     ipcRenderer.on('isOnline', (e, payload) => {
       console.log(payload);
     });
-    // window.addEventListener('online', () => {
-    //   this.getLyrics();
-    //   this.fetchArtistsInfo();
-    // });
-
-    // Record that the app has been launched
-
     if (localStorage.getItem('launches')) {
       let launches = localStorage.getItem('launches');
       launches += 1;
@@ -190,15 +192,13 @@ export default {
     }
     setInterval(() => {
       ipcRenderer.invoke('checkOnline').then(result => {
+        if (result && !this.statsSent) {
+          sendMessageToNode('sendUsageStats');
+          this.statsSent = true;
+        }
         this.seIstOnlineState(result);
       });
     }, 3000);
-    setTimeout(() => {
-      console.log(`App is ${this.appIsOnline}`);
-      if (this.appIsOnline) {
-        // sendMessageToNode('sendUsageStats');
-      }
-    }, 4000);
   }
 };
 </script>

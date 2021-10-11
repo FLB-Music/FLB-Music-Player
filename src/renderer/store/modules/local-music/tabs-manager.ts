@@ -9,7 +9,7 @@ import {
   PlaylistType,
   TrackType
 } from '@/types';
-import { ActionTree } from 'vuex';
+import { ActionTree, Payload } from 'vuex';
 import TrackSelector from './track-selector';
 import PlaybackManger from './playback-manger';
 
@@ -41,7 +41,7 @@ const state: TabsManagerStateInterface = {
   downloadedArtistPictures: []
 };
 const mutations = {
-  addTrack (state: TabsManagerStateInterface, payload: TrackType) {
+  addTrack(state: TabsManagerStateInterface, payload: TrackType) {
     const trackAlreadyAdded = state.tabsData.addedTracks.some(
       (track: TrackType) => track.fileLocation === payload.fileLocation
     );
@@ -49,41 +49,51 @@ const mutations = {
       state.tabsData.addedTracks.push(payload);
     }
   },
-  updateTrack (state: TabsManagerStateInterface, payload: TrackType) {
+  addMultipleTracks(state: TabsManagerStateInterface, payload: TrackType[]) {
+    const mutatedTracks = [...state.tabsData.addedTracks, ...payload];
+    state.tabsData.addedTracks = removeDuplicates(mutatedTracks, 'fileLocation')
+  },
+  updateTrack(state: TabsManagerStateInterface, payload: TrackType) {
     const indexOfUpdatedTrack = state.tabsData.addedTracks.findIndex(
       track => track.fileLocation === payload.fileLocation
     );
-    state.tabsData.addedTracks.splice(indexOfUpdatedTrack, 1);
-    state.tabsData.addedTracks.unshift(payload);
+
+    state.tabsData.addedTracks[indexOfUpdatedTrack].title = payload.title;
+    state.tabsData.addedTracks[indexOfUpdatedTrack].artist = payload.artist;
+    state.tabsData.addedTracks[indexOfUpdatedTrack].album = payload.album;
+    state.tabsData.addedTracks[indexOfUpdatedTrack].albumArt = payload.albumArt;
     if (
       PlaybackManger.state.playingTrackInfo.track?.fileLocation ===
       payload.fileLocation
     ) {
-      PlaybackManger.state.playingTrackInfo.track = payload;
+      PlaybackManger.state.playingTrackInfo.track.title = payload.title;
+      PlaybackManger.state.playingTrackInfo.track.artist = payload.artist;
+      PlaybackManger.state.playingTrackInfo.track.album = payload.album;
+      PlaybackManger.state.playingTrackInfo.track.albumArt = payload.albumArt;
     }
   },
-  deleteTrack (state: TabsManagerStateInterface, payload: string) {
+  deleteTrack(state: TabsManagerStateInterface, payload: string) {
     const indexOfDeletedTrack = state.tabsData.addedTracks.findIndex(
       track => track.fileLocation === payload
     );
     state.tabsData.addedTracks.splice(indexOfDeletedTrack, 1);
   },
-  restoreTracks (state: TabsManagerStateInterface, payload: Array<TrackType>) {
+  restoreTracks(state: TabsManagerStateInterface, payload: Array<TrackType>) {
     state.tabsData.addedTracks = payload;
   },
-  restoreRecentlyPlayed (
+  restoreRecentlyPlayed(
     state: TabsManagerStateInterface,
     payload: Array<TrackType>
   ) {
     state.tabsData.recentlyPlayedTracks = payload;
   },
-  restorePlaylists (
+  restorePlaylists(
     state: TabsManagerStateInterface,
     payload: Array<PlaylistType>
   ) {
     state.tabsData.playlists = payload;
   },
-  createPlaylist (state: TabsManagerStateInterface, payload: string) {
+  createPlaylist(state: TabsManagerStateInterface, payload: string) {
     const newPlaylist: PlaylistType = {
       name: payload,
       tracks: []
@@ -91,7 +101,7 @@ const mutations = {
     state.tabsData.playlists.push(newPlaylist);
     sendMessageToNode('updatePlaylists', state.tabsData.playlists);
   },
-  renameCurrentPlaylist (state: TabsManagerStateInterface, payload: string) {
+  renameCurrentPlaylist(state: TabsManagerStateInterface, payload: string) {
     state.tabsData.playlists.forEach((playlist: PlaylistType) => {
       if (playlist.name === TrackSelector.state.selectedGroup?.name) {
         playlist.name = payload;
@@ -99,7 +109,7 @@ const mutations = {
     });
     sendMessageToNode('updatePlaylists', state.tabsData.playlists);
   },
-  deletePlaylist (state: TabsManagerStateInterface, payload: string) {
+  deletePlaylist(state: TabsManagerStateInterface, payload: string) {
     state.tabsData.playlists.forEach(
       (playlist: PlaylistType, index: number) => {
         if (playlist.name === payload) {
@@ -109,7 +119,7 @@ const mutations = {
     );
     sendMessageToNode('updatePlaylists', state.tabsData.playlists);
   },
-  addSelectedTracksToPlaylist (
+  addSelectedTracksToPlaylist(
     state: TabsManagerStateInterface,
     payload: string
   ) {
@@ -135,7 +145,7 @@ const mutations = {
     );
     sendMessageToNode('updatePlaylists', state.tabsData.playlists);
   },
-  deleteSelectedTrackFromPlaylist (
+  deleteSelectedTrackFromPlaylist(
     state: TabsManagerStateInterface,
     payload?: TrackType
   ) {
@@ -169,7 +179,7 @@ const mutations = {
     );
     sendMessageToNode('updatePlaylists', state.tabsData.playlists);
   },
-  setDownloadedArtistInfo (
+  setDownloadedArtistInfo(
     state: TabsManagerStateInterface,
     payload: ArtistInfoInterface[]
   ) {
@@ -273,14 +283,14 @@ const actions: ActionTree<TabsManagerStateInterface, any> = {
     });
     sortArrayOfObjects(state.tabsData.folders, 'name');
   },
-  findAndGoToArtist ({ state, commit }, payload: string) {
+  findAndGoToArtist({ state, commit }, payload: string) {
     state.tabsData.artists.forEach((artist: ArtistType) => {
       if (payload === artist.name) {
         commit('selectGroup', artist);
       }
     });
   },
-  fetchArtistsInfo ({ state }) {
+  fetchArtistsInfo({ state }) {
     const artistsData: ArtistInfoInterface[] = [];
     if (navigator.onLine) {
       const dbInfo = localStorage.getItem('downloadedArtists');

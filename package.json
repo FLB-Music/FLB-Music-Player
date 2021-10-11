@@ -8,14 +8,14 @@
     "url": "git+https://github.com/FLB-Music/FLB-Music-Player.git"
   },
   "author": {
-    "name": "Patrick Waweru (Just Patrick,JP)",
+    "name": "Patrick Waweru (Just Patrick)",
     "email": "pntxall100@gmail.com"
   },
   "main": "background.js",
   "scripts": {
     "start": "vue-cli-service electron:serve --skip-plugins @vue/cli-plugin-eslint",
-    "serve": "vue-cli-service electron:serve",
-    "build": "vue-cli-service electron:build --skip-plugins @vue/cli-plugin-eslint",
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint --fix -f codeframe",
     "e:build": "vue-cli-service electron:build --skip-plugins @vue/cli-plugin-eslint",
@@ -26,11 +26,13 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^1.21.0",
+    "@types/lokijs": "^1.5.7",
     "animate.css": "4.1.1",
     "axios": "^0.21.1",
     "color-thief-browser": "^2.0.2",
     "core-js": "3.15.2",
     "css-color-converter": "2.0.0",
+    "dotenv": "^10.0.0",
     "electron": "13.1.5",
     "electron-updater": "4.3.9",
     "g-i-s": "2.1.6",
@@ -39,6 +41,8 @@
     "is-online": "^9.0.1",
     "json5": "2.2.0",
     "lodash": "4.17.21",
+    "lokijs": "^1.5.12",
+    "music-metadata": "^7.11.4",
     "node-downloader-helper": "1.0.18",
     "node-id3": "0.2.3",
     "node-vibrant": "^3.2.1-alpha.1",

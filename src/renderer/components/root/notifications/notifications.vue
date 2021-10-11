@@ -31,28 +31,14 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['pushNotification'])
+    ...mapMutations(['pushNotification', 'removeNotification'])
   },
   mounted() {
-    ipcRenderer.on('normalMsg', (e, msg) => this.pushNotification({
-      title: msg,
-      subTitle: null,
-      type: 'normal'
-    }));
-    ipcRenderer.on('errorMsg', (e, msg) => this.pushNotification({
-      title: msg,
-      subTitle: null,
-      type: 'danger'
-    }));
-    ipcRenderer.on('parsingProgress', (e, [currentIndex, total]) => {
-      if (!this.progressNotificationSent) {
-        this.progressNotificationSent = true;
-        this.pushNotification({
-          title: 'Adding tracks',
-          subTitle: `${currentIndex}/${total}`,
-          type: 'persist'
-        });
-      }
+    ipcRenderer.on('notification', (e, notification) => {
+      this.pushNotification(notification);
+    });
+    ipcRenderer.on('closeNotification', (e, title) => {
+      this.removeNotification(title);
     });
   }
 };

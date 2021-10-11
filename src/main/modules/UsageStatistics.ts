@@ -16,12 +16,12 @@ export class UsageManager {
     os_type: os.type(),
     app_launches: []
   };
-  constructor () {
+  constructor() {
     this.usageData.id = this.idGenerator();
     this.usageData.app_launches = this.appLaunches();
     this.addAppLaunch();
   }
-  idGenerator () {
+  idGenerator() {
     if (fs.existsSync(paths.usageData)) {
       const data = JSON.parse(
         fs.readFileSync(paths.usageData, 'utf-8')
@@ -31,7 +31,7 @@ export class UsageManager {
       return Math.round(Math.random() * 50000) + os.userInfo().username;
     }
   }
-  appLaunches () {
+  appLaunches() {
     if (fs.existsSync(paths.usageData)) {
       const data: UserInfo = JSON.parse(
         fs.readFileSync(paths.usageData, 'utf-8')
@@ -41,11 +41,11 @@ export class UsageManager {
       return [];
     }
   }
-  addAppLaunch () {
+  addAppLaunch() {
     this.usageData.app_launches.push(Date());
     this.saveUsageData();
   }
-  saveUsageData () {
+  saveUsageData() {
     fs.writeFile(
       paths.usageData,
       JSON.stringify(this.usageData),
@@ -54,8 +54,9 @@ export class UsageManager {
       }
     );
   }
-  async sendUsageData () {
-    const supabase = createClient('https://tqfvneqybooaifvbdqlj.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyNzMwODQ4OSwiZXhwIjoxOTQyODg0NDg5fQ.wr67SdghPIPEEhkoK7xeOHS3Dq2jojCYDYsD6ktUKTo');
+  async sendUsageData() {
+    const key = process.env.SUPABASE_KEY || ""
+    const supabase = createClient('https://tqfvneqybooaifvbdqlj.supabase.co', key);
     try {
       const { data } = await supabase
         .from<UserInfo>('Users')
@@ -64,10 +65,11 @@ export class UsageManager {
         ], { upsert: true });
       console.log(data);
     } catch (error) {
-      console.log('No internet');
+      console.log('Unable to send stats');
+      console.log(error);
     }
   }
-  public get getUsageData (): UserInfo {
+  public get getUsageData(): UserInfo {
     return this.usageData;
   }
 }

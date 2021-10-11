@@ -5,7 +5,7 @@
       class="album_art round15"
       :src="albumArt"
       @click="$emit('togglePlayerMode')"
-    >
+    />
   </div>
 </template>
 
@@ -28,15 +28,20 @@ export default {
     setThemeColor() {
       if (this.dynamicAccentColor) {
         setTimeout(async () => {
-          const palette = await ColorThief.prototype.getPalette(
-            document.querySelector('#playing_track_album_art')
-          );
-          const app = document.querySelector('#app');
-          if (palette[0] && palette[1]) {
-            app.style.setProperty(
-              '--accentColor',
-              `linear-gradient(120deg,rgba(${palette[0]}),rgba(${palette[1]}))`
+          try {
+            const palette = await ColorThief.prototype.getPalette(
+              document.querySelector('#playing_track_album_art')
             );
+            const app = document.querySelector('#app');
+            if (palette[0] && palette[1]) {
+              app.style.setProperty(
+                '--accentColor',
+                `linear-gradient(120deg,rgba(${palette[0]}),rgba(${palette[1]}))`
+              );
+            }
+          } catch (error) {
+            console.log('Error changing dynamic accent color');
+            console.log(error);
           }
         }, 50);
       }
