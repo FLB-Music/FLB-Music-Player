@@ -202,10 +202,15 @@ ipcMain.on('updatePlaylists', (e, payload) => {
 ipcMain.on('addScanFolder', () => {
   dialog.showOpenDialog(win, { properties: ['openDirectory'] }).then(async (data) => {
     if (!data.canceled) {
-      settings.addFolderToScan(data.filePaths[0]);
-      win.webContents.send('userSettings', settings.getSettings);
-      const tracks = await getParsedTracks([data.filePaths[0]])
-      sendMessageToRenderer("addMultipleTracks", tracks)
+      let isAdded = settings.addFolderToScan(data.filePaths[0]);
+      if (isAdded) {
+        win.webContents.send('userSettings', settings.getSettings);
+        const tracks = await getParsedTracks([data.filePaths[0]])
+        sendMessageToRenderer("addMultipleTracks", tracks)
+        fileTracker.saveChanges()
+      } else {
+        sendNotificationToRenderer("Folder already added")
+      }
     }
   });
 });
