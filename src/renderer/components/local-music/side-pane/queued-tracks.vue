@@ -1,29 +1,28 @@
 <template>
-  <div class="QueuedTracks animated faster disable__options round20 pos-rel">
+  <div class="queuedTracks animated faster disable__options round20 pos-rel">
     <div
       v-if="customQueue.length > 1"
-      class="queue-actions pos-abs bottom0 bg2 pa10 zIndex2 w-100 flex center-a"
+      class="queue-actions blurred_bg blur20 zIndex2 w-100 flex center-a"
     >
-      <base-button
-        text="Clear Queue"
-        :active="autoScroll"
-        @click.native="clearCustomQueue"
-      />
+      <base-button text="Clear Queue" @click.native="clearCustomQueue" />
     </div>
-    <div class="QueuedTracksWrapper round20 h-90 w-100">
-      <draggable
-        v-model="customQueue"
-        ghost-class="ghost"
-        @start="drag = true"
-        @end="drag = false"
-      >
-        <que-track
-          v-for="(track, index) in customQueue"
-          :key="track.fileLocation"
-          :track="track"
-          :index="index"
-        />
-      </draggable>
+    <div class="queuedTracksWrapper round20 h-90" @scroll="virtualize($event)">
+      <div class="tracksWrapper">
+        <draggable
+          v-model="customQueue"
+          ghost-class="ghost"
+          @start="drag = true"
+          @end="drag = false"
+        >
+          <que-track
+            v-for="(track, index) in tracksToRender"
+            :key="track.fileLocation"
+            :track="track"
+            :index="index"
+          />
+        </draggable>
+      </div>
+      <div :style="{ height: compHeight }" class="filler" />
     </div>
   </div>
 </template>
@@ -36,7 +35,9 @@ export default {
 
   data() {
     return {
-      queue: []
+      queue: [],
+      tracksToRender: [],
+      NO_OF_TRACKS_TO_RENDER: 30
     };
   },
   computed: {
@@ -65,6 +66,26 @@ export default {
       this.scrollToPlayingTrack();
       return this.$store.state.PlaybackManger.playingTrackInfo.track
         .fileLocation;
+    },
+    compHeight() {
+      const number = this.customQueue.length + 8;
+      const height = number * this.NO_OF_TRACKS_TO_RENDER;
+      let tracksWrapperHeight = 0;
+      try {
+        tracksWrapperHeight = parseInt(
+          getComputedStyle(
+            document.querySelector('.tracksWrapper')
+          ).height.replace('px', '')
+        );
+      } catch (error) {
+        console.log('Component not yet rendered');
+      }
+      return `${height - tracksWrapperHeight}px`;
+    }
+  },
+  watch: {
+    customQueue() {
+      this.virtualize();
     }
   },
   methods: {
@@ -77,34 +98,65 @@ export default {
     playQueuedTrack(track) {
       this.setPlayingTrack({ track, index: 0 });
     },
+    virtualize() {
+      console.log('Virtualizing Queue');
+      const container = document.querySelector('.queuedTracksWrapper');
+      const scrollTop = Math.trunc(
+        container.scrollTop / this.NO_OF_TRACKS_TO_RENDER
+      );
+      const start = scrollTop;
+      const end = scrollTop + this.NO_OF_TRACKS_TO_RENDER;
+      console.log(start, end);
+      this.tracksToRender = this.customQueue.slice(start, end);
+    },
     scrollToPlayingTrack() {
-      setTimeout(() => {
-        const index = parseInt(
-          document.querySelector('.playing_track').getAttribute('data-index'),
-          10
-        );
-        console.log(index);
-      }, 100);
+      // setTimeout(() => {
+      //   const index = parseInt(
+      //     document.querySelector('.playing_track').getAttribute('data-index'),
+      //     10
+      //   );
+      //   console.log(index);
+      // }, 100);
     }
+  },
+  mounted() {
+    this.tracksToRender = this.customQueue.slice(
+      0,
+      this.NO_OF_TRACKS_TO_RENDER
+    );
   }
 };
 </script>
 
 <style lang="scss">
-.QueuedTracks {
-  width: 97%;
+.queuedTracks {
+  width: 100%;
   height: 95%;
-  margin-left: -5px;
-  .QueuedTracksWrapper {
-    padding: 5px;
-    padding-right: 12px;
-    width: 104%;
-    overflow: scroll;
-    // padding-top: 40px;
+  .queuedTracksWrapper {
+    width: 103%;
+    height: 100%;
+    overflow-y: scroll;
   }
   .queue-actions {
+    position: absolute;
+    padding: 10px;
+    bottom: 0px;
     left: -5px;
-    padding-top: 12px;
+  }
+  .tracksWrapper {
+    overflow: hidden;
+    position: sticky;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    width: 100%;
+    height: 100%;
+    &:last-child {
+      border-bottom: none !important;
+    }
+    .filler {
+      width: 100%;
+    }
   }
 }
 </style>

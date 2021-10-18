@@ -24,88 +24,88 @@
 </template>
 
 <script>
-  import { mapMutations } from 'vuex';
+import { mapMutations } from 'vuex';
 
-  export default {
-    name: 'QueTrack',
-    props: {
-      track: Object,
-      index: Number
-    },
-    computed: {
-      currentlyPlayingTrackPath() {
-        return this.$store.state.PlaybackManger.playingTrackInfo.track
-          .fileLocation;
-      }
-    },
-    methods: {
-      ...mapMutations(['setPlayingTrack', 'removeTrackFromCustomQueue']),
-      playQueuedTrack(track) {
-        this.setPlayingTrack({ track, index: 0 });
-      }
+export default {
+  name: 'QueTrack',
+  props: {
+    track: Object,
+    index: Number
+  },
+  computed: {
+    currentlyPlayingTrackPath() {
+      return this.$store.state.PlaybackManger.playingTrackInfo.track
+        .fileLocation;
     }
-  };
+  },
+  methods: {
+    ...mapMutations(['setPlayingTrack', 'removeTrackFromCustomQueue']),
+    playQueuedTrack(track) {
+      this.setPlayingTrack({ track, index: 0 });
+    }
+  }
+};
 </script>
 
 <style lang="scss">
-  .queuedTrack {
-    position: relative;
-    padding: 10px;
-    cursor: pointer;
-    width: 95%;
-    p {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-    .card_title {
-      width: 90%;
-    }
+.queuedTrack {
+  position: relative;
+  padding: 10px;
+  cursor: pointer;
+  p {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 80%;
+  }
+  .card_title {
+    width: 90%;
+  }
 
-    .removeBt {
-      position: absolute;
-      bottom: -5px;
-      left: 50%;
-      background: crimson;
-      display: none;
-    }
-    &::before,
-    &::after {
-      content: '';
-      position: absolute;
-      height: 3px;
-      width: 20px;
-      right: 10px;
-      cursor: grab;
-      top: 40%;
-    }
+  .removeBt {
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    background: crimson;
+    display: none;
+  }
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    height: 3px;
+    width: 20px;
+    right: 10px;
+    cursor: grab;
+    top: 40%;
+  }
 
-    &::before {
-      border-top: 2px solid white;
-    }
-    &::after {
-      border-bottom: 2px solid white;
-      border-top: 2px solid white;
-      transform: translateY(5px);
-    }
+  &::before {
+    border-top: 2px solid white;
   }
-  .ghost {
-    background: var(--accentColor);
+  &::after {
+    border-bottom: 2px solid white;
+    border-top: 2px solid white;
+    transform: translateY(5px);
   }
-  .queuedTrack:hover:not(.playing_track) {
-    background: rgba(255, 255, 255, 0.158);
-    .removeBt {
-      display: block;
-    }
+}
+.ghost {
+  background: var(--accentColor);
+}
+.queuedTrack:hover:not(.playing_track) {
+  background: rgba(255, 255, 255, 0.158);
+  .removeBt {
+    display: block;
   }
-  .queuedTrack:active {
-    img {
-      transform: translateX(-50%) scale(0);
-    }
+}
+.queuedTrack:active {
+  img {
+    transform: translateX(-50%) scale(0);
   }
-  .playing_track {
-    border-radius: 10px;
-    margin: 10px 0px;
-    background: var(--accentColor);
-  }
+}
+.playing_track {
+  border-radius: 10px;
+  margin: 10px 0px;
+  background: var(--accentColor);
+}
 </style>
