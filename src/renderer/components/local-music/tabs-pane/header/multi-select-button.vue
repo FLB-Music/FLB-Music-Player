@@ -31,8 +31,8 @@ export default {
       const trackOptions = document.querySelector('.trackOptions');
       if (this.multiSelectOn) {
         trackOptions.style.height = `0px`;
-        trackOptions.style.top = `300px`;
-        trackOptions.style.left = `600px`;
+        trackOptions.style.top = `130px`;
+        trackOptions.style.left = `62%`;
         setTimeout(() => {
           trackOptions.style.height = `225px`;
         }, 100);
