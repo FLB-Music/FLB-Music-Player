@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="tab addedTracksTab"
-    @scroll="virtualize($event)"
-  >
+  <div class="tab addedTracksTab" @scroll="virtualize($event)">
     <div
       v-if="addedTracks.length === 0"
       class="flex-col center-a"
@@ -14,71 +11,29 @@
       </p>
       <!-- <p>💬 Or Just Download⬇ some with FLBing💎</p> -->
     </div>
-    <virtual-list
-      v-if="0"
-      id="tracksTabVirtualList"
-      scrollable
-      :data-key="'fileLocation'"
-      :data-sources="addedTracks"
-      :data-component="card"
-      :estimate-size="280"
-    />
-    <div
-      :style="{ height: compHeight }"
-      class="filler"
-    />
-    <div
-      class="tracksWrapper"
-      @click="addTracksToQueue"
-    >
+    <div class="tracksWrapper" @click="addTracksToQueue">
       <track-card
         v-for="(track, index) in tracksToRender"
         :key="track.fileLocation"
-        :source="track"
+        :trackInfo="track"
         :index="index"
       />
     </div>
-    <div class="customScrollBar">
-      <div
-        class="l"
-        :style="{ top: scrollPercent }"
-      />
-      <div
-        class="wrapper"
-        style="height: 100%"
-      >
-        <input
-          type="range"
-          value="0"
-          min="0"
-          max="100"
-          @input="scrollContainer($event)"
-        >
-      </div>
-    </div>
-    <track-card v-if="0" />
+    <div :style="{ height: compHeight }" class="filler" />
   </div>
 </template>
 
 <script>
 import { mapMutations } from 'vuex';
 import { sortArrayOfObjects } from '@/shared-utils';
-import TrackCard from '@/renderer/components/root/track/track-card.vue';
 
 export default {
   name: 'TracksTab',
 
   data() {
     return {
-      card: TrackCard,
       tracksToRender: [],
-      scrollTop: 0,
-      startingIndexForTracksNotRendered: 50,
-      scrollDirection: 'Down',
-      removedChucks: [],
-      scrollAmountNotRepeated: 0,
-      scrollPercent: '0%',
-      offset: 0
+      NO_OF_TRACKS_TO_RENDER: 30
     };
   },
   computed: {
@@ -95,13 +50,26 @@ export default {
       return this.$store.state.sortParameter;
     },
     compHeight() {
-      const number = this.addedTracks.length + 9;
-      const height = number * 20;
-      return `${height}px`;
+      const number = this.addedTracks.length - 1;
+      const height = number * this.NO_OF_TRACKS_TO_RENDER;
+      let tracksWrapperHeight = 0;
+      try {
+        tracksWrapperHeight = parseInt(
+          getComputedStyle(
+            document.querySelector('.tracksWrapper')
+          ).height.replace('px', '')
+        );
+      } catch (error) {
+        console.log('Component not yet rendered');
+      }
+      return `${height - tracksWrapperHeight}px`;
     }
   },
   watch: {
     sortParameter() {
+      this.virtualize();
+    },
+    addedTracks() {
       this.virtualize();
     },
     flipSortOrder() {
@@ -119,50 +87,28 @@ export default {
       this.overWriteCustomQueue(this.addedTracks);
     },
     virtualize() {
+      console.log('Virtualizing');
       const container = document.querySelector('.addedTracksTab');
-      const scrollTop = Math.trunc(container.scrollTop / 20);
+      const scrollTop = Math.trunc(
+        container.scrollTop / this.NO_OF_TRACKS_TO_RENDER
+      );
       const start = scrollTop;
-      const end = scrollTop + 16;
+      const end = scrollTop + this.NO_OF_TRACKS_TO_RENDER;
       this.tracksToRender = this.addedTracks.slice(start, end);
     }
   },
   mounted() {
-    this.tracksToRender = this.addedTracks.slice(0, 16);
+    this.tracksToRender = this.addedTracks.slice(
+      0,
+      this.NO_OF_TRACKS_TO_RENDER
+    );
   }
 };
 </script>
 
 <style lang="scss">
-.customScrollBar {
-  height: 90%;
-  width: 8px;
-  position: absolute;
-  right: 0px;
-  top: 0px;
-  display: none;
-  .wrapper {
-    position: relative;
-  }
-  .l {
-    background: var(--accentColor);
-    height: 10%;
-    width: 100%;
-    border-radius: 10px;
-    position: absolute;
-  }
-  input {
-    position: absolute;
-    width: 5600%;
-    right: 0px;
-    bottom: 280px;
-    right: -280px;
-    transform: rotate(90deg);
-    opacity: 0;
-    pointer-events: none;
-  }
-}
 .addedTracksTab {
-  // position: relative;
+  position: relative;
   overflow: hidden;
   overflow-y: scroll !important;
   width: 102%;
@@ -170,12 +116,11 @@ export default {
   #tracksTabVirtualList,
   .tracksWrapper {
     overflow: hidden;
-    position: absolute;
-
-    bottom: 5px;
-    top: 100px;
+    position: sticky;
+    top: 0px;
     left: 10px;
-    right: 20px;
+    height: 100%;
+    padding: 10px;
     &:last-child {
       border-bottom: none !important;
     }

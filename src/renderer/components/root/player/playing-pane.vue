@@ -673,20 +673,20 @@ export default {
   }
   #toggle_play button {
     position: fixed;
-    left: 46%;
+    left: 48%;
     top: 50%;
     transform: translateX(-50%) translateY(-50%);
     transition: 0.1s ease-in-out;
   }
   #next_bt {
     position: fixed;
-    right: 10px;
+    right: 12px;
     top: 50%;
     transform: translateX(-50%) translateY(-50%);
   }
   #prev_bt {
     position: fixed;
-    left: 25px;
+    left: 38px;
     top: 50.5%;
     transform: translateX(-50%) translateY(-50%);
   }

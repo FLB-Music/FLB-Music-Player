@@ -9,22 +9,19 @@
     @contextmenu="showOptions($event)"
     @click="playTrack"
   >
-    <div
-      class="fxSelectBt"
-      @click.stop="bulkSelectTrack($event)"
-    />
+    <div class="fxSelectBt" @click.stop="bulkSelectTrack($event)" />
     <div class="info">
       <p class="trackTitle text-small-1">
-        {{ source.defaultTitle }}
+        {{ trackInfo.defaultTitle }}
       </p>
       <p class="artist weight300 fade_to_8 text-small-1">
-        {{ source.defaultArtist }}
+        {{ trackInfo.defaultArtist }}
       </p>
       <p class="album queue weight300 fade_to_8 text-small-1">
-        {{ source.album }}
+        {{ trackInfo.album }}
       </p>
       <p class="duration">
-        {{ source.formattedLength }}
+        {{ trackInfo.formattedLength }}
       </p>
     </div>
   </div>
@@ -43,15 +40,15 @@ export default {
   computed: {
     isCurrentlyPlaying() {
       return (
-        this.$store.state.PlaybackManger.playingTrackInfo.track
-        && this.$store.state.PlaybackManger.playingTrackInfo.track.fileLocation
-          === this.source.fileLocation
+        this.$store.state.PlaybackManger.playingTrackInfo.track &&
+        this.$store.state.PlaybackManger.playingTrackInfo.track.fileLocation ===
+          this.trackInfo.fileLocation
       );
     },
     isSelected() {
       return (
         this.$store.state.TrackSelector.selectedTracks.findIndex(
-          track => track.fileLocation === this.source.fileLocation
+          track => track.fileLocation === this.trackInfo.fileLocation
         ) !== -1
       );
     }
@@ -79,16 +76,16 @@ export default {
         trackOptions.style.height = `225px`;
       }, 100);
       this.clearSelectedTracks();
-      this.addToSelectedTracks(this.source);
+      this.addToSelectedTracks(this.trackInfo);
     },
     playTrack() {
       if (document.querySelector('audio')) {
         document.querySelector('audio').muted = false;
       }
-      this.setPlayingTrack({ track: this.source, index: this.index });
+      this.setPlayingTrack({ track: this.trackInfo, index: this.index });
     },
     bulkSelectTrack() {
-      this.addToSelectedTracks(this.source);
+      this.addToSelectedTracks(this.trackInfo);
     }
   },
   props: {
@@ -99,11 +96,8 @@ export default {
       // index of current item
       type: Number
     },
-    source: {
-      type: Object,
-      default() {
-        return {};
-      }
+    trackInfo: {
+      type: Object
     }
   }
 };

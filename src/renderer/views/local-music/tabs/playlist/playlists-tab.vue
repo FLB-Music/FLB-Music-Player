@@ -1,9 +1,6 @@
 <template>
   <div class="PlaylistsTab tab">
-    <div
-      v-if="!selectedGroup"
-      class="playlistCards"
-    >
+    <div v-if="!selectedGroup" class="playlistCards">
       <playlist-card
         v-for="playlist in playlists"
         :key="playlist.name"
@@ -14,10 +11,7 @@
       enter-active-class="animated fadeInUp extrafaster"
       leave-active-class="animated fadeOutDown extrafaster"
     >
-      <div
-        v-if="selectedGroup"
-        class="selectedGroup bg1"
-      >
+      <div v-if="selectedGroup" class="selectedGroup bg1">
         <base-button
           id="backToUnfilteredItems"
           extra-class="blurred_bg"
@@ -33,10 +27,7 @@
               :key="albumArt"
               class="flex_image_wrapper"
             >
-              <img
-                class="flexImage"
-                :src="'file://' + albumArt"
-              >
+              <img class="flexImage" :src="'file://' + albumArt" />
             </div>
           </div>
 
@@ -47,10 +38,7 @@
           />
           <div class="sliverBarFooter">
             <div class="groupedCard_info">
-              <p
-                style="margin-bottom: 10px"
-                class="groupedInfo_title"
-              >
+              <p style="margin-bottom: 10px" class="groupedInfo_title">
                 {{ selectedGroup.name }}
               </p>
             </div>
@@ -71,7 +59,7 @@
               v-for="(track, index) in playlistsTracks"
               :key="track.fileLocation"
               :index="index"
-              :source="track"
+              :trackInfo="track"
             />
           </transition-group>
         </div>

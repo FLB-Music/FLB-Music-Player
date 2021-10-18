@@ -1,9 +1,6 @@
 <template>
   <div class="FoldersTab groupedContentTab tab">
-    <div
-      v-if="!selectedGroup"
-      class="folderCards flex_auto"
-    >
+    <div v-if="!selectedGroup" class="folderCards flex_auto">
       <div
         v-for="folder in folders"
         :key="folder.path"
@@ -11,10 +8,7 @@
         @click="selectGroup(folder)"
       >
         <div class="silv">
-          <img
-            class="folderIcon"
-            src="@icon/folder.svg"
-          >
+          <img class="folderIcon" src="@icon/folder.svg" />
           <div class="top3">
             <!-- <img
               v-if="folder.tracks[0]"
@@ -37,10 +31,7 @@
       enter-active-class="animated fadeInUp extrafaster"
       leave-active-class="animated fadeOutDown extrafaster"
     >
-      <div
-        v-if="selectedGroup"
-        class="selectedGroup bg1"
-      >
+      <div v-if="selectedGroup" class="selectedGroup bg1">
         <base-button
           id="backToUnfilteredItems"
           icon-weight="regular"
@@ -58,11 +49,7 @@
               </p>
             </div>
             <div class="sliverBarActions">
-              <base-button
-                icon="play"
-                text="Play"
-                @click.native="playAll"
-              />
+              <base-button icon="play" text="Play" @click.native="playAll" />
               <base-button
                 icon="queue"
                 text="Queue"
@@ -74,23 +61,20 @@
             v-if="selectedGroup.tracks[0].albumArt"
             id="blurred"
             :src="'file://' + selectedGroup.tracks[0].albumArt"
-          >
+          />
           <img
             v-if="!selectedGroup.tracks[0].albumArt"
             id="blurred"
             src="@img/flbdefault-cover.png"
-          >
-          <img
-            class="coverArt"
-            src="@icon/folder.svg"
-          >
+          />
+          <img class="coverArt" src="@icon/folder.svg" />
         </div>
         <div class="cardsWrapper">
           <track-card
             v-for="(track, index) in folderTracks"
             :key="track.path"
             :index="index"
-            :source="track"
+            :trackInfo="track"
           />
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { win } from "@/background";
-import path from 'path';
+import fs from 'fs';
 import { TrackType } from "@/types";
 import { FilesTracker } from "../modules/FilesTracker";
 import { PlaybackStats } from "../modules/PlaybackStats";
@@ -38,7 +38,8 @@ export async function initializeApp(fileTracker: FilesTracker, playlistsTracker:
             win.webContents.send('newTrack', newTrack);
             win.webContents.send('playThisTrack', newTrack);
         }
-        if (path.parse(firstArgument).ext == '') {
+        const isFolder = fs.lstatSync(firstArgument).isDirectory()
+        if (isFolder && !firstArgument.includes("dist_electron")) {
             const tracks = await getParsedTracks([firstArgument])
             fileTracker.addMultipleTracks(tracks);
             sendMessageToRenderer("addMultipleTracks", tracks)
