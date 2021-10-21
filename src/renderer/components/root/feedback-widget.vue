@@ -1,9 +1,7 @@
 <template>
   <div class="feedback_widget widget blurred_bg blur20 max-h-80 bottom10">
     <div class="widget_header">
-      <h1 class="widget_title">
-        Feedback
-      </h1>
+      <h1 class="widget_title">Feedback</h1>
       <base-button
         icon="x"
         extra-class="widget_close shrink_icon circle shrink8"
@@ -12,24 +10,16 @@
       />
     </div>
     <div class="flex-col">
-      <p
-        v-if="feedbackType === 'issue'"
-        class="mb10 weight300"
-      >
+      <p v-if="feedbackType === 'issue'" class="mb10 weight300">
         Report an Issue 🐜
       </p>
-      <p
-        v-else
-        class="mb10 weight300"
-      >
-        Request a Feature 💎
-      </p>
+      <p v-else class="mb10 weight300">Request a Feature 💎</p>
       <input
         v-model="feedback.title"
         placeholder="Title"
         type="text"
         class="inputElem mb10 min-w-90 pr10 max-w-90"
-      >
+      />
       <textarea
         v-model="feedback.description"
         placeholder="Description"
@@ -70,24 +60,46 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(['UIcontrollerToggleProperty']),
-    async sendFeedback(type) {
-      const data = {
-        type,
-        ...this.feedback
-      };
+    ...mapMutations(['UIcontrollerToggleProperty', 'pushNotification']),
+    async sendFeedback() {
+      this.UIcontrollerToggleProperty('showFeedbackWidget');
+      this.pushNotification({
+        title: 'Sending...',
+        subTitle: '',
+        type: 'normal'
+      });
+      const endPoint =
+        this.feedbackType === 'request' ? 'feature-request' : 'bug-report';
+
+      const res = await fetch(`https://flb-server.herokuapp.com/${endPoint}`, {
+        body: JSON.stringify(this.feedback),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: 'POST'
+      });
+      if (res.status === 200) {
+        this.pushNotification({
+          title:
+            this.feedbackType === 'request'
+              ? 'Feature Request Sent'
+              : 'Bug Reported',
+          subTitle: "Awesome keep 'em coming",
+          type: 'success'
+        });
+      } else {
+        this.pushNotification({
+          title:
+            this.feedbackType === 'request'
+              ? 'Error sending Feature Request'
+              : 'Error sending Bug Report',
+          subTitle: '',
+          type: 'danger'
+        });
+      }
+      console.log(res);
       this.feedback.title = '';
       this.feedback.description = '';
-      const req = await fetch('https://flbmusic-bot.herokuapp.com/api', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          'User-Agent': 'FLB Music App'
-        },
-        body: JSON.stringify(data)
-      });
-      console.log(req);
     }
   },
   props: {
