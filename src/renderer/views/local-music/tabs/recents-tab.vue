@@ -10,7 +10,7 @@
     </div>
     <div @click="addTracksToQueue">
       <track-card
-        v-for="track in recentlyPlayedTracks"
+        v-for="track in recentlyPlayedTracks.reverse()"
         :key="track.fileLocation"
         :track-info="track"
         :index="0"
