@@ -153,3 +153,16 @@ export interface UserInfo {
   os_type: string;
   app_launches: string[]
 }
+
+export interface DeezerArtistData {
+  id: number;
+  name: string;
+  link: string;
+  picture: string;
+  picture_small: string;
+  picture_medium: string;
+  picture_big: string;
+  picture_xl: string;
+  tracklist: string;
+  type: string;
+}

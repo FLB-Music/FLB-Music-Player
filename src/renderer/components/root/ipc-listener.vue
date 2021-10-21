@@ -9,22 +9,14 @@
     >
       <defs>
         <filter id="goo">
-          <feGaussianBlur
-            in="SourceGraphic"
-            stdDeviation="8"
-            result="blur"
-          />
+          <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
           <feColorMatrix
             in="blur"
             mode="matrix"
             values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9"
             result="goo"
           />
-          <feComposite
-            in="SourceGraphic"
-            in2="goo"
-            operator="atop"
-          />
+          <feComposite in="SourceGraphic" in2="goo" operator="atop" />
         </filter>
       </defs>
     </svg>
@@ -79,6 +71,14 @@ export default {
       return this.$store.state.appIsOnline;
     }
   },
+  watch: {
+    appIsOnline() {
+      if (this.appIsOnline) {
+        this.fetchArtistsInfo();
+        this.getLyrics();
+      }
+    }
+  },
   mounted() {
     ipcRenderer.send('initializeSettings');
     ipcRenderer.send('initializeApp');
@@ -108,11 +108,11 @@ export default {
       this.generateAlbumsData();
       this.generateArtistsData();
       this.generateFoldersData();
-      if (this.appIsOnline) {
-        this.fetchArtistsInfo();
-        this.getLyrics();
-      }
     });
+    if (this.appIsOnline) {
+      this.fetchArtistsInfo();
+      this.getLyrics();
+    }
     ipcRenderer.on('playStats', (e, tracks) => {
       this.setPlayStats(tracks);
     });
