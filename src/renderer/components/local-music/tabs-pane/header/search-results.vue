@@ -13,12 +13,12 @@
         <track-card
           v-for="track in searchResults.tracks"
           :key="track.fileLocation"
-          :trackInfo="track"
+          :track-info="track"
           :index="0"
         />
       </div>
     </div>
-    <hr />
+    <hr>
     <div
       class="ArtistResults groupedContentTab"
       style="padding: 0px"
@@ -41,7 +41,10 @@
         />
       </div>
     </div>
-    <div class="AlbumResults groupedContentTab" @click="closeSearch">
+    <div
+      class="AlbumResults groupedContentTab"
+      @click="closeSearch"
+    >
       <div class="sectionHeading">
         <h3>Albums</h3>
         <div class="line" />

@@ -5,7 +5,10 @@
       leave-active-class="animated fadeOutDown extrafaster"
     >
       <playlist-widget v-if="showPlaylistWidget" />
-      <tag-editor v-if="showTagEditor" :target-track="selectedTrack" />
+      <tag-editor
+        v-if="showTagEditor"
+        :target-track="selectedTrack"
+      />
     </transition>
     <transition
       enter-active-class="animated fadeInUp extrafaster"

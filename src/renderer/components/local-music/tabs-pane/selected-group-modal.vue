@@ -5,15 +5,24 @@
       style="margin-top: 20px"
       @click="deSelectGroup()"
     >
-      <base-icon icon="caret-left" weight="regular" />
+      <base-icon
+        icon="caret-left"
+        weight="regular"
+      />
     </button>
     <div class="sliverBar">
       <div class="sliverBarActions">
-        <button class="btWithIcon" @click="playAll">
+        <button
+          class="btWithIcon"
+          @click="playAll"
+        >
           <base-icon icon="skip-forward" />
           <p>Play All</p>
         </button>
-        <button class="btWithIcon" @click="addTracksToQueue">
+        <button
+          class="btWithIcon"
+          @click="addTracksToQueue"
+        >
           <base-icon icon="queue" />
           <p>Add To Queue</p>
         </button>
@@ -21,8 +30,11 @@
       <img
         class="coverArt"
         :src="'file://' + selectedGroup.tracks[0].albumArt"
-      />
-      <img id="blurred" :src="'file://' + selectedGroup.tracks[0].albumArt" />
+      >
+      <img
+        id="blurred"
+        :src="'file://' + selectedGroup.tracks[0].albumArt"
+      >
       <div class="groupedCard_info">
         <p class="groupedInfo_title">
           {{ selectedGroup.name }}
@@ -37,7 +49,7 @@
         v-for="(track, index) in selectedGroup.tracks"
         :key="track.path"
         :index="index"
-        :trackInfo="track"
+        :track-info="track"
       />
     </div>
   </div>

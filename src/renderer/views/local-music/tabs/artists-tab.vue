@@ -1,10 +1,16 @@
 <template>
   <div class="tab ArtistsTab groupedContentTab">
     <track-card v-if="0" />
-    <div v-if="artists.length === 0" class="loadingArea">
+    <div
+      v-if="artists.length === 0"
+      class="loadingArea"
+    >
       <div class="loadingIndicator" />
     </div>
-    <div v-if="!selectedGroup" class="groupCards grid_auto">
+    <div
+      v-if="!selectedGroup"
+      class="groupCards grid_auto"
+    >
       <artist-card
         v-for="artist in artists"
         :key="artist.name"
@@ -15,14 +21,17 @@
       enter-active-class="animated fadeInUp extrafaster"
       leave-active-class="animated fadeOutDown extrafaster"
     >
-      <div v-if="selectedGroup" class="selectedGroup bg1">
+      <div
+        v-if="selectedGroup"
+        class="selectedGroup bg1"
+      >
         <div class="sliverBar">
-          <base-button
+          <!-- <base-button
             id="bingArtistBtn"
             img="@icon/flbing.svg"
             title="Bing this Artist"
             @click.native="bingThisArtist"
-          />
+          /> -->
           <div class="sliverBarFooter">
             <div class="groupedCard_info">
               <p class="groupedInfo_title">
@@ -36,7 +45,11 @@
               </p>
             </div>
             <div class="sliverBarActions">
-              <base-button icon="play" text="Play" @click.native="playAll" />
+              <base-button
+                icon="play"
+                text="Play"
+                @click.native="playAll"
+              />
               <base-button
                 icon="queue"
                 text="Queue"
@@ -55,14 +68,17 @@
             v-if="artistPicture"
             class="coverArt roundImage"
             :src="'file://' + artistPicture"
+          >
+          <letter-card
+            v-else
+            :text="selectedGroup.name"
           />
-          <letter-card v-else :text="selectedGroup.name" />
           <img
             v-if="artistPicture"
             id="blurred"
             class="coverArt"
             :src="'file://' + artistPicture"
-          />
+          >
         </div>
         <div class="cardsWrapper">
           <div class="flex gap20 al_t">
@@ -85,7 +101,9 @@
 
             <div class="artistTracks">
               <div class="sectionHeading">
-                <p style="margin-left: -10px">Tracks</p>
+                <p style="margin-left: -10px">
+                  Tracks
+                </p>
                 <div class="line" />
                 <p>{{ selectedGroup.tracks.length }}</p>
               </div>
@@ -94,7 +112,7 @@
                   v-for="(track, index) in artistTracks"
                   :key="track.path"
                   :index="index"
-                  :trackInfo="track"
+                  :track-info="track"
                 />
               </div>
             </div>

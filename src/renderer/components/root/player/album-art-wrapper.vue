@@ -5,7 +5,7 @@
       class="album_art round15"
       :src="albumArt"
       @click="$emit('togglePlayerMode')"
-    />
+    >
   </div>
 </template>
 

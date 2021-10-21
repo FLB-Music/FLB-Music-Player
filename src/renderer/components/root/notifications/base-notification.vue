@@ -8,17 +8,24 @@
     @click="popNotification"
   >
     <div class="notification_body">
-      <p class="notification_title">{{ currentNotification.title }}</p>
-      <p class="notification_subtitle" v-if="currentNotification.subTitle">
+      <p class="notification_title">
+        {{ currentNotification.title }}
+      </p>
+      <p
+        v-if="currentNotification.subTitle"
+        class="notification_subtitle"
+      >
         {{ currentNotification.subTitle }}
       </p>
     </div>
-    <base-icon class="closeNotification" icon="x" />
+    <base-icon
+      class="closeNotification"
+      icon="x"
+    />
   </div>
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
 import { mapMutations } from 'vuex';
 
 export default {

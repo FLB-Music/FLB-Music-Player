@@ -1,5 +1,8 @@
 <template>
-  <div class="tab addedTracksTab" @scroll="virtualize($event)">
+  <div
+    class="tab addedTracksTab"
+    @scroll="virtualize($event)"
+  >
     <div
       v-if="addedTracks.length === 0"
       class="flex-col center-a"
@@ -11,15 +14,21 @@
       </p>
       <!-- <p>💬 Or Just Download⬇ some with FLBing💎</p> -->
     </div>
-    <div class="tracksWrapper" @click="addTracksToQueue">
+    <div
+      class="tracksWrapper"
+      @click="addTracksToQueue"
+    >
       <track-card
         v-for="(track, index) in tracksToRender"
         :key="track.fileLocation"
-        :trackInfo="track"
+        :track-info="track"
         :index="index"
       />
     </div>
-    <div :style="{ height: compHeight }" class="filler" />
+    <div
+      :style="{ height: compHeight }"
+      class="filler"
+    />
   </div>
 </template>
 
@@ -57,7 +66,8 @@ export default {
         tracksWrapperHeight = parseInt(
           getComputedStyle(
             document.querySelector('.tracksWrapper')
-          ).height.replace('px', '')
+          ).height.replace('px', ''),
+          10
         );
       } catch (error) {
         console.log('Component not yet rendered');

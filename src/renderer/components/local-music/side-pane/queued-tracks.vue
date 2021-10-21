@@ -4,9 +4,15 @@
       v-if="customQueue.length > 1"
       class="queue-actions blurred_bg blur20 zIndex2 w-100 flex center-a"
     >
-      <base-button text="Clear Queue" @click.native="clearCustomQueue" />
+      <base-button
+        text="Clear Queue"
+        @click.native="clearCustomQueue"
+      />
     </div>
-    <div class="queuedTracksWrapper round20 h-90" @scroll="virtualize($event)">
+    <div
+      class="queuedTracksWrapper round20 h-90"
+      @scroll="virtualize($event)"
+    >
       <div class="tracksWrapper">
         <draggable
           v-model="customQueue"
@@ -22,7 +28,10 @@
           />
         </draggable>
       </div>
-      <div :style="{ height: compHeight }" class="filler" />
+      <div
+        :style="{ height: compHeight }"
+        class="filler"
+      />
     </div>
   </div>
 </template>
@@ -75,7 +84,8 @@ export default {
         tracksWrapperHeight = parseInt(
           getComputedStyle(
             document.querySelector('.tracksWrapper')
-          ).height.replace('px', '')
+          ).height.replace('px', ''),
+          10
         );
       } catch (error) {
         console.log('Component not yet rendered');
@@ -141,7 +151,8 @@ export default {
     position: absolute;
     padding: 10px;
     bottom: 0px;
-    left: -5px;
+    left: 0px;
+    border-radius: 0px 0px 20px 20px;
   }
   .tracksWrapper {
     overflow: hidden;

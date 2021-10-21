@@ -15,8 +15,12 @@
         v-if="track.albumArt"
         class="card_image"
         :src="'file://' + track.albumArt"
-      />
-      <img v-else class="card_image" src="@img/flbdefault-cover.png" />
+      >
+      <img
+        v-else
+        class="card_image"
+        src="@img/flbdefault-cover.png"
+      >
       <base-button
         id="card_playBt"
         icon="play"

@@ -9,7 +9,10 @@
     @contextmenu="showOptions($event)"
     @click="playTrack"
   >
-    <div class="fxSelectBt" @click.stop="bulkSelectTrack($event)" />
+    <div
+      class="fxSelectBt"
+      @click.stop="bulkSelectTrack($event)"
+    />
     <div class="info">
       <p class="trackTitle text-small-1">
         {{ trackInfo.defaultTitle }}
@@ -40,9 +43,9 @@ export default {
   computed: {
     isCurrentlyPlaying() {
       return (
-        this.$store.state.PlaybackManger.playingTrackInfo.track &&
-        this.$store.state.PlaybackManger.playingTrackInfo.track.fileLocation ===
-          this.trackInfo.fileLocation
+        this.$store.state.PlaybackManger.playingTrackInfo.track
+        && this.$store.state.PlaybackManger.playingTrackInfo.track.fileLocation
+          === this.trackInfo.fileLocation
       );
     },
     isSelected() {

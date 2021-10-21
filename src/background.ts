@@ -1,6 +1,4 @@
 'use strict';
-require('dotenv').config()
-
 import {
   app,
   BrowserWindow,
@@ -185,14 +183,15 @@ ipcMain.on('initializeSettings', () => {
 ipcMain.on('getFirstTracks', async () => {
   const tracks = await getParsedTracks(settings.getSettings.foldersToScan);
   fileTracker.addMultipleTracks(tracks);
-  sendMessageToRenderer("addMultipleTracks", tracks)
+  sendMessageToRenderer('addMultipleTracks', tracks);
+  fileTracker.saveChanges();
 });
 ipcMain.on('initializeApp', () => {
-  initializeApp(fileTracker, playlistsTracker, playbackStats)
+  initializeApp(fileTracker, playlistsTracker, playbackStats);
 });
 
 ipcMain.on('resetApp', () => {
-  resetApp()
+  resetApp();
 });
 
 ipcMain.on('updatePlaylists', (e, payload) => {
@@ -200,16 +199,16 @@ ipcMain.on('updatePlaylists', (e, payload) => {
 });
 
 ipcMain.on('addScanFolder', () => {
-  dialog.showOpenDialog(win, { properties: ['openDirectory'] }).then(async (data) => {
+  dialog.showOpenDialog(win, { properties: ['openDirectory'] }).then(async data => {
     if (!data.canceled) {
-      let isAdded = settings.addFolderToScan(data.filePaths[0]);
+      const isAdded = settings.addFolderToScan(data.filePaths[0]);
       if (isAdded) {
         win.webContents.send('userSettings', settings.getSettings);
-        const tracks = await getParsedTracks([data.filePaths[0]])
-        sendMessageToRenderer("addMultipleTracks", tracks)
-        fileTracker.saveChanges()
+        const tracks = await getParsedTracks([data.filePaths[0]]);
+        sendMessageToRenderer('addMultipleTracks', tracks);
+        fileTracker.saveChanges();
       } else {
-        sendNotificationToRenderer("Folder already added")
+        sendNotificationToRenderer('Folder already added');
       }
     }
   });
@@ -221,7 +220,7 @@ ipcMain.on('removeFromScannedFolders', (e, payload) => {
   win.webContents.send('userSettings', settings.getSettings);
 });
 ipcMain.on('refresh', () => {
-  sendNotificationToRenderer("Refreshing...", "", "success")
+  sendNotificationToRenderer('Refreshing...', '', 'success');
   getParsedTracks(settings.getSettings.foldersToScan);
 });
 
@@ -244,7 +243,7 @@ ipcMain.on('processDroppedFiles', async (e, droppedFiles: string[]) => {
   // // User dropped an array of folders
   if (fs.lstatSync(droppedFiles[0]).isDirectory()) {
     console.log('User dropped folder(s)');
-    const tracks = await getParsedTracks([droppedFiles[0]])
+    const tracks = await getParsedTracks([droppedFiles[0]]);
     fileTracker.addMultipleTracks(tracks);
     sendMessageToRenderer('addMultipleTracks', tracks);
   } else {
@@ -304,7 +303,7 @@ ipcMain.on('maximize', () => {
   }
 });
 ipcMain.on('closeWindow', async () => {
-  await fileTracker.saveChanges()
+  await fileTracker.saveChanges();
   app.quit();
 });
 
@@ -347,7 +346,7 @@ ipcMain.on('downloadBingTrack', (e, payload) => {
 });
 
 ipcMain.on('sendUsageStats', () => {
-  usageTracker.sendUsageData();
+  // usageTracker.sendUsageData();
 });
 
 ipcMain.on('checkForUpdate', () => {
@@ -378,16 +377,19 @@ async function getParsedTracks(folders: string[] = []) {
   const allParsedTracks: TrackType[] = [];
   for (const folder of folders) {
     const tracks = parseFolder(folder);
-    allTracks = [...allTracks, ...tracks]
+    allTracks = [...allTracks, ...tracks];
   }
   for (const [index, track] of allTracks.entries()) {
-    sendNotificationToRenderer("Loading songs", `${index + 1}/${allTracks.length}`, 'normal', true)
-    const parsedTrack = await createParsedTrack(track)
-    allParsedTracks.push(parsedTrack)
+    sendNotificationToRenderer('Loading songs', `${index + 1}/${allTracks.length}`, 'normal', true);
+    const alreadyParsed = fileTracker.getTracks.map(track => track.fileLocation);
+    if (!alreadyParsed.includes(track)) {
+      const parsedTrack = await createParsedTrack(track);
+      allParsedTracks.push(parsedTrack);
+    }
   }
-  sendMessageToRenderer("closeNotification", 'Loading songs')
-  console.log(allParsedTracks.length + " tracks parsed");
-  return allParsedTracks
+  sendMessageToRenderer('closeNotification', 'Loading songs');
+  console.log(allParsedTracks.length + ' tracks parsed');
+  return allParsedTracks;
 }
 
 export async function writeTags(
@@ -396,7 +398,7 @@ export async function writeTags(
   silent = false
 ) {
   if (tagChanges.APIC && tagChanges.APIC.includes('http')) {
-    console.log("downloading file");
+    console.log('downloading file');
     try {
       tagChanges.APIC = await downloadFile(
         tagChanges.APIC,
@@ -408,7 +410,7 @@ export async function writeTags(
       console.log('errorobject');
       console.log(error);
     }
-    console.log("Done downloading file");
+    console.log('Done downloading file');
     tagChanges.APIC = decodeURI(tagChanges.APIC);
   }
   const isSuccessFull = NodeID3.update(tagChanges, filePath);

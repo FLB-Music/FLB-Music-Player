@@ -1,4 +1,3 @@
-
 interface FolderContent {
   name: string;
   extension: string;
@@ -15,14 +14,14 @@ interface ParsedPath {
 import fs from 'fs';
 import path from 'path';
 
-export default function parseFolder(
+export default function parseFolder (
   folder: string,
   isStartingFolder = true,
   subFolderStack: string[] = [],
   filesStack: string[] = []
 ): string[] {
   console.log('**********' + folder + '**********');
-  if (!isStartingFolder && subFolderStack.length == 0) {
+  if (!isStartingFolder && subFolderStack.length === 0) {
     console.log('===================Done====================');
     return filesStack;
   }
@@ -46,13 +45,13 @@ export default function parseFolder(
       });
 
     const subFolders: string[] = folderContents
-      .filter(content => content.extension == '')
+      .filter(content => content.extension === '')
       .map(subFolder => path.join(folder, subFolder.name));
 
     const files = folderContents
       .filter(
         content =>
-          content.extension != '' &&
+          content.extension !== '' &&
           supportedFileTypes.includes(content.extension)
       )
       .map(file => path.join(folder, file.name) + file.extension);
@@ -66,6 +65,7 @@ export default function parseFolder(
     subFolderStack.shift();
   } finally {
     const firstSubFolder: string = subFolderStack.shift() || '';
+    // eslint-disable-next-line no-unsafe-finally
     return parseFolder(firstSubFolder, false, subFolderStack, filesStack);
   }
 }

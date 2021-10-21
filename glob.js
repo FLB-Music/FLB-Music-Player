@@ -12,10 +12,6 @@ glob(`./src/renderer/**/*`, {}, (err, files) => {
   });
 });
 
-function sleep (t = 1000) {
-  return new Promise(resolve => setTimeout(resolve, t * 1000));
-}
-
 async function rename (file) {
   const { dir: oldDir } = path.parse(file);
   oldDirs.push(oldDir);
@@ -35,7 +31,10 @@ async function truncate (file) {
     const { name } = path.parse(file);
     let buffer = await fs.readFile(file, 'utf8');
     buffer = buffer.replace(/name:(?:\s'(.+)'),\n/g, '\n');
-    buffer = buffer.replace('export default {', `export default {\n\tname: '${name}',`);
+    buffer = buffer.replace(
+      'export default {',
+      `export default {\n\tname: '${name}',`
+    );
     await fs.writeFile(file, buffer, 'utf8');
     consola.success(`modified: ${file}`);
   }

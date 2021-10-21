@@ -6,7 +6,10 @@
           :album-art="albumArt"
           @togglePlayerMode="togglePlayerMode"
         />
-        <img class="album_art_blurred" :src="albumArt" />
+        <img
+          class="album_art_blurred"
+          :src="albumArt"
+        >
 
         <div class="track_info">
           <p class="track_title">
@@ -36,7 +39,10 @@
             :small="true"
             @click.native="determineNextTrack('prev')"
           />
-          <div id="toggle_play" @click="toggleIsPlaying">
+          <div
+            id="toggle_play"
+            @click="toggleIsPlaying"
+          >
             <base-button
               v-if="!audioState.playing"
               id="play_bt"
@@ -124,12 +130,16 @@
     <transition enter-active-class="animated fadeInUp faster">
       <div
         v-if="playingPaneExpanded && !showLyrics"
-        class="que_wrappers bg2 round15"
+        class="que_wrappers round15"
       >
         <h1>Queue</h1>
+        <div class="toggle_queue" />
         <queued-tracks />
       </div>
-      <div v-if="playingPaneExpanded && showLyrics" class="lyrics_wrappers">
+      <div
+        v-if="playingPaneExpanded && showLyrics"
+        class="lyrics_wrappers"
+      >
         <h1>Lyrics</h1>
         <lyrics />
       </div>
@@ -537,7 +547,7 @@ export default {
     transform: rotate(-90deg);
     z-index: 20;
     .VolumeRocker {
-      transform: rotateX(180deg) translateY(72px) translateX(-12px);
+      transform: rotateX(180deg) translateY(72px) translateX(0px);
       svg {
         transform: rotate(-90deg);
       }
@@ -559,7 +569,12 @@ export default {
   width: 280px;
   padding: 10px;
   padding-top: 5px;
-  overflow: hidden;
+  // overflow: hidden;
+  .toggle_queue {
+    position: absolute;
+    top: 50%;
+    left: 0%;
+  }
   h1 {
     text-align: center;
     margin-bottom: 5px;

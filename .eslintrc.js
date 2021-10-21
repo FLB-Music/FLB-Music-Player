@@ -104,7 +104,7 @@ module.exports = {
     node: true
   },
   extends: [
-    'eslint:recommended',
+    // 'eslint:recommended',
     'plugin:import/errors',
     'plugin:import/warnings',
     'plugin:@typescript-eslint/recommended'

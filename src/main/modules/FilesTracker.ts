@@ -55,10 +55,11 @@ export class FilesTracker {
 
       fs.writeFileSync(
         paths.filesTrackerLocation,
-        JSON.stringify(removeDuplicates(this.processedFiles, 'fileLocation')),
+        JSON.stringify(removeDuplicates(this.processedFiles, 'fileLocation'))
       );
+      console.log("File tracker updated");
     } catch (err) {
-      console.log("Error saving file tracker");
+      console.log('Error saving file tracker');
       console.log(err);
     }
   }

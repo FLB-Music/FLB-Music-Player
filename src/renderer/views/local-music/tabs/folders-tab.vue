@@ -74,7 +74,7 @@
             v-for="(track, index) in folderTracks"
             :key="track.path"
             :index="index"
-            :trackInfo="track"
+            :track-info="track"
           />
         </div>
       </div>
@@ -126,11 +126,7 @@ export default {
       });
     }
   },
-  watch: {
-    flipSortOrder() {
-      this.folderTracks.reverse();
-    }
-  },
+
   computed: {
     folders() {
       return this.$store.state.TabsManager.tabsData.folders;
@@ -149,6 +145,11 @@ export default {
     },
     renderedTracks() {
       return this.$store.state.renderedTracks;
+    }
+  },
+  watch: {
+    flipSortOrder() {
+      this.folderTracks.reverse();
     }
   },
   mounted() {
