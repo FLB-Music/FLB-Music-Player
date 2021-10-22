@@ -279,7 +279,7 @@ ipcMain.on('updateTags', async (e, payload) => {
     win.webContents.send('updatedTrack', updatedTrack);
     fileTracker.updateFile(updatedTrack);
     console.log('Updated Track 👇');
-    console.table(updatedTrack);
+    console.log(updatedTrack);
   }
 });
 ipcMain.on('requestVersion', () =>
@@ -313,7 +313,7 @@ ipcMain.on('downloadArtistPicture', (e, payload) => {
 });
 
 ipcMain.on('imageSearcherChoice', (e, sourceURL) => {
-  sendMessageToRenderer('importedCoverArt', sourceURL);
+  sendMessageToRenderer('urlImage', sourceURL);
 });
 
 ipcMain.on('importCoverArt', async () => {
@@ -330,7 +330,7 @@ ipcMain.on('importCoverArt', async () => {
   if (file) {
     for (const possibleCover of (await file).filePaths) {
       if (possibleCover.match(/\.jpeg|\.jpg|\.png/gi)) {
-        win.webContents.send('importedCoverArt', 'file://' + possibleCover);
+        win.webContents.send('importedCoverArt', possibleCover);
       }
     }
   } else {
@@ -346,13 +346,13 @@ ipcMain.on('downloadBingTrack', (e, payload) => {
 });
 
 ipcMain.on('sendUsageStats', () => {
-  // usageTracker.sendUsageData();
+  usageTracker.sendUsageData();
+  sendMessageToRenderer("userID", usageTracker.getUsageData.id)
 });
 
 ipcMain.on('checkForUpdate', () => {
   sendNotificationToRenderer('Checking For Update');
   checkForUpdates();
-  console.log(app.getAppMetrics());
 });
 
 ipcMain.on('toggleMiniMode', (e, payload) => {
@@ -405,8 +405,9 @@ export async function writeTags(
         paths.albumArtFolder,
         path.parse(filePath).name
       );
-
+      sendNotificationToRenderer("Downloading Picture")
     } catch (error) {
+      sendNotificationToRenderer("Error downloading Picture", "", "warning")
       console.log('errorobject');
       console.log(error);
     }
@@ -414,11 +415,9 @@ export async function writeTags(
     tagChanges.APIC = decodeURI(tagChanges.APIC);
   }
   const isSuccessFull = NodeID3.update(tagChanges, filePath);
-  console.log('Just Wrote');
+  console.log(isSuccessFull);
   if (isSuccessFull && !silent) {
     sendNotificationToRenderer('Tags Successfully changed', '', 'success');
-    console.log(filePath);
-    // sendMessageToRenderer('updateTrack', { filePath, tagChanges });
   } else {
     sendMessageToRenderer('errorMsg', 'An Error occurred while changing tags');
   }
@@ -427,6 +426,8 @@ export async function writeTags(
 
 
 function checkForUpdates() {
-  autoUpdater.checkForUpdatesAndNotify();
+  autoUpdater.checkForUpdatesAndNotify().then((res) => {
+    console.log(res);
+  })
 }
 

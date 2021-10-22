@@ -54,14 +54,17 @@ export default {
   data() {
     return {
       feedback: {
+        user: 'unknown',
         title: '',
-        description: ''
+        description: '',
+        state: 'pending'
       }
     };
   },
   methods: {
     ...mapMutations(['UIcontrollerToggleProperty', 'pushNotification']),
     async sendFeedback() {
+      this.feedback.user = localStorage.getItem('userID');
       this.UIcontrollerToggleProperty('showFeedbackWidget');
       this.pushNotification({
         title: 'Sending...',
@@ -70,7 +73,6 @@ export default {
       });
       const endPoint =
         this.feedbackType === 'request' ? 'feature-request' : 'bug-report';
-
       const res = await fetch(`https://flb-server.herokuapp.com/${endPoint}`, {
         body: JSON.stringify(this.feedback),
         headers: {
@@ -97,7 +99,6 @@ export default {
           type: 'danger'
         });
       }
-      console.log(res);
       this.feedback.title = '';
       this.feedback.description = '';
     }

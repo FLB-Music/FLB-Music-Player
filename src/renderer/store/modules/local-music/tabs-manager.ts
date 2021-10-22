@@ -58,20 +58,34 @@ const mutations = {
     const indexOfUpdatedTrack = state.tabsData.addedTracks.findIndex(
       track => track.fileLocation === payload.fileLocation
     );
-
-    state.tabsData.addedTracks[indexOfUpdatedTrack].title = payload.title;
-    state.tabsData.addedTracks[indexOfUpdatedTrack].artist = payload.artist;
-    state.tabsData.addedTracks[indexOfUpdatedTrack].album = payload.album;
-    state.tabsData.addedTracks[indexOfUpdatedTrack].albumArt = payload.albumArt;
-    if (
-      PlaybackManger.state.playingTrackInfo.track?.fileLocation ===
-      payload.fileLocation
-    ) {
-      PlaybackManger.state.playingTrackInfo.track.title = payload.title;
-      PlaybackManger.state.playingTrackInfo.track.artist = payload.artist;
-      PlaybackManger.state.playingTrackInfo.track.album = payload.album;
-      PlaybackManger.state.playingTrackInfo.track.albumArt = payload.albumArt;
+    //Dirty code that I will probably forget later
+    const importedAlbumArt = localStorage.getItem("importedAlbumArt");
+    if (importedAlbumArt) {
+      payload.albumArt = importedAlbumArt;
+      localStorage.removeItem("importedAlbumArt")
     }
+
+    PlaybackManger.state.playingTrackInfo.track = null;
+    console.log(state.tabsData.addedTracks[indexOfUpdatedTrack]);
+    console.log(state.tabsData.addedTracks.length);
+    state.tabsData.addedTracks.splice(indexOfUpdatedTrack, 1);
+    console.log(state.tabsData.addedTracks.length);
+    state.tabsData.addedTracks.unshift(payload)
+    PlaybackManger.state.playingTrackInfo.track = payload
+    console.log(payload);
+    // state.tabsData.addedTracks[indexOfUpdatedTrack].title = payload.title;
+    // state.tabsData.addedTracks[indexOfUpdatedTrack].artist = payload.artist;
+    // state.tabsData.addedTracks[indexOfUpdatedTrack].album = payload.album;
+    // state.tabsData.addedTracks[indexOfUpdatedTrack].albumArt = payload.albumArt;
+    // if (
+    //   PlaybackManger.state.playingTrackInfo.track?.fileLocation ===
+    //   payload.fileLocation
+    // ) {
+    //   PlaybackManger.state.playingTrackInfo.track.title = payload.title;
+    //   PlaybackManger.state.playingTrackInfo.track.artist = payload.artist;
+    //   PlaybackManger.state.playingTrackInfo.track.album = payload.album;
+    //   PlaybackManger.state.playingTrackInfo.track.albumArt = payload.albumArt;
+    // }
   },
   deleteTrack(state: TabsManagerStateInterface, payload: string) {
     const indexOfDeletedTrack = state.tabsData.addedTracks.findIndex(
@@ -326,7 +340,7 @@ const actions: ActionTree<TabsManagerStateInterface, any> = {
               sendMessageToNode('downloadArtistPicture', artistInfo);
             }
           })
-          .catch(error => console.log('error', error));
+          .catch(error => console.log('error getting pic'));
       });
     }
   }

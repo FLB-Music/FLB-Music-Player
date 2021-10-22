@@ -1,9 +1,7 @@
 <template>
   <div class="TagEditor widget blurred_bg blur10">
     <div class="widget_header">
-      <h1 class="widget_title">
-        Tag Editor
-      </h1>
+      <h1 class="widget_title">Tag Editor</h1>
       <base-button
         icon="x"
         extra-class="widget_close shrink_icon circle shrink8"
@@ -13,21 +11,12 @@
     </div>
     <div class="trackTags">
       <div class="tag flex-col center-a">
-        <img
-          id="coverArtTag"
-          :src="'file://' + targetTrack.albumArt"
-        >
-        <p
-          v-if="!targetTrack.albumArt"
-          style="margin-top: 10px"
-        >
+        <img id="coverArtTag" :src="'file://' + targetTrack.albumArt" />
+        <p v-if="!targetTrack.albumArt" style="margin-top: 10px">
           No Album Art 🖼
         </p>
         <div class="grid2 gap10">
-          <base-button
-            text="Import Picture"
-            @click.native="importCover"
-          />
+          <base-button text="Import Picture" @click.native="importCover" />
           <base-button
             text="Search Online"
             @click.native="UIcontrollerToggleProperty('showImageSearcher')"
@@ -54,7 +43,7 @@
           v-model="newTitle"
           placeholder="New Title"
           class="inputElem"
-        >
+        />
       </div>
       <div class="tag bg1">
         <div class="flex-col gap10">
@@ -68,7 +57,7 @@
           v-model="newArtist"
           placeholder="New Artist"
           class="inputElem"
-        >
+        />
       </div>
       <div class="tag bg1">
         <div class="flex-col gap10">
@@ -82,7 +71,7 @@
           v-model="newAlbum"
           placeholder="New Album"
           class="inputElem"
-        >
+        />
       </div>
     </div>
     <base-button
@@ -110,6 +99,9 @@ export default {
       newAlbum: '',
       newArtist: '',
       newAlbumArt: '',
+      importedAlbumArt: '',
+      urlAlbumArt: '',
+      downloadedAlbumArt: '',
       query: '',
       cover: '',
       searchAlbumArt: false,
@@ -123,7 +115,6 @@ export default {
   },
   methods: {
     ...mapMutations(['UIcontrollerToggleProperty', 'pushNotification']),
-
     importCover() {
       ipcRenderer.send('importCoverArt');
     },
@@ -131,10 +122,13 @@ export default {
       const newAlbumArt = document.querySelector('#coverArtTag');
       let newAlbumArtSrc;
       if (newAlbumArt) {
-        newAlbumArtSrc = decodeURI(newAlbumArt.src)
-          .replace('file:///', '')
-          .replace(/\//g, '\\');
+        newAlbumArtSrc = this.importedAlbumArt;
+        localStorage.setItem('importedAlbumArt', newAlbumArtSrc);
       }
+      if (newAlbumArt.src.includes('http')) {
+        newAlbumArtSrc = this.urlAlbumArt;
+      }
+      console.log(newAlbumArtSrc);
       const tags = {};
       if (this.newTitle) {
         tags.title = this.newTitle;
@@ -172,8 +166,13 @@ export default {
     }
   },
   mounted() {
-    ipcRenderer.on('importedCoverArt', (e, data) => {
-      document.querySelector('#coverArtTag').src = data;
+    ipcRenderer.on('importedCoverArt', (e, payload) => {
+      document.querySelector('#coverArtTag').src = 'file://' + payload;
+      this.importedAlbumArt = payload;
+    });
+    ipcRenderer.on('urlImage', (e, payload) => {
+      document.querySelector('#coverArtTag').src = payload;
+      this.urlAlbumArt = payload;
     });
     window.addEventListener('online', () => {
       this.isOnline = true;

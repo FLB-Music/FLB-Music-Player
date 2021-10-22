@@ -2,7 +2,8 @@ import { UserInfo } from '@/types';
 import fs from 'fs';
 import os from 'os';
 import { paths } from './Paths';
-import { createClient } from '@supabase/supabase-js';
+import axios from 'axios';
+import { sendMessageToRenderer } from '../reusables/messageToRenderer';
 
 export class UsageManager {
   usageData: UserInfo = {
@@ -16,12 +17,12 @@ export class UsageManager {
     os_type: os.type(),
     app_launches: []
   };
-  constructor () {
+  constructor() {
     this.usageData.id = this.idGenerator();
     this.usageData.app_launches = this.appLaunches();
     this.addAppLaunch();
   }
-  idGenerator () {
+  idGenerator() {
     if (fs.existsSync(paths.usageData)) {
       const data = JSON.parse(
         fs.readFileSync(paths.usageData, 'utf-8')
@@ -31,7 +32,7 @@ export class UsageManager {
       return Math.round(Math.random() * 50000) + os.userInfo().username;
     }
   }
-  appLaunches () {
+  appLaunches() {
     if (fs.existsSync(paths.usageData)) {
       const data: UserInfo = JSON.parse(
         fs.readFileSync(paths.usageData, 'utf-8')
@@ -41,11 +42,11 @@ export class UsageManager {
       return [];
     }
   }
-  addAppLaunch () {
+  addAppLaunch() {
     this.usageData.app_launches.push(Date());
     this.saveUsageData();
   }
-  saveUsageData () {
+  saveUsageData() {
     fs.writeFile(
       paths.usageData,
       JSON.stringify(this.usageData),
@@ -54,22 +55,16 @@ export class UsageManager {
       }
     );
   }
-  async sendUsageData () {
-    const key = process.env.SUPABASE_KEY || '';
-    const supabase = createClient('https://tqfvneqybooaifvbdqlj.supabase.co', key);
-    try {
-      const { data } = await supabase
-        .from<UserInfo>('Users')
-        .insert([
-          this.usageData
-        ], { upsert: true });
-      console.log(data);
-    } catch (error) {
-      console.log('Unable to send stats');
-      console.log(error);
-    }
+  async sendUsageData() {
+    axios.post('https://flb-server.herokuapp.com/usage-stats', this.usageData)
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }
-  public get getUsageData (): UserInfo {
+  public get getUsageData(): UserInfo {
     return this.usageData;
   }
 }

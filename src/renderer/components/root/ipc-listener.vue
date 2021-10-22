@@ -85,6 +85,9 @@ export default {
     ipcRenderer.on('newTrack', (e, newTrack) => {
       this.addTrack(newTrack);
     });
+    ipcRenderer.on('userID', (e, id) => {
+      localStorage.setItem('userID', id);
+    });
     ipcRenderer.on('playThisTrack', (e, track) => {
       if (document.querySelector('audio')) {
         document.querySelector('audio').muted = false;
@@ -96,7 +99,9 @@ export default {
       this.addMultipleTracks(payload);
     });
 
-    ipcRenderer.on('updateTrack', (e, updatedTrack) => {
+    ipcRenderer.on('updatedTrack', (e, updatedTrack) => {
+      console.log('Updated Track');
+      console.log(updatedTrack);
       this.updateTrack(updatedTrack);
     });
     ipcRenderer.on('deleteComplete', (e, pathToTrack) => {

@@ -31,6 +31,7 @@ export class FilesTracker {
       track => track.fileLocation === track.fileLocation
     );
     this.processedFiles[index] = track;
+    this.saveChanges()
   }
   checkForDeletedTracks() {
     console.log('Checking for deleted tracks');
