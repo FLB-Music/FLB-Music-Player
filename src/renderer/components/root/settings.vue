@@ -20,7 +20,7 @@
               class="folderBox bg1"
             >
               <div>
-                <p>{{ folder.replace(/(.*)[\/\\]/, '') }}</p>
+                <p>{{ folder.replace(/(.*)[\/\\]/, "") }}</p>
                 <p style="font-family: inherit; font-size: 0.9rem">
                   {{ folder }}
                 </p>
@@ -52,12 +52,12 @@
                 :class="[
                   settings.defaultTab === tab.name ? 'defaultTab' : '',
                   'tabDiv',
-                  'bg2'
+                  'bg2',
                 ]"
                 @click="
                   setSettingValue({
                     property: 'defaultTab',
-                    newValue: tab.name
+                    newValue: tab.name,
                   })
                 "
               >
@@ -70,7 +70,7 @@
         <article
           :class="[
             settings.dynamicAccentColor ? 'fade_to_7 unclickable' : '',
-            'bg1'
+            'bg1',
           ]"
         >
           <h4>Accent Color 🖌</h4>
@@ -83,12 +83,12 @@
                 settings.accentColor == 'accent_' + index
                   ? 'active_colorDiv'
                   : '',
-                'colorDiv'
+                'colorDiv',
               ]"
               @click="
                 setSettingValue({
                   property: 'accentColor',
-                  newValue: 'accent_' + index
+                  newValue: 'accent_' + index,
                 })
               "
             />
@@ -97,7 +97,7 @@
         <div
           :class="[
             settings.dynamicAccentColor ? 'activeBtn' : '',
-            'switch bg1 ma10'
+            'switch bg1 ma10',
           ]"
           @click="toggleDynamicAccentColor"
         >
@@ -113,7 +113,7 @@
             <div
               :class="[
                 settings.theme === 'fancy' ? 'activeSetting' : '',
-                'bg2'
+                'bg2',
               ]"
               @click="setSettingValue({ property: 'theme', newValue: 'fancy' })"
             >
@@ -128,7 +128,7 @@
             <div
               :class="[
                 settings.theme === 'black' ? 'activeSetting' : '',
-                'bg2'
+                'bg2',
               ]"
               @click="setSettingValue({ property: 'theme', newValue: 'black' })"
             >
@@ -137,7 +137,7 @@
             <div
               :class="[
                 settings.theme === 'light' ? 'activeSetting' : '',
-                'bg2'
+                'bg2',
               ]"
               @click="setSettingValue({ property: 'theme', newValue: 'light' })"
             >
@@ -199,12 +199,12 @@
           <div
             :class="[
               settings.desktopNotifications ? 'activeBtn' : '',
-              'switch bg1'
+              'switch bg1',
             ]"
             @click="
               setSettingValue({
                 property: 'desktopNotifications',
-                newValue: !settings.desktopNotifications
+                newValue: !settings.desktopNotifications,
               })
             "
           >
@@ -252,37 +252,37 @@
 </template>
 
 <script>
-import { sendMessageToNode } from '@/renderer/utils/index';
-import { mapMutations } from 'vuex';
-import { ipcRenderer } from 'electron';
+import { sendMessageToNode } from "@/renderer/utils/index";
+import { mapMutations } from "vuex";
+import { ipcRenderer } from "electron";
 
 export default {
-  name: 'Settings',
+  name: "Settings",
 
   data() {
     return {
-      appVersion: '0.0.1',
+      appVersion: "0.0.1",
       tabs: [
-        { name: 'Home', icon: 'house' },
-        { name: 'Tracks', icon: 'music-note-simple' },
-        { name: 'Playlists', icon: 'playlist' },
-        { name: 'Artists', icon: 'user' },
-        { name: 'Albums', icon: 'disc' },
-        { name: 'Folders', icon: 'folder-simple' }
+        { name: "Home", icon: "house" },
+        { name: "Tracks", icon: "music-note-simple" },
+        { name: "Playlists", icon: "playlist" },
+        { name: "Artists", icon: "user" },
+        { name: "Albums", icon: "disc" },
+        { name: "Folders", icon: "folder-simple" },
       ],
       accentColors: [
-        '#0066ff',
-        '#7A86CB',
-        '#BA68C6',
-        '#FD8B64',
-        '#ACD580',
-        '#FCD450',
-        '#4DB6AC',
-        '#EE6390',
-        '#E57375',
-        '#FF8A66'
+        "#0066ff",
+        "#7A86CB",
+        "#BA68C6",
+        "#FD8B64",
+        "#ACD580",
+        "#FCD450",
+        "#4DB6AC",
+        "#EE6390",
+        "#E57375",
+        "#FF8A66",
       ],
-      feedbackType: 'issue'
+      feedbackType: "issue",
     };
   },
   computed: {
@@ -291,63 +291,63 @@ export default {
     },
     showFeedbackWidget() {
       return this.$store.state.UIController.UIProperties.showFeedbackWidget;
-    }
+    },
   },
   methods: {
     ...mapMutations([
-      'setSettingValue',
-      'UIcontrollerToggleProperty',
-      'UIcontrollerSetPropertyValue'
+      "setSettingValue",
+      "UIcontrollerToggleProperty",
+      "UIcontrollerSetPropertyValue",
     ]),
     addFolder() {
-      sendMessageToNode('addScanFolder', '');
+      sendMessageToNode("addScanFolder", "");
     },
     removeFromScannedFolders(path) {
       console.log(path);
-      sendMessageToNode('removeFromScannedFolders', path);
+      sendMessageToNode("removeFromScannedFolders", path);
     },
     resetApp() {
-      localStorage.removeItem('downloadedArtists');
-      localStorage.removeItem('lyrics');
-      sendMessageToNode('resetApp');
+      localStorage.removeItem("downloadedArtists");
+      localStorage.removeItem("lyrics");
+      sendMessageToNode("resetApp");
     },
     checkForUpdate() {
-      console.log('Checking');
-      sendMessageToNode('checkForUpdate');
+      console.log("Checking");
+      sendMessageToNode("checkForUpdate");
     },
     toggleVideoSupport() {
       this.setSettingValue({
-        property: 'videoSupport',
-        newValue: !this.settings.videoSupport
+        property: "videoSupport",
+        newValue: !this.settings.videoSupport,
       });
       console.log(this.settings.videoSupport);
-      sendMessageToNode('toggleVideoSupport');
+      sendMessageToNode("toggleVideoSupport");
     },
     toggleDynamicAccentColor() {
       console.log(this.settings.dynamicAccentColor);
       this.setSettingValue({
-        property: 'dynamicAccentColor',
-        newValue: !this.settings.dynamicAccentColor
+        property: "dynamicAccentColor",
+        newValue: !this.settings.dynamicAccentColor,
       });
       if (!this.settings.dynamicAccentColor) {
-        const app = document.querySelector('#app');
-        app.style.removeProperty('--accentColor', `#0066ff`);
+        const app = document.querySelector("#app");
+        app.style.removeProperty("--accentColor", `#0066ff`);
       }
     },
     selectFeedbackType(type) {
       this.feedbackType = type;
       this.UIcontrollerSetPropertyValue({
-        property: 'showFeedbackWidget',
-        newValue: true
+        property: "showFeedbackWidget",
+        newValue: true,
       });
-    }
+    },
   },
   mounted() {
-    ipcRenderer.send('requestVersion');
-    ipcRenderer.on('appVersion', (e, version) => {
+    ipcRenderer.send("requestVersion");
+    ipcRenderer.on("appVersion", (e, version) => {
       this.appVersion = version;
     });
-  }
+  },
 };
 </script>
 
@@ -357,7 +357,7 @@ export default {
   overflow: hidden;
   top: 40px;
   left: 10px;
-  height: 91.5%;
+  height: 90%;
   width: 97%;
   z-index: 50;
   border: 1px solid rgba(255, 255, 255, 0.315);

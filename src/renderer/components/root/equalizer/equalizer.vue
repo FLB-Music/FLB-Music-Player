@@ -1,9 +1,7 @@
 <template>
   <div class="Equalizer widget blurred_bg blur20">
     <div class="widget_header">
-      <h1 class="widget_title">
-        Equalizer
-      </h1>
+      <h1 class="widget_title">Equalizer</h1>
       <base-button
         icon="x"
         class="widget_close circle shrink8"
@@ -22,11 +20,7 @@
       />
     </div>
     <div class="filter_sliders">
-      <div
-        v-for="(band, index) in bands"
-        :key="band.id"
-        class="filter"
-      >
+      <div v-for="(band, index) in bands" :key="band.id" class="filter">
         <p>{{ band.value }}db</p>
         <filter-slider
           :target-band="band.id"
@@ -38,27 +32,18 @@
       </div>
     </div>
     <div class="b_t">
-      <triangle-slider
-        filter-name="Bass"
-        @newGainValues="changeBandGains"
-      />
-      <triangle-slider
-        filter-name="Treble"
-        @newGainValues="changeBandGains"
-      />
-      <triangle-slider
-        filter-name="VBoost"
-        title="Boost Volume"
-      />
+      <triangle-slider filter-name="Bass" @newGainValues="changeBandGains" />
+      <triangle-slider filter-name="Treble" @newGainValues="changeBandGains" />
+      <triangle-slider filter-name="VBoost" title="Boost Volume" />
     </div>
+    <spatializer />
   </div>
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
-
+import { mapMutations } from "vuex";
 export default {
-  name: 'Equalizer',
+  name: "Equalizer",
 
   computed: {
     bands() {
@@ -69,16 +54,16 @@ export default {
     },
     currentPreset() {
       return this.$store.state.EqualizerManager.currentPreset;
-    }
+    },
   },
   methods: {
     ...mapMutations([
-      'UIcontrollerToggleProperty',
-      'updateBandFilter',
-      'changeBandGains',
-      'loadPreset'
-    ])
-  }
+      "UIcontrollerToggleProperty",
+      "updateBandFilter",
+      "changeBandGains",
+      "loadPreset",
+    ]),
+  },
 };
 </script>
 

@@ -30,22 +30,21 @@ module.exports = {
     electronBuilder: {
       nodeIntegration: true,
       builderOptions: {
-        productName: "FLB Music",
+        productName: 'FLB Music',
         appId: 'com.flb.flbmusic',
         productName: 'FLB Music',
         copyright: 'MIT',
         publish: [
           {
-            provider: "github",
-            owner:"FLB-Music",
-            repo:"FLB-Music-Player"
+            provider: 'github',
+            owner: 'FLB-Music',
+            repo: 'FLB-Music-Player'
           }
         ],
-        snap:{
-          title:"FLB Music",
-          confinement:"classic",
-          summary:"A Beautiful and Feature Rich Music Player",
-          grade: "stable"
+        snap: {
+          title: 'FLB Music',
+          summary: 'A Beautiful and Feature Rich Music Player',
+          grade: 'stable'
         }
       }
     }

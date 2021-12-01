@@ -5,8 +5,9 @@
       'queuedTrack bg1 border_split'
     ]"
     :data-index="index"
+    @click.stop="playQueuedTrack(track)"
   >
-    <div @click.stop="playQueuedTrack(track)">
+    <div>
       <p class="card_title text-small-1">
         {{ track.defaultTitle }}
       </p>

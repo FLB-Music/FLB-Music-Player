@@ -7,17 +7,13 @@
         max="15"
         value="0"
         @input="updateInput($event)"
-      >
+      />
       <div
         v-if="filterName === 'VBoost'"
         class="slider_progress"
         :style="{ height: barHeightForVolumeBoost }"
       />
-      <div
-        v-else
-        class="slider_progress"
-        :style="{ height: barHeight }"
-      />
+      <div v-else class="slider_progress" :style="{ height: barHeight }" />
     </div>
     <p>
       {{ filterName }}
@@ -26,15 +22,15 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
-import { gainNode } from './equalizer';
+import { mapMutations } from "vuex";
+import { gainNode } from "./equalizer";
 
 export default {
-  name: 'TriangleSlider',
+  name: "TriangleSlider",
 
   data() {
     return {
-      barHeight: 0
+      barHeight: 0,
     };
   },
   computed: {
@@ -49,18 +45,18 @@ export default {
       return `${h}%`;
     },
     bandValuesFromState() {
-      return this.$store.state.EqualizerManager.bands.map(band => band.value);
-    }
+      return this.$store.state.EqualizerManager.bands.map((band) => band.value);
+    },
   },
   methods: {
-    ...mapMutations(['setSettingValue']),
+    ...mapMutations(["setSettingValue"]),
     updateInput(e) {
       const filterValue = parseInt(e.srcElement.value, 10);
-      if (this.filterName === 'VBoost') {
+      if (this.filterName === "VBoost") {
         this.adjustVolumeBoost(filterValue);
         return;
       }
-      if (this.filterName === 'Bass') {
+      if (this.filterName === "Bass") {
         this.adjustBase(filterValue);
         this.barHeight = `${(parseInt(filterValue, 10) / 15) * 100}%`;
       } else {
@@ -75,7 +71,7 @@ export default {
       bandGains[2] = filterValue - 6 < 0 ? 0 : -filterValue + 6;
       bandGains[3] = filterValue - 5 < 0 ? 0 : -filterValue + 5;
       bandGains[4] = filterValue - 4 < 0 ? 0 : -filterValue + 4;
-      this.$emit('newGainValues', bandGains);
+      this.$emit("newGainValues", bandGains);
     },
     adjustTreble(filterValue) {
       const bandGains = [0, 0, 0, 0, 0];
@@ -84,24 +80,24 @@ export default {
       bandGains[2] = filterValue - 6 < 0 ? 0 : -filterValue + 6;
       bandGains[3] = filterValue - 4 < 0 ? 0 : filterValue - 4;
       bandGains[4] = filterValue - 2 < 0 ? 0 : filterValue - 2;
-      this.$emit('newGainValues', bandGains);
+      this.$emit("newGainValues", bandGains);
     },
     adjustVolumeBoost(filterValue) {
       const boostedVolume = 1 + parseInt(filterValue, 10) / 15;
       if (boostedVolume > 1) {
         this.setSettingValue({
-          property: 'volume',
-          newValue: boostedVolume
+          property: "volume",
+          newValue: boostedVolume,
         });
         gainNode.gain.value = 1 + parseInt(filterValue, 10) / 15;
       } else {
-        this.setSettingValue({ property: 'volume', newValue: 1 });
+        this.setSettingValue({ property: "volume", newValue: 1 });
       }
-    }
+    },
   },
   props: {
-    filterName: String
-  }
+    filterName: String,
+  },
 };
 </script>
 
@@ -133,12 +129,12 @@ export default {
     position: relative;
     display: inline-block;
     width: 80px;
-    filter: url('#goo');
+    filter: url("#goo");
     display: flex;
     flex-direction: column-reverse;
     overflow: hidden;
     &::before {
-      content: '';
+      content: "";
       display: block;
       padding-top: 86%;
       background: var(--accentColor);
@@ -153,7 +149,7 @@ export default {
     height: 100%;
     width: 100%;
     &::before {
-      content: '';
+      content: "";
       display: block;
       padding-top: 86%;
       background: var(--accentColor);

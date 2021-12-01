@@ -1,10 +1,15 @@
 <template>
   <div
     id="app"
-    :class="[accentColor, theme + '_theme', miniMode ? 'miniMode' : '']"
+    :class="[
+      accentColor,
+      theme + '_theme',
+      miniMode ? 'miniMode' : '',
+      'pb5 pl5 pr5',
+    ]"
     @click="cleanUp"
   >
-    <custom-title-bar />
+    <custom-title-bar class="mb5" />
     <ipc-listener />
     <transition
       enter-active-class="animated slideInUp extrafaster"
@@ -12,35 +17,29 @@
     >
       <settings v-if="showSettings" />
     </transition>
-    <on-board
-      v-if="showOnboard"
-      @closeOnBoard="showOnboard = false"
-    />
+    <on-board v-if="showOnboard" @closeOnBoard="showOnboard = false" />
     <notifications />
-    <section id="main-view">
-      <div
-        v-if="!miniMode"
-        id="sub-view-1"
-        class="flex"
-      >
+    <section id="main-view" class="flex flex-col h-100">
+      <div v-if="!miniMode" id="sub-view-1" class="flex h-100">
         <side-nav />
         <router-view />
       </div>
-      <playing-pane
-        v-if="playingTrack"
-        @fullPlayer="reactToFullPlayer"
-      />
     </section>
+    <playing-pane
+      class="mb5 mt5"
+      v-if="playingTrack"
+      @fullPlayer="reactToFullPlayer"
+    />
     <bg v-if="theme === 'fancy'" />
   </div>
 </template>
 <script>
 export default {
-  name: 'App',
+  name: "App",
   data() {
     return {
       showOnboard: true,
-      fullPlayer: false
+      fullPlayer: false,
     };
   },
   computed: {
@@ -61,29 +60,29 @@ export default {
     },
     miniMode() {
       return this.$store.state.UIController.UIProperties.miniMode;
-    }
+    },
   },
   methods: {
     cleanUp() {
-      if (document.querySelector('.trackOptions')) {
-        document.querySelector('.trackOptions').style.height = `0px`;
+      if (document.querySelector(".trackOptions")) {
+        document.querySelector(".trackOptions").style.height = `0px`;
       }
     },
     reactToFullPlayer(fullPlayer) {
       this.fullPlayer = fullPlayer;
       console.log(this.fullPlayer);
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss">
-@import '@scss/animate.scss';
-@import '@scss/global.scss';
-@import '@scss/themer.scss';
-@import '@scss/grouped-content.scss';
-@import '@scss/utility-classes.scss';
-@import '@scss/mixins.scss';
-@import '@scss/fun.scss';
+@import "@scss/animate.scss";
+@import "@scss/global.scss";
+@import "@scss/themer.scss";
+@import "@scss/grouped-content.scss";
+@import "@scss/utility-classes.scss";
+@import "@scss/mixins.scss";
+@import "@scss/fun.scss";
 // @font-face {
 //   font-family: 'Quicksand';
 //   src: local('@styles/Quicksand.tff') format('tff');
@@ -114,26 +113,11 @@ body {
   background: var(--accentColor);
   border-radius: 10px;
 }
-.playingPaneLoaded {
-  #main-view {
-    height: 94%;
-  }
-  #sub-view-1 {
-    min-height: 85%;
-    max-height: 0vh;
-  }
-}
 #main-view {
   position: relative;
   z-index: 2;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 10px;
 }
 #sub-view-1 {
-  height: 100%;
   min-height: 100%;
   max-height: 0vh;
 }

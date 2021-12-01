@@ -1,52 +1,32 @@
 <template>
   <div class="VolumeRocker flex center-v gap10 pl5 bg1">
-    <div
-      class="rocker_icons flex center-a"
-      @click="toggleMute"
-    >
-      <base-icon
-        v-if="volume > 0.6"
-        icon="speaker-simple-high"
-        :size="18"
-      />
+    <div class="rocker_icons flex center-a" @click="toggleMute">
+      <base-icon v-if="volume > 0.6" icon="speaker-simple-high" :size="18" />
       <base-icon
         v-if="volume <= 0.6 && volume > 0"
         icon="speaker-simple-low"
         :size="18"
       />
-      <base-icon
-        v-if="volume == 0"
-        icon="speaker-slash"
-        :size="18"
-      />
+      <base-icon v-if="volume == 0" icon="speaker-slash" :size="18" />
     </div>
     <div class="rocker_wrapper bg1 pos-rel round10">
-      <input
-        v-model="volume"
-        min="0"
-        max="1"
-        step="0.05"
-        type="range"
-      >
-      <div
-        :style="{ width: progressBarWidth }"
-        class="base_slider_progress"
-      />
+      <input v-model="volume" min="0" max="1" step="0.05" type="range" />
+      <div :style="{ width: progressBarWidth }" class="base_slider_progress" />
     </div>
   </div>
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
-import { gainNode } from '../equalizer/equalizer';
+import { mapMutations } from "vuex";
+import { gainNode } from "../equalizer/equalizer";
 
 export default {
-  name: 'VolumeRocker',
+  name: "VolumeRocker",
 
   data() {
     return {
       volume: 0.5,
-      mute: false
+      mute: false,
     };
   },
   computed: {
@@ -55,16 +35,16 @@ export default {
     },
     userSetVolume() {
       return this.$store.state.SettingsManager.settings.volume;
-    }
+    },
   },
   watch: {
     volume() {
       gainNode.gain.value = this.volume;
-      this.setSettingValue({ property: 'volume', newValue: this.volume });
-    }
+      this.setSettingValue({ property: "volume", newValue: this.volume });
+    },
   },
   methods: {
-    ...mapMutations(['setSettingValue']),
+    ...mapMutations(["setSettingValue"]),
     toggleMute() {
       this.mute = !this.mute;
       if (this.mute) {
@@ -72,14 +52,14 @@ export default {
       } else {
         this.volume = 0.5;
       }
-    }
+    },
   },
   mounted() {
     this.volume = this.userSetVolume;
     setTimeout(() => {
       gainNode.gain.value = this.volume;
     }, 0);
-  }
+  },
 };
 </script>
 

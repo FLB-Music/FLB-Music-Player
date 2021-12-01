@@ -5,10 +5,7 @@
         <h1>Library Stats</h1>
       </div>
       <div class="statsWrapper">
-        <div
-          class="statCard"
-          @click="routeTo('Tracks')"
-        >
+        <div class="statCard" @click="routeTo('Tracks')">
           <h2>{{ tabsData.addedTracks.length }}</h2>
           <p>Tracks</p>
           <base-icon
@@ -17,34 +14,17 @@
             :size="40"
           />
         </div>
-        <div
-          class="statCard"
-          @click="routeTo('Albums')"
-        >
+        <div class="statCard" @click="routeTo('Albums')">
           <h2>{{ tabsData.albums.length }}</h2>
           <p>Albums</p>
-          <base-icon
-            class="fade_to_7 stat_icon"
-            :size="40"
-            icon="disc"
-          />
+          <base-icon class="fade_to_7 stat_icon" :size="40" icon="disc" />
         </div>
-        <div
-          class="statCard stat_icon"
-          @click="routeTo('Artists')"
-        >
+        <div class="statCard stat_icon" @click="routeTo('Artists')">
           <h2>{{ tabsData.artists.length }}</h2>
           <p>Artists</p>
-          <base-icon
-            icon="user"
-            :size="40"
-            class="stat_icon fade_to_7"
-          />
+          <base-icon icon="user" :size="40" class="stat_icon fade_to_7" />
         </div>
-        <div
-          class="statCard"
-          @click="routeTo('Folders')"
-        >
+        <div class="statCard" @click="routeTo('Folders')">
           <h2>{{ tabsData.folders.length }}</h2>
           <p>Folders</p>
           <base-icon
@@ -55,7 +35,7 @@
         </div>
       </div>
     </div>
-    <hr>
+    <hr />
     <div class="stats">
       <div class="stats_title">
         <h1>Daily Mixes</h1>
@@ -77,15 +57,15 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
-import { MixGenerator } from '@/renderer/utils/mix-generator';
+import { mapMutations } from "vuex";
+import { MixGenerator } from "@/renderer/utils/mix-generator";
 
 export default {
-  name: 'HomeTab',
+  name: "HomeTab",
 
   data() {
     return {
-      mixes: []
+      mixes: [],
     };
   },
   computed: {
@@ -94,24 +74,24 @@ export default {
     },
     playStats() {
       return this.$store.state.StatsManager.stats.playStats;
-    }
+    },
   },
   methods: {
     ...mapMutations([
-      'setPlayingTrack',
-      'addToSelectedTracks',
-      'clearSelectedTracks',
-      'overWriteCustomQueue',
-      'UIcontrollerSetPropertyValue'
+      "setPlayingTrack",
+      "addToSelectedTracks",
+      "clearSelectedTracks",
+      "overWriteCustomQueue",
+      "UIcontrollerSetPropertyValue",
     ]),
     routeTo(tab) {
       this.UIcontrollerSetPropertyValue({
-        property: 'currentMainTab',
-        newValue: tab
+        property: "currentMainTab",
+        newValue: tab,
       });
-      const path = tab === 'Home' ? '/' : `/${tab}`;
+      const path = tab === "Home" ? "/" : `/${tab}`;
       this.$router.push(path);
-    }
+    },
   },
   mounted() {
     setTimeout(() => {
@@ -121,8 +101,10 @@ export default {
         this.tabsData.recentlyPlayedTracks
       );
       this.mixes = mixGen.allMixes;
-    }, 100);
-  }
+      console.log("mixes generated");
+      console.log(this.mixes);
+    }, 500);
+  },
 };
 </script>
 

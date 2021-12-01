@@ -5,10 +5,7 @@
       leave-active-class="animated fadeOutDown extrafaster"
     >
       <playlist-widget v-if="showPlaylistWidget" />
-      <tag-editor
-        v-if="showTagEditor"
-        :target-track="selectedTrack"
-      />
+      <tag-editor v-if="showTagEditor" :target-track="selectedTrack" />
     </transition>
     <transition
       enter-active-class="animated fadeInUp extrafaster"
@@ -32,14 +29,14 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
+import { ipcRenderer } from "electron";
 
 export default {
-  name: 'LocalMusic',
+  name: "LocalMusic",
 
   data() {
     return {
-      selectedTrack: null
+      selectedTrack: null,
     };
   },
   computed: {
@@ -54,19 +51,19 @@ export default {
     },
     multiSelectOn() {
       return this.$store.state.UIController.UIProperties.multiSelectMode;
-    }
+    },
   },
   mounted() {
-    const tabsArea = document.querySelector('#tabsArea');
-    tabsArea.addEventListener('drop', event => {
+    const tabsArea = document.querySelector("#tabsArea");
+    tabsArea.addEventListener("drop", (event) => {
       event.preventDefault();
       event.stopPropagation();
       const filePaths = Array.from(event.dataTransfer.files).map(
-        file => file.path
+        (file) => file.path
       );
-      ipcRenderer.send('processDroppedFiles', filePaths);
+      ipcRenderer.send("processDroppedFiles", filePaths);
     });
-    tabsArea.addEventListener('dragover', e => {
+    tabsArea.addEventListener("dragover", (e) => {
       e.preventDefault();
       e.stopPropagation();
       // document.body.classList.add("droppingAFile");
@@ -78,12 +75,12 @@ export default {
   methods: {
     setTagEditorTrack(track) {
       this.selectedTrack = track;
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss">
-@import '@scss/mixins.scss';
+@import "@scss/mixins.scss";
 .droppingAFile {
   .LocalMusic {
     main {
@@ -108,10 +105,10 @@ export default {
       padding: 10px;
       height: 97%;
       width: 80%;
-      margin-right: 10px;
+      margin-right: 5px;
       border-radius: 20px;
       &::before {
-        content: '💧Drop it, Right Here 🛒';
+        content: "💧Drop it, Right Here 🛒";
         position: absolute;
         z-index: 100;
         border-radius: 15px;

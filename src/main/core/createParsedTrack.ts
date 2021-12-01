@@ -6,7 +6,7 @@ import { paths } from '../modules/Paths';
 import { fileTracker } from '../../background';
 import { extractTitleAndArtist, removeMIME, writeImageBuffer } from '../utils';
 
-export function createParsedTrack (fileLocation: string) {
+export function createParsedTrack(fileLocation: string) {
   return new Promise<TrackType>(resolve => {
     const track: TrackType = {
       r_fileLocation: '',

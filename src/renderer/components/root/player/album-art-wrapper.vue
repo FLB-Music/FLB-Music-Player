@@ -11,18 +11,33 @@
 
 <script>
 // eslint-disable-next-line import/extensions
-import ColorThief from './color-thief.min.js';
+import ColorThief from "./color-thief.min.js";
 
 export default {
   computed: {
     dynamicAccentColor() {
       return this.$store.state.SettingsManager.settings.dynamicAccentColor;
-    }
+    },
+    presetAccentColor() {
+      return this.$store.state.SettingsManager.settings.accentColor;
+    },
+    playingTrack() {
+      return this.$store.state.PlaybackManger.playingTrackInfo.track;
+    },
   },
   watch: {
-    albumArt() {
+    playingTrack() {
       this.setThemeColor();
-    }
+      this.recolorDefaultAlbumArt(
+        parseInt(this.presetAccentColor.replace("accent_", ""))
+      );
+    },
+    presetAccentColor(newAccent) {
+      this.recolorDefaultAlbumArt(parseInt(newAccent.replace("accent_", "")));
+    },
+    dynamicAccentColor() {
+      this.setThemeColor();
+    },
   },
   methods: {
     setThemeColor() {
@@ -30,26 +45,62 @@ export default {
         setTimeout(async () => {
           try {
             const palette = await ColorThief.prototype.getPalette(
-              document.querySelector('#playing_track_album_art')
+              document.querySelector("#playing_track_album_art")
             );
-            const app = document.querySelector('#app');
+            const app = document.querySelector("#app");
             if (palette[0] && palette[1]) {
               app.style.setProperty(
-                '--accentColor',
+                "--accentColor",
                 `linear-gradient(120deg,rgba(${palette[0]}),rgba(${palette[1]}))`
               );
             }
           } catch (error) {
-            console.log('Error changing dynamic accent color');
+            console.log("Error changing dynamic accent color");
             console.log(error);
           }
-        }, 50);
+        }, 0);
       }
-    }
+    },
+    recolorDefaultAlbumArt(index) {
+      //only recolor when dc is off
+      if (!this.dynamicAccentColor) {
+        const accentColorHues = [231, 268, 298, 38, 169, 27, 193, 328, 0, 19];
+        const hueToApply = accentColorHues[index];
+
+        const bgImage = document.querySelector("#bg_fancy");
+        const albumArt = document.querySelector("#playing_track_album_art");
+        setTimeout(() => {
+          console.clear();
+          if (bgImage) {
+            if (bgImage.src.includes("flbdefault")) {
+              bgImage.style.filter = `hue-rotate(${hueToApply}deg) blur(50px)`;
+              console.log("bg hue applied");
+            } else {
+              bgImage.style.filter = `blur(50px)`;
+              console.log("bgImage hue reset");
+            }
+          }
+          if (albumArt) {
+            if (albumArt.src.includes("flbdefault")) {
+              albumArt.style.filter = `hue-rotate(${hueToApply}deg)`;
+              console.log("albumArt hue applied");
+            } else {
+              albumArt.style.filter = `none`;
+              console.log("albumArt hue reset");
+            }
+          }
+        }, 0);
+      }
+    },
   },
   props: {
-    albumArt: String
-  }
+    albumArt: String,
+  },
+  mounted() {
+    this.recolorDefaultAlbumArt(
+      parseInt(this.presetAccentColor.replace("accent_", ""))
+    );
+  },
 };
 </script>
 

@@ -6,10 +6,7 @@
           :album-art="albumArt"
           @togglePlayerMode="togglePlayerMode"
         />
-        <img
-          class="album_art_blurred"
-          :src="albumArt"
-        >
+        <img class="album_art_blurred" :src="albumArt" />
 
         <div class="track_info">
           <p class="track_title">
@@ -39,10 +36,7 @@
             :small="true"
             @click.native="determineNextTrack('prev')"
           />
-          <div
-            id="toggle_play"
-            @click="toggleIsPlaying"
-          >
+          <div id="toggle_play" @click="toggleIsPlaying">
             <base-button
               v-if="!audioState.playing"
               id="play_bt"
@@ -136,10 +130,7 @@
         <div class="toggle_queue" />
         <queued-tracks />
       </div>
-      <div
-        v-if="playingPaneExpanded && showLyrics"
-        class="lyrics_wrappers"
-      >
+      <div v-if="playingPaneExpanded && showLyrics" class="lyrics_wrappers">
         <h1>Lyrics</h1>
         <lyrics />
       </div>
@@ -148,26 +139,26 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex';
-import { sendMessageToNode } from '@/renderer/utils';
-import { setupEqualizer } from '../equalizer/equalizer';
+import { mapActions, mapMutations } from "vuex";
+import { sendMessageToNode } from "@/renderer/utils";
+import { setupEqualizer } from "../equalizer/equalizer";
 /* eslint-disable */
-const defaultCover = require('@img/flbdefault-cover.png');
+const defaultCover = require("@img/flbdefault-cover.png");
 /* eslint-disable */
 export default {
-  name: 'PlayingPane',
+  name: "PlayingPane",
 
   data() {
     return {
-      elements: ['songName', 'artistName', 'albumName'],
+      elements: ["songName", "artistName", "albumName"],
       repeat: false,
       shuffle: false,
       possibleThumbnails: [],
-      selectedCover: '',
+      selectedCover: "",
       volume: 1,
       isOnline: false,
       playingPaneExpanded: false,
-      showLyrics: false
+      showLyrics: false,
     };
   },
   computed: {
@@ -185,7 +176,7 @@ export default {
     },
     isInFavorites() {
       return this.$store.state.TabsManager.tabsData.playlists[0].tracks.some(
-        track => track.fileLocation === this.playingTrack.fileLocation
+        (track) => track.fileLocation === this.playingTrack.fileLocation
       );
     },
     miniMode() {
@@ -194,7 +185,7 @@ export default {
     playingTrackLyrics() {
       return (
         this.$store.state.PlaybackManger.allLyrics.filter(
-          trackLyricInfo =>
+          (trackLyricInfo) =>
             trackLyricInfo.trackName === this.playingTrack.defaultTitle
         )[0]?.lyrics || false
       );
@@ -206,62 +197,62 @@ export default {
         return `file://${playingTrackAlbumArt}`;
       }
       return defaultCover;
-    }
+    },
   },
   watch: {
     playingTrack() {
       this.showLyrics = false;
-    }
+    },
   },
   methods: {
     ...mapMutations([
-      'pushNotification',
-      'addToSelectedTracks',
-      'addSelectedTracksToPlaylist',
-      'deleteSelectedTrackFromPlaylist',
-      'UIcontrollerToggleProperty',
-      'UIcontrollerSetPropertyValue',
-      'setSettingValue',
-      'clearSelectedTracks'
+      "pushNotification",
+      "addToSelectedTracks",
+      "addSelectedTracksToPlaylist",
+      "deleteSelectedTrackFromPlaylist",
+      "UIcontrollerToggleProperty",
+      "UIcontrollerSetPropertyValue",
+      "setSettingValue",
+      "clearSelectedTracks",
     ]),
     ...mapActions([
-      'toggleRepeat',
-      'toggleShuffler',
-      'toggleIsPlaying',
-      'determineNextTrack',
-      'findAndGoToArtist'
+      "toggleRepeat",
+      "toggleShuffler",
+      "toggleIsPlaying",
+      "determineNextTrack",
+      "findAndGoToArtist",
     ]),
     togglePlayerMode() {
-      document.body.classList.toggle('fullScreenPlayingPane');
+      document.body.classList.toggle("fullScreenPlayingPane");
       this.playingPaneExpanded = !this.playingPaneExpanded;
       this.UIcontrollerSetPropertyValue({
-        property: 'currentSidePaneTab',
-        newValue: 'Info'
+        property: "currentSidePaneTab",
+        newValue: "Info",
       });
     },
     toggleMiniMode() {
-      sendMessageToNode('toggleMiniMode', !this.miniMode);
-      this.UIcontrollerToggleProperty('miniMode');
-      document.body.classList.remove('fullScreenPlayingPane');
+      sendMessageToNode("toggleMiniMode", !this.miniMode);
+      this.UIcontrollerToggleProperty("miniMode");
+      document.body.classList.remove("fullScreenPlayingPane");
       this.playingPaneExpanded = false;
     },
     goToArtist() {
-      document.querySelector('#Artists').click();
+      document.querySelector("#Artists").click();
       this.findAndGoToArtist(this.playingTrack.defaultArtist);
     },
     shuffler() {
       this.toggleShuffler();
-      const state = this.audioState.shuffle ? 'On' : 'Off';
+      const state = this.audioState.shuffle ? "On" : "Off";
       this.pushNotification({
         title: `Shuffle ${state}`,
         subTitle: null,
-        type: 'normal'
+        type: "normal",
       });
     },
     showPlaylistAdder() {
       this.addToSelectedTracks(this.playingTrack);
       if (!this.showPlaylistWidget) {
-        this.UIcontrollerToggleProperty('showPlaylistWidget');
+        this.UIcontrollerToggleProperty("showPlaylistWidget");
       }
     },
     toggleFromFavorites() {
@@ -271,77 +262,77 @@ export default {
         this.pushNotification({
           title: `Removed from Favorites`,
           subTitle: `${this.playingTrack.defaultTitle}`,
-          type: 'danger'
+          type: "danger",
         });
       } else {
-        this.addSelectedTracksToPlaylist('Favorites');
+        this.addSelectedTracksToPlaylist("Favorites");
         this.pushNotification({
           title: `Added to Favorites`,
           subTitle: `${this.playingTrack.defaultTitle}`,
-          type: 'normal'
+          type: "normal",
         });
       }
     },
     changeRepeat() {
       this.toggleRepeat();
-      const state = this.audioState.repeat ? 'On' : 'Off';
+      const state = this.audioState.repeat ? "On" : "Off";
       this.pushNotification({
         title: `Repeat ${state}`,
         subTitle: null,
-        type: 'normal'
+        type: "normal",
       });
-    }
+    },
   },
   mounted() {
     setupEqualizer();
-    window.addEventListener('keydown', e => {
-      if (!document.activeElement.classList.contains('inputElem')) {
-        if (e.code === 'Space') {
+    window.addEventListener("keydown", (e) => {
+      if (!document.activeElement.classList.contains("inputElem")) {
+        if (e.code === "Space") {
           e.preventDefault();
-          document.querySelector('#toggle_play').click();
+          document.querySelector("#toggle_play").click();
           return;
         }
-        if (e.code === 'ArrowLeft') {
-          this.determineNextTrack('prev');
+        if (e.code === "ArrowLeft") {
+          this.determineNextTrack("prev");
           return;
         }
-        if (e.code === 'ArrowRight') {
-          this.determineNextTrack('next');
+        if (e.code === "ArrowRight") {
+          this.determineNextTrack("next");
           return;
         }
-        if (e.code === 'Tab') {
+        if (e.code === "Tab") {
           e.preventDefault();
-          document.querySelector('#search').focus();
+          document.querySelector("#search").focus();
         }
       }
     });
-    document.querySelector('body').classList.add('playingPaneLoaded');
+    document.querySelector("body").classList.add("playingPaneLoaded");
 
     const actionHandlers = [
       [
-        'play',
+        "play",
         () => {
           this.toggleIsPlaying();
-        }
+        },
       ],
       [
-        'pause',
+        "pause",
         () => {
           this.toggleIsPlaying();
-        }
+        },
       ],
       [
-        'previoustrack',
+        "previoustrack",
         () => {
-          this.determineNextTrack('prev');
-        }
+          this.determineNextTrack("prev");
+        },
       ],
       [
-        'nexttrack',
+        "nexttrack",
         () => {
-          this.determineNextTrack('next');
-        }
-      ]
+          this.determineNextTrack("next");
+        },
+      ],
     ];
     for (const [action, handler] of actionHandlers) {
       try {
@@ -352,7 +343,7 @@ export default {
         );
       }
     }
-  }
+  },
 };
 </script>
 
