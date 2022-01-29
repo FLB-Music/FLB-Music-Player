@@ -36,7 +36,7 @@
       <triangle-slider filter-name="Treble" @newGainValues="changeBandGains" />
       <triangle-slider filter-name="VBoost" title="Boost Volume" />
     </div>
-    <spatializer />
+    <!-- <spatializer />  -->
   </div>
 </template>
 

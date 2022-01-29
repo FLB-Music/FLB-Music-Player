@@ -57,10 +57,10 @@ export class UsageManager {
   }
   async sendUsageData() {
     axios.post('https://flb-server.herokuapp.com/usage-stats', this.usageData)
-      .then(function (response) {
-        console.log(response);
+      .then(function(response) {
+        // console.log(response);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   }

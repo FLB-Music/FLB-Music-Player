@@ -34,7 +34,7 @@
 
 <script>
 import { mapMutations } from 'vuex';
-import { sortArrayOfObjects } from '@/shared-utils';
+import { sortArrayOfObjects,removeDuplicates } from '@/shared-utils';
 
 export default {
   name: 'TracksTab',
@@ -104,7 +104,7 @@ export default {
       );
       const start = scrollTop;
       const end = scrollTop + this.NO_OF_TRACKS_TO_RENDER;
-      this.tracksToRender = this.addedTracks.slice(start, end);
+      this.tracksToRender = removeDuplicates(this.addedTracks.slice(start, end), 'fileLocation');
     }
   },
   mounted() {

@@ -27,7 +27,7 @@
       />
     </div>
     <div
-      v-if="imageResults.length === 0 && searching"
+      v-if="searching"
       class="loadingArea"
     >
       <div class="loadingIndicator" />
@@ -63,10 +63,12 @@ export default {
   methods: {
     ...mapMutations(['UIcontrollerToggleProperty']),
     searchImage() {
+      console.log("searching for image")
       this.imageResults = [];
       this.searching = true;
       gis(this.query, (error, results) => {
         console.log('logging results');
+          this.searching = false
         if (error) {
           console.log(error);
         } else if (results.length > 1) {

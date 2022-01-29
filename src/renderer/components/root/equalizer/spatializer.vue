@@ -1,23 +1,54 @@
 <template>
-  <div class="spatializer">
-    <base-button
-      text="Pan"
-      class="widget_close circle shrink8"
-      @click.native="pan"
-    />
-  </div>
+  <div class="spatializer"></div>
 </template>
 
 <script>
-import { panner } from "./spatializer";
+import { spatialize } from "./spatializer";
 export default {
   data() {
-    return { horizontalPan: 0, verticalPan: 0 };
+    return {
+      panningData: null,
+      trackLength: 0,
+      currentSpatialPosition: null,
+      nextSpatialPosition: null,
+    };
   },
-  methods: {
-    pan(direction) {
-      console.log("panning");
+  computed: {
+    playingTrack() {
+      return this.$store.state.PlaybackManger.playingTrackInfo.track;
     },
+  },
+  watch: {
+    playingTrack() {
+      setTimeout(() => {
+        const audio = document.querySelector("audio");
+        const trackLength = Math.trunc(audio.duration);
+        console.log(trackLength);
+        this.panningData = getSpatials(trackLength);
+        /* //Once the playing track changes, reinitialize the spatializer */
+        console.log("Intializing spatializer");
+        console.log(this.panningData);
+      }, 500);
+    },
+  },
+  methods: {},
+  mounted() {
+    let isPlaying = false;
+    setInterval(() => {
+      if (isPlaying) {
+        spatialize();
+        isPlaying = false;
+      }
+    }, 4000);
+    /* let timeout = 5000; */
+    const audioElement = document.querySelector("audio");
+    audioElement.addEventListener("timeupdate", (e) => {
+      isPlaying = true;
+      /*   setTimeout(() => { */
+      /*     spatialize(); */
+      /*   }, timeout); */
+      /*   timeout++; */
+    });
   },
 };
 </script>

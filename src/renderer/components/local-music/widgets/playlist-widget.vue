@@ -19,6 +19,7 @@
         type="text"
       >
       <base-button
+      v-if="newPlaylistName!==''"
         text="Create"
         :active="true"
         class="w-100 mt10"

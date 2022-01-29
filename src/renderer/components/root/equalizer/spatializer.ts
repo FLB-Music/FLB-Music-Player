@@ -68,30 +68,157 @@ export function setupSpatializer(audioContext: AudioContext) {
   return panner;
 }
 
-function moveRandomly(x: Number, y: Number, z: Number) {
-  const centerFace = [
-    [-15, 15, 0],
-    [15, 15, 0],
-    [15, -15, 0],
-    [-15, -15, 0],
+let currentPointInTrip = 0;
+let intervalID: number;
+
+export function manageDirections() {
+  const trips = [
+    ...["right", "farLeft", "farRight", "up", "farLeft", "farDown", "farRight"],
+    ...["farUp", "farLeft", "farDown", "right", "farUp"],
+    ...["farLeft", "down", "right"],
   ];
-  const backFace = [
-    [-15, 15, -15],
-    [15, 15, -15],
-    [15, -15, -15],
-    [-15, -15, -15],
-  ];
-  const frontFace = [
-    [-15, 15, 15],
-    [15, 15, 15],
-    [15, -15, 15],
-    [-15, -15, 15],
-  ];
-  // const locations = shuffleArray([
-  //   ...centerFace,
-  //   ...backFace,
-  //   ...frontFace,
-  //   [0, 0, 0],
-  // ]);
-  const locations = shuffleArray([...centerFace, [0, 0, 0]]);
+  return trips[currentPointInTrip];
+}
+
+export function spatialize() {
+  clearInterval(intervalID);
+  const randomDirection = manageDirections();
+  if (currentPointInTrip == 14) {
+    currentPointInTrip = 0;
+  } else {
+    currentPointInTrip++;
+  }
+  console.log("randomDirection " + randomDirection);
+  const minX = window.innerWidth / 2 - 10;
+  const maxX = window.innerWidth / 2 + 10;
+  const maxY = window.innerHeight / 2 + 10;
+  const minY = window.innerHeight / 2 - 10;
+
+  if (randomDirection == "left") {
+    console.log("-==> left");
+    const finalPos = panner.positionX.value - 10;
+    if (finalPos >= minX) {
+      let currentPos = panner.positionX.value;
+      intervalID = window.setInterval(() => {
+        if (finalPos < currentPos) {
+          panner.positionX.value -= 0.1;
+          currentPos -= 0.1;
+        }
+      }, 100);
+    } else {
+      // console.log("Beyond min ");
+    }
+  }
+
+  if (randomDirection == "farLeft") {
+    console.log("-==> farLeft");
+    const finalPos = panner.positionX.value - 20;
+    if (finalPos >= minX - 20) {
+      let currentPos = panner.positionX.value;
+      intervalID = window.setInterval(() => {
+        if (finalPos < currentPos) {
+          panner.positionX.value -= 0.1;
+          currentPos -= 0.1;
+        }
+      }, 50);
+    } else {
+      // console.log("Beyond min ");
+    }
+  }
+
+  if (randomDirection == "right") {
+    console.log("-==> Right");
+    const finalPos = panner.positionX.value + 10;
+    if (finalPos <= maxX) {
+      let currentPos = panner.positionX.value;
+      intervalID = window.setInterval(() => {
+        if (finalPos > currentPos) {
+          panner.positionX.value += 0.1;
+          currentPos += 0.1;
+        }
+      }, 100);
+    } else {
+      // console.log("Beyond max");
+    }
+  }
+
+  if (randomDirection == "farRight") {
+    console.log("-==> farRight");
+    const finalPos = panner.positionX.value + 20;
+    if (finalPos <= maxX + 10) {
+      let currentPos = panner.positionX.value;
+      intervalID = window.setInterval(() => {
+        if (finalPos > currentPos) {
+          panner.positionX.value += 0.1;
+          currentPos += 0.1;
+        }
+      }, 50);
+    } else {
+      // console.log("Beyond max");
+    }
+  }
+
+  if (randomDirection == "up") {
+    console.log("-==> up");
+    const finalPos = panner.positionY.value - 10;
+    if (finalPos >= minY) {
+      let currentPos = panner.positionY.value;
+      intervalID = window.setInterval(() => {
+        if (finalPos > currentPos) {
+          panner.positionY.value -= 0.1;
+          currentPos -= 0.1;
+        }
+      }, 100);
+    } else {
+      // console.log("Beyond max");
+    }
+  }
+
+  if (randomDirection == "farUp") {
+    console.log("-==> farUp");
+    const finalPos = panner.positionY.value - 20;
+    if (finalPos >= minY - 10) {
+      let currentPos = panner.positionY.value;
+      intervalID = window.setInterval(() => {
+        if (finalPos > currentPos) {
+          panner.positionY.value -= 0.1;
+          currentPos -= 0.1;
+        }
+      }, 100);
+    } else {
+      // console.log("Beyond max");
+    }
+  }
+
+  if (randomDirection == "down") {
+    console.log("-==> down");
+    const finalPos = panner.positionY.value + 10;
+    if (finalPos <= maxY) {
+      let currentPos = panner.positionY.value;
+      intervalID = window.setInterval(() => {
+        if (finalPos > currentPos) {
+          panner.positionY.value += 0.1;
+          currentPos += 0.1;
+        }
+      }, 100);
+    } else {
+      // console.log("Beyond max");
+    }
+  }
+
+  if (randomDirection == "farDown") {
+    console.log("-==> farDown");
+    const finalPos = panner.positionY.value + 20;
+    if (finalPos <= maxY + 10) {
+      let currentPos = panner.positionY.value;
+      intervalID = window.setInterval(() => {
+        if (finalPos > currentPos) {
+          panner.positionY.value += 0.1;
+          currentPos += 0.1;
+        }
+      }, 50);
+    } else {
+      // console.log("Beyond max");
+    }
+  }
 }

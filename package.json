@@ -21,7 +21,6 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^1.21.0",
-    "@types/lokijs": "^1.5.7",
     "animate.css": "4.1.1",
     "axios": "^0.21.1",
     "color-thief-browser": "^2.0.2",
@@ -36,7 +35,6 @@
     "is-online": "^9.0.1",
     "json5": "2.2.0",
     "lodash": "4.17.21",
-    "lokijs": "^1.5.12",
     "music-metadata": "^7.11.4",
     "node-downloader-helper": "1.0.18",
     "node-id3": "0.2.3",
@@ -48,10 +46,7 @@
     "vue-virtual-scroll-list": "2.3.2",
     "vue-virtual-scroller": "1.0.10",
     "vuedraggable": "2.24.3",
-    "vuex": "3.6.2",
-    "youtube-api-v3-search": "^1.2.1",
-    "youtube-music-api": "^1.0.6",
-    "ytdl-core": "4.8.3"
+    "vuex": "3.6.2"
   },
   "devDependencies": {
     "@types/electron-devtools-installer": "2.2.0",

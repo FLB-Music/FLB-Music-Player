@@ -111,7 +111,7 @@
       enter-active-class="animated fadeInUp extrafaster"
       leave-active-class="animated fadeOutDown extrafaster"
     >
-      <equalizer v-if="showEqualizerWidget" />
+      <equalizer v-show="showEqualizerWidget" />
     </transition>
     <base-button
       v-if="playingTrackLyrics"

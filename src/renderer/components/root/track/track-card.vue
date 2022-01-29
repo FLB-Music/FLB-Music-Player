@@ -23,7 +23,7 @@
       <p class="album queue weight300 fade_to_8 text-small-1">
         {{ trackInfo.album }}
       </p>
-      <p class="duration">
+      <p class="duration weight300 fade_to_8 text-small-1">
         {{ trackInfo.formattedLength }}
       </p>
     </div>
@@ -216,7 +216,8 @@ export default {
   .info {
     width: 100%;
     display: grid;
-    grid-template-columns: 3fr 1fr 2fr;
+    grid-template-columns: 3fr 1fr 1fr 0.5fr;
+    gap:5px;
     justify-content: center;
     align-items: center;
     align-items: center;

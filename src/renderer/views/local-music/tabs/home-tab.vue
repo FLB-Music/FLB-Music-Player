@@ -59,7 +59,7 @@
 <script>
 import { mapMutations } from "vuex";
 import { MixGenerator } from "@/renderer/utils/mix-generator";
-
+import {ipcRenderer} from 'electron'
 export default {
   name: "HomeTab",
 
@@ -92,17 +92,20 @@ export default {
       const path = tab === "Home" ? "/" : `/${tab}`;
       this.$router.push(path);
     },
-  },
-  mounted() {
-    setTimeout(() => {
+    async intializeMixes(){
+      const playStats = await ipcRenderer.invoke('getPlaybackStats');
       const mixGen = new MixGenerator(
-        this.playStats,
+        playStats,
         this.tabsData.addedTracks,
         this.tabsData.recentlyPlayedTracks
       );
       this.mixes = mixGen.allMixes;
-      console.log("mixes generated");
-      console.log(this.mixes);
+      }
+  },
+  mounted() {
+    setTimeout(() => {
+    this.intializeMixes()
+    
     }, 500);
   },
 };

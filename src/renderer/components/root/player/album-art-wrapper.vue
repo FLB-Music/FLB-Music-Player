@@ -70,7 +70,6 @@ export default {
         const bgImage = document.querySelector("#bg_fancy");
         const albumArt = document.querySelector("#playing_track_album_art");
         setTimeout(() => {
-          console.clear();
           if (bgImage) {
             if (bgImage.src.includes("flbdefault")) {
               bgImage.style.filter = `hue-rotate(${hueToApply}deg) blur(50px)`;

@@ -1,24 +1,25 @@
 <template>
   <div class="PlaylistCard bg1">
-    <div
-      v-if="playlist.tracks.length === 0"
-      style="cursor: pointer"
-      class="centerContents"
-      @click="openPlaylist"
-    >
-      <img
-        style="width: 140px"
-        src="@img/add-illustration.svg"
-      >
-      <p style="font-family: inherit">
-        Empty Playlist
-      </p>
-    </div>
     <div class="playlist_header">
       <p class="playlist_name bg1">
         {{ playlist.name }}
       </p>
 
+    <div
+      v-if="playlist.tracks.length === 0"
+      style="cursor: pointer;width:150px"
+      class="centerContents"
+      @click="openPlaylist"
+    >
+      <img
+        style="width: 100px"
+        class="ma10"
+        src="@img/add-illustration.svg"
+      >
+      <p class="ma10">
+        Empty Playlist
+      </p>
+    </div>
       <div
         v-if="playlist.tracks.length !== 0"
         class="playlist_actions"

@@ -36,7 +36,7 @@ import { initializeApp, resetApp } from "./main/core/utils";
 
 console.log(paths.appFolder);
 
-dialog.showErrorBox = function (title, content) {
+dialog.showErrorBox = function(title, content) {
   sendMessageToRenderer(`dangerMsg`, `⚠Error⚠ 👉${title} ${content}`);
   console.log(`An Error Occurred ⚠`);
   console.log(`${title}\n ${content}`);
@@ -103,7 +103,7 @@ async function createWindow() {
     // do some stuff
   });
 
-  win.webContents.on("new-window", function (e, url) {
+  win.webContents.on("new-window", function(e, url) {
     e.preventDefault();
     shell.openExternal(url);
   });
@@ -181,6 +181,9 @@ ipcMain.on("initializeSettings", () => {
   win.webContents.send("userSettings", settings.getSettings);
 });
 ipcMain.on("getFirstTracks", async () => {
+
+
+
   const tracks = await getParsedTracks(settings.getSettings.foldersToScan);
   fileTracker.addMultipleTracks(tracks);
   sendMessageToRenderer("addMultipleTracks", tracks);
@@ -221,9 +224,12 @@ ipcMain.on("removeFromScannedFolders", (e, payload) => {
   settings.removeFromScannedFolders(payload);
   win.webContents.send("userSettings", settings.getSettings);
 });
-ipcMain.on("refresh", () => {
+ipcMain.on("refresh", async () => {
   sendNotificationToRenderer("Refreshing...", "", "success");
-  getParsedTracks(settings.getSettings.foldersToScan);
+  const tracks = await getParsedTracks(settings.getSettings.foldersToScan);
+  fileTracker.addMultipleTracks(tracks);
+  sendMessageToRenderer("addMultipleTracks", tracks);
+  fileTracker.saveChanges();
 });
 
 ipcMain.on("playingTrack", async (e, track: TrackType) => {
@@ -369,6 +375,9 @@ ipcMain.on("toggleMiniMode", (e, payload) => {
   }
 });
 
+ipcMain.handle('getPlaybackStats', () => playbackStats.getPlayStats)
+
+
 async function getParsedTracks(folders: string[] = []) {
   let allTracks: string[] = [];
   const allParsedTracks: TrackType[] = [];
@@ -407,7 +416,7 @@ export async function writeTags(
       tagChanges.APIC = await downloadFile(
         tagChanges.APIC,
         paths.albumArtFolder,
-        path.parse(filePath).name
+        path.parse(filePath).name + '.jpeg'
       );
       sendNotificationToRenderer("Downloading Picture");
     } catch (error) {

@@ -1,13 +1,13 @@
 import YoutubeMusicApi from 'youtube-music-api';
-
+const { spawn } = require('child_process');
 export class MeldManager {
   searches = []
   api: any
-  constructor () {
+  constructor() {
     this.api = new YoutubeMusicApi();
     this.api.initalize();
   }
-  async searchSong (query: string) {
+  async searchSong(query: string) {
     try {
       this.api.initalize()
         .then(() => {
@@ -21,7 +21,7 @@ export class MeldManager {
       return null;
     }
   }
-  async searchVideo (query: string) {
+  async searchVideo(query: string) {
     try {
       const result = await this.api.search(query, 'video').then((result: any) => console.log(result));
       return result;
@@ -31,7 +31,7 @@ export class MeldManager {
     }
 
   }
-  async searchAlbum (query: string) {
+  async searchAlbum(query: string) {
     try {
       const result = await this.api.search(query, 'album').then((result: any) => console.log(result));
       return result;
@@ -41,7 +41,7 @@ export class MeldManager {
     }
 
   }
-  async searchArtist (query: string) {
+  async searchArtist(query: string) {
     try {
       const result = await this.api.search(query, 'artist').then((result: any) => console.log(result));
       return result;
@@ -51,7 +51,7 @@ export class MeldManager {
     }
 
   }
-  async searchPlaylist (query: string) {
+  async searchPlaylist(query: string) {
     try {
       const result = await this.api.search(query, 'playlist').then((result: any) => console.log(result));
       return result;
@@ -61,4 +61,21 @@ export class MeldManager {
     }
 
   }
+}
+
+
+
+export async function ytdlGetAudioURL(query: String) {
+  return new Promise((resolve, reject) => {
+    const ls = spawn(`youtube-dl`, [`ytsearch1:${query}`, '--get-url', '--extract-audio']);
+    ls.stdout.on('data', (data: any) => {
+      console.log(`stdout: ${data}`);
+      resolve(data)
+    });
+    ls.stderr.on('data', (data: any) => {
+      reject(data)
+      console.error(`stderr: ${data}`);
+    });
+
+  })
 }
