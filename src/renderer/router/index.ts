@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter, { RouteConfig } from 'vue-router';
 import LocalMusic from '../views/local-music/local-music.vue';
-import FLBing from '../views/flbing.vue';
+import Meld from '../views/Meld.vue';
 import HomeTab from '../views/local-music/tabs/home-tab.vue';
 import TracksTab from '../views/local-music/tabs/tracks-tab.vue';
 import RecentsTab from '../views/local-music/tabs/recents-tab.vue';
@@ -48,8 +48,8 @@ const routes: Array<RouteConfig> = [
     ]
   },
   {
-    path: '/flbing',
-    component: FLBing
+    path: '/meld',
+    component: Meld
   }
 ];
 

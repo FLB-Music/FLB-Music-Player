@@ -63,7 +63,7 @@
 import { mapMutations } from 'vuex';
 
 export default {
-  name: 'Flbing',
+  name: 'Meld',
 
   data() {
     return {

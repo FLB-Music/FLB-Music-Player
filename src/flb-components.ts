@@ -60,7 +60,7 @@ export { default as settings } from "./renderer/components/root/settings.vue";
 export { default as sideNav } from "./renderer/components/root/side-nav.vue";
 export { default as trackCard } from "./renderer/components/root/track/track-card.vue";
 export { default as trackContextMenu } from "./renderer/components/root/track/track-context-menu.vue";
-export { default as flbing } from "./renderer/views/flbing.vue";
+export { default as Meld } from "./renderer/views/Meld.vue";
 export { default as localMusic } from "./renderer/views/local-music/local-music.vue";
 export { default as albumsTab } from "./renderer/views/local-music/tabs/albums-tab.vue";
 export { default as artistsTab } from "./renderer/views/local-music/tabs/artists-tab.vue";
