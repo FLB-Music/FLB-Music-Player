@@ -23,6 +23,7 @@
         </router-link>
       </div>
       <div
+      @click="giveHope()"
         id="FLBing"
         :class="[
           currentPage === 'FLBing' ? 'active-sideNav-group' : '',
