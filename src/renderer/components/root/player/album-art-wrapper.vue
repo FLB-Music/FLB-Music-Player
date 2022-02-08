@@ -31,6 +31,12 @@ export default {
       this.recolorDefaultAlbumArt(
         parseInt(this.presetAccentColor.replace("accent_", ""))
       );
+      setTimeout(() => {
+        this.setThemeColor();
+        this.recolorDefaultAlbumArt(
+          parseInt(this.presetAccentColor.replace("accent_", ""))
+        );
+      }, 500);
     },
     presetAccentColor(newAccent) {
       this.recolorDefaultAlbumArt(parseInt(newAccent.replace("accent_", "")));
