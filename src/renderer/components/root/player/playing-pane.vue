@@ -476,20 +476,19 @@ export default {
     justify-content: space-between;
     align-items: flex-start;
     .album_art_wrapper {
-      position: absolute;
-      top: 20px;
+      position: fixed;
+      bottom: 300px;
       left: 50%;
       transform: translateX(-50%);
-      width: 300px;
-      height: 300px;
+      width: 27vw;
+      height: 27vw;
     }
     .track_info {
-      position: absolute;
-      bottom: 40px;
-      left: 50%;
-      transform: translateX(-50%);
-      // transform: translateY(100%) translateX(-72%);
-      height: 150px;
+    position: fixed;
+    bottom: 115px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 150px;
       .track_title {
         font-size: 4rem;
         max-width: 40vw;
@@ -532,13 +531,16 @@ export default {
   }
   .right_pane_section {
     position: absolute;
-    left: -80px;
+    left: -50px;
     top: 40%;
     justify-content: flex-end;
     transform: rotate(-90deg);
     z-index: 20;
     .VolumeRocker {
-      transform: rotateX(180deg) translateY(72px) translateX(0px);
+      //transform: rotateX(180deg) translateY(72px) translateX(0px);
+      position: absolute;
+      left:20px;
+      bottom: 40px;
       svg {
         transform: rotate(-90deg);
       }

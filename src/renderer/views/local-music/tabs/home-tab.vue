@@ -106,7 +106,7 @@ export default {
     setTimeout(() => {
     this.intializeMixes()
     
-    }, 500);
+    }, 1000);
   },
 };
 </script>
