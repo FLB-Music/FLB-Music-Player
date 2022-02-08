@@ -29,7 +29,7 @@
       </p>
     </div>
     <div
-      v-if="playingTrackLyrics"
+      v-if="playingTrackLyrics && autoScroll"
       class="lyrics"
     >
       <div
@@ -46,6 +46,27 @@
         </p>
       </div>
     </div>
+
+    <div
+      v-if="playingTrackLyrics && !autoScroll"
+      class="lyrics-no-auto"
+    >
+      <div
+        v-for="(verse, index) in playingTrackLyrics"
+        :key="index"
+        class="verse"
+      >
+        <p
+          v-for="(line, lineIndex) in verseLines(verse)"
+          :key="lineIndex"
+          class="line"
+        >
+          {{ line }}
+        </p>
+      </div>
+    </div>
+
+
     <div
       v-if="playingTrackLyrics"
       class="
@@ -115,6 +136,7 @@ export default {
       return verse.replace(/\[.*\].*/gi, '').split(/\n/);
     },
     autoScrollContainer() {
+      console.log("Auto Scrolling")
       if (this.autoScroll) {
         const audio = document.querySelector('audio');
         const percent = audio.currentTime / audio.duration;
@@ -157,6 +179,7 @@ export default {
     this.getLyrics();
     const audio = document.querySelector('audio');
     audio.addEventListener('timeupdate', () => {
+      console.log(this.autoScroll)
       if (this.autoScroll) {
         this.autoScrollContainer();
       }
@@ -204,6 +227,24 @@ export default {
   height: 92%;
 }
 .lyrics {
+  font-family: inherit;
+  text-align: left;
+  overflow: hidden;
+  height: 90%;
+  width: 105%;
+  overflow-y: scroll;
+  .verse {
+    padding: 10px;
+    line-height: 1.5rem;
+    text-align: center;
+    .line {
+      text-align: center;
+    }
+  }
+  // width: 100px;
+}
+
+.lyrics-no-auto {
   font-family: inherit;
   text-align: left;
   overflow: hidden;
