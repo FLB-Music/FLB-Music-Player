@@ -508,14 +508,14 @@ export default {
     justify-content: flex-end;
     .TrackBar {
       position: absolute;
-      left: 52%;
+      left: 50%;
       transform: translateX(-50%);
       width: 80%;
     }
     .t_actions {
       position: absolute;
       bottom: 40px;
-      left: 52%;
+      left: 50%;
       transform: translateX(-50%);
       button {
         width: 40px;
@@ -540,9 +540,9 @@ export default {
       //transform: rotateX(180deg) translateY(72px) translateX(0px);
       position: absolute;
       left:20px;
-      bottom: 40px;
+      bottom: 45px;
       svg {
-        transform: rotate(-90deg);
+        transform: rotate(90deg);
       }
     }
     button {
