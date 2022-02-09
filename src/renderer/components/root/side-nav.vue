@@ -30,7 +30,7 @@
           'sideNav-group'
         ]"
       >
-        <router-link to="/meld">
+        <router-link to="/">
           <img
             title="FLBing"
             class="icon"

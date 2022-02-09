@@ -1,6 +1,6 @@
 {
   "name": "flbmusic",
-  "version": "1.1.9",
+  "version": "1.2.0",
   "private": true,
   "description": "A Beautiful and Feature Rich Music Player",
   "repository": {
@@ -17,7 +17,7 @@
     "lint": "vue-cli-service lint --fix -f codeframe",
     "build": "vue-cli-service electron:build --skip-plugins @vue/cli-plugin-eslint",
     "push-update": "vue-cli-service electron:build -- -p always",
-    "deploy:steps": "git commit -am vx.x.x && git tag vx.x.x && git push --tags"
+    "deploy-steps": "git commit -am v1.2.0 && git tag v1.2.0 && git push --tags"
   },
   "dependencies": {
     "@supabase/supabase-js": "^1.21.0",
