@@ -1,11 +1,11 @@
 
-![Logo](https://i.ibb.co/ry3w6cw/flb-website-min.jpg)
+![Logo](https://i.ibb.co/PwrL1Hy/flb-website-shot.png)
 
     
 # FLB Music
 
 A Beautiful🌹 and Feature Rich💎 Cross Platform Music Player and Downloader.
-Visit 🔗https://fellthebeat.xyz to download ⬇
+Visit 🔗https://flbmusic.xyz to download ⬇
 
 
 
