@@ -72,15 +72,11 @@ export default {
         type: 'normal'
       });
       const endPoint =
-        this.feedbackType === 'request' ? 'feature-request' : 'bug-report';
-      const res = await fetch(`https://flb-server.herokuapp.com/${endPoint}`, {
-        body: JSON.stringify(this.feedback),
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        method: 'POST'
-      });
-      if (res.status === 200) {
+        this.feedbackType === 'request' ? 'Feature Requests' : 'Bug Reports';
+        const dbResponse = await dbUpsert("Bug Reports", bugReport);
+  console.log(dbResponse);
+
+    if (dbResponse.error) {
         this.pushNotification({
           title:
             this.feedbackType === 'request'
