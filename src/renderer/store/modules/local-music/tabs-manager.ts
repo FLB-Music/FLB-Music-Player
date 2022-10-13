@@ -1,5 +1,5 @@
-import { sendMessageToNode } from '@/renderer/utils';
-import { removeDuplicates, sortArrayOfObjects } from '@/shared-utils';
+import { sendMessageToNode } from "@/renderer/utils";
+import { removeDuplicates, sortArrayOfObjects } from "@/shared-utils";
 import {
   AlbumType,
   ArtistInfoInterface,
@@ -8,11 +8,12 @@ import {
   FolderInfoType,
   FolderParsedType,
   PlaylistType,
-  TrackType
-} from '@/types';
-import { ActionTree } from 'vuex';
-import TrackSelector from './track-selector';
-import PlaybackManger from './playback-manger';
+  TrackType,
+} from "@/types";
+import { ActionTree } from "vuex";
+import TrackSelector from "./track-selector";
+import PlaybackManger from "./playback-manger";
+import axios from "axios";
 
 interface TabsManagerStateInterface {
   tabsData: {
@@ -33,13 +34,13 @@ const state: TabsManagerStateInterface = {
     albums: [],
     playlists: [
       {
-        name: 'Favorites',
-        tracks: []
-      }
+        name: "Favorites",
+        tracks: [],
+      },
     ],
-    folders: []
+    folders: [],
   },
-  downloadedArtistPictures: []
+  downloadedArtistPictures: [],
 };
 const mutations = {
   addTrack(state: TabsManagerStateInterface, payload: TrackType) {
@@ -52,17 +53,20 @@ const mutations = {
   },
   addMultipleTracks(state: TabsManagerStateInterface, payload: TrackType[]) {
     const mutatedTracks = [...state.tabsData.addedTracks, ...payload];
-    state.tabsData.addedTracks = removeDuplicates(mutatedTracks, 'fileLocation');
+    state.tabsData.addedTracks = removeDuplicates(
+      mutatedTracks,
+      "fileLocation"
+    );
   },
   updateTrack(state: TabsManagerStateInterface, payload: TrackType) {
     const indexOfUpdatedTrack = state.tabsData.addedTracks.findIndex(
-      track => track.fileLocation === payload.fileLocation
+      (track) => track.fileLocation === payload.fileLocation
     );
     //Dirty code that I will probably forget later
     const importedAlbumArt = localStorage.getItem("importedAlbumArt");
     if (importedAlbumArt) {
       payload.albumArt = importedAlbumArt;
-      localStorage.removeItem("importedAlbumArt")
+      localStorage.removeItem("importedAlbumArt");
     }
 
     PlaybackManger.state.playingTrackInfo.track = null;
@@ -70,8 +74,8 @@ const mutations = {
     console.log(state.tabsData.addedTracks.length);
     state.tabsData.addedTracks.splice(indexOfUpdatedTrack, 1);
     console.log(state.tabsData.addedTracks.length);
-    state.tabsData.addedTracks.unshift(payload)
-    PlaybackManger.state.playingTrackInfo.track = payload
+    state.tabsData.addedTracks.unshift(payload);
+    PlaybackManger.state.playingTrackInfo.track = payload;
     console.log(payload);
     // state.tabsData.addedTracks[indexOfUpdatedTrack].title = payload.title;
     // state.tabsData.addedTracks[indexOfUpdatedTrack].artist = payload.artist;
@@ -89,7 +93,7 @@ const mutations = {
   },
   deleteTrack(state: TabsManagerStateInterface, payload: string) {
     const indexOfDeletedTrack = state.tabsData.addedTracks.findIndex(
-      track => track.fileLocation === payload
+      (track) => track.fileLocation === payload
     );
     state.tabsData.addedTracks.splice(indexOfDeletedTrack, 1);
   },
@@ -111,10 +115,10 @@ const mutations = {
   createPlaylist(state: TabsManagerStateInterface, payload: string) {
     const newPlaylist: PlaylistType = {
       name: payload,
-      tracks: []
+      tracks: [],
     };
     state.tabsData.playlists.push(newPlaylist);
-    sendMessageToNode('updatePlaylists', state.tabsData.playlists);
+    sendMessageToNode("updatePlaylists", state.tabsData.playlists);
   },
   renameCurrentPlaylist(state: TabsManagerStateInterface, payload: string) {
     state.tabsData.playlists.forEach((playlist: PlaylistType) => {
@@ -122,7 +126,7 @@ const mutations = {
         playlist.name = payload;
       }
     });
-    sendMessageToNode('updatePlaylists', state.tabsData.playlists);
+    sendMessageToNode("updatePlaylists", state.tabsData.playlists);
   },
   deletePlaylist(state: TabsManagerStateInterface, payload: string) {
     state.tabsData.playlists.forEach(
@@ -132,17 +136,17 @@ const mutations = {
         }
       }
     );
-    sendMessageToNode('updatePlaylists', state.tabsData.playlists);
+    sendMessageToNode("updatePlaylists", state.tabsData.playlists);
   },
   addSelectedTracksToPlaylist(
     state: TabsManagerStateInterface,
     payload: string
   ) {
-    if (payload === 'Favorites') {
+    if (payload === "Favorites") {
       TrackSelector.state.selectedTracks.forEach((track: TrackType) => {
         state.tabsData.playlists[0].tracks.push(track);
       });
-      sendMessageToNode('updatePlaylists', state.tabsData.playlists);
+      sendMessageToNode("updatePlaylists", state.tabsData.playlists);
       return;
     }
     state.tabsData.playlists.forEach(
@@ -152,13 +156,13 @@ const mutations = {
             state.tabsData.playlists[index].tracks.push(track);
             state.tabsData.playlists[index].tracks = removeDuplicates(
               state.tabsData.playlists[index].tracks,
-              'fileLocation'
+              "fileLocation"
             );
           });
         }
       }
     );
-    sendMessageToNode('updatePlaylists', state.tabsData.playlists);
+    sendMessageToNode("updatePlaylists", state.tabsData.playlists);
   },
   deleteSelectedTrackFromPlaylist(
     state: TabsManagerStateInterface,
@@ -168,11 +172,11 @@ const mutations = {
     if (payload) {
       state.tabsData.playlists[0].tracks.forEach(() => {
         const tindex = state.tabsData.playlists[0].tracks.findIndex(
-          track => track.fileLocation === payload.fileLocation
+          (track) => track.fileLocation === payload.fileLocation
         );
         state.tabsData.playlists[0].tracks.splice(tindex, 1);
       });
-      sendMessageToNode('updatePlaylists', state.tabsData.playlists);
+      sendMessageToNode("updatePlaylists", state.tabsData.playlists);
       return;
     }
     // deletes from other playlists
@@ -183,7 +187,7 @@ const mutations = {
             TrackSelector.state.selectedTracks.forEach(
               (selectedTrack: TrackType) => {
                 const tindex = playlist.tracks.findIndex(
-                  track => track.fileLocation === selectedTrack.fileLocation
+                  (track) => track.fileLocation === selectedTrack.fileLocation
                 );
                 state.tabsData.playlists[pindex].tracks.splice(tindex, 1);
               }
@@ -192,14 +196,14 @@ const mutations = {
         }
       }
     );
-    sendMessageToNode('updatePlaylists', state.tabsData.playlists);
+    sendMessageToNode("updatePlaylists", state.tabsData.playlists);
   },
   setDownloadedArtistInfo(
     state: TabsManagerStateInterface,
     payload: ArtistInfoInterface[]
   ) {
     state.downloadedArtistPictures = payload;
-  }
+  },
 };
 const actions: ActionTree<TabsManagerStateInterface, any> = {
   generateArtistsData: ({ state }) => {
@@ -222,12 +226,12 @@ const actions: ActionTree<TabsManagerStateInterface, any> = {
     // Still debating on whether to do this or a better alternative
 
     // Loop through each artist to generate artistInfo objects
-    artistNames.forEach(artist => {
+    artistNames.forEach((artist) => {
       const artistInfo: ArtistType = {
         name: artist,
         picture: null,
         tracks: [],
-        albums: []
+        albums: [],
       };
 
       const tracksFromCurrentArtist = state.tabsData.addedTracks.filter(
@@ -240,19 +244,19 @@ const actions: ActionTree<TabsManagerStateInterface, any> = {
         .map((track: TrackType) => track.album)
         .filter((album: string) => album);
 
-      albumsFromCurrentArtist.forEach(album => {
+      albumsFromCurrentArtist.forEach((album) => {
         const newAlbum: AlbumType = {
           name: album,
           artist,
           tracks: tracksFromCurrentArtist.filter(
             (track: TrackType) => track.album === album
-          )
+          ),
         };
         artistInfo.albums.push(newAlbum);
       });
       state.tabsData.artists.unshift(artistInfo);
     });
-    sortArrayOfObjects(state.tabsData.artists, 'name');
+    sortArrayOfObjects(state.tabsData.artists, "name");
   },
   generateAlbumsData: ({ state }) => {
     state.tabsData.albums = [];
@@ -263,11 +267,11 @@ const actions: ActionTree<TabsManagerStateInterface, any> = {
         .filter((album: string) => album)
     );
 
-    albumNames.forEach(album => {
+    albumNames.forEach((album) => {
       const albumInfo: AlbumType = {
         name: album,
-        artist: '',
-        tracks: []
+        artist: "",
+        tracks: [],
       };
       const tracks: TrackType[] = state.tabsData.addedTracks.filter(
         (track: TrackType) => track.album === album
@@ -276,19 +280,19 @@ const actions: ActionTree<TabsManagerStateInterface, any> = {
       albumInfo.artist = tracks[0].artist || tracks[0].extractedArtist;
       state.tabsData.albums.unshift(albumInfo);
     });
-    sortArrayOfObjects(state.tabsData.albums, 'name');
+    sortArrayOfObjects(state.tabsData.albums, "name");
   },
   generateFoldersData: ({ state }) => {
     state.tabsData.folders = [];
     let folders: Array<FolderInfoType> = state.tabsData.addedTracks.map(
       (track: TrackType) => track.folderInfo
     );
-    folders = removeDuplicates(folders, 'path');
-    folders.forEach(folder => {
+    folders = removeDuplicates(folders, "path");
+    folders.forEach((folder) => {
       const folderInfo: FolderParsedType = {
         name: folder.name,
         path: folder.path,
-        tracks: []
+        tracks: [],
       };
       const tracks = state.tabsData.addedTracks.filter(
         (track: TrackType) => track.folderInfo.path === folder.path
@@ -296,19 +300,19 @@ const actions: ActionTree<TabsManagerStateInterface, any> = {
       folderInfo.tracks = tracks;
       state.tabsData.folders.unshift(folderInfo);
     });
-    sortArrayOfObjects(state.tabsData.folders, 'name');
+    sortArrayOfObjects(state.tabsData.folders, "name");
   },
   findAndGoToArtist({ state, commit }, payload: string) {
     state.tabsData.artists.forEach((artist: ArtistType) => {
       if (payload === artist.name) {
-        commit('selectGroup', artist);
+        commit("selectGroup", artist);
       }
     });
   },
   fetchArtistsInfo({ state }) {
     const artistsData: ArtistInfoInterface[] = [];
     if (navigator.onLine) {
-      const dbInfo = localStorage.getItem('downloadedArtists');
+      const dbInfo = localStorage.getItem("downloadedArtists");
       let downloadedArtists: ArtistInfoInterface[] = [];
       if (dbInfo) {
         downloadedArtists = JSON.parse(dbInfo);
@@ -317,37 +321,40 @@ const actions: ActionTree<TabsManagerStateInterface, any> = {
       const artists = state.tabsData.artists.map(
         (artist: ArtistType) => artist.name
       );
-      artists.forEach((artist: string) => {
+      artists.forEach(async (artist: string) => {
         if (
           downloadedArtists.findIndex(
-            artistsInfo => artistsInfo.name === artist
+            (artistsInfo) => artistsInfo.name === artist
           ) !== -1
         )
           return;
-        fetch(
-          `https://flb-server.herokuapp.com/get-artist-image?artist=${encodeURI(artist)}`,
-          { method: 'GET' }
-        )
-          .then(response => response.text())
-          .then(result => {
-            if (!JSON.parse(result).error) {
-              const artistData: DeezerArtistData = JSON.parse(result);
-              const artistInfo = {
-                name: artist,
-                picture: artistData.picture_big
-              };
-              artistsData.push(artistInfo);
-              sendMessageToNode('downloadArtistPicture', artistInfo);
-            }
-          })
-          .catch(error => console.log('error getting pic'));
+        try {
+          const response = await axios.get(
+            `https://api.deezer.com/search?q=${artist}`
+          );
+          const searchResults = response.data.data.map(
+            (item: any) => item.artist
+          );
+          const targetArtist = searchResults.filter(
+            (artist: any) => artist.name.toLowerCase() == artist
+          )[0];
+          const artistData: DeezerArtistData = targetArtist;
+          const artistInfo = {
+            name: artist,
+            picture: artistData.picture_big,
+          };
+          artistsData.push(artistInfo);
+          sendMessageToNode("downloadArtistPicture", artistInfo);
+        } catch (error) {
+          console.log("Error downloading artist");
+        }
       });
     }
-  }
+  },
 };
 
 export default {
   state,
   actions,
-  mutations
+  mutations,
 };

@@ -29,7 +29,7 @@
     "dotenv": "^10.0.0",
     "electron": "13.1.5",
     "electron-updater": "4.3.9",
-    "g-i-s": "2.1.6",
+    "g-i-s": "^2.1.6",
     "genius-lyrics-api": "3.0.6",
     "glob": "7.1.7",
     "is-online": "^9.0.1",

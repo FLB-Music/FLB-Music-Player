@@ -28,7 +28,6 @@ import {
 import { SettingsType, TagChangesType, TrackType } from "@/types";
 import { downloadArtistPicture } from "./main/services";
 import { SUPPORTED_FORMATS } from "./main/utils/constants";
-import { DownloadManager } from "./main/modules/BingDownloader";
 import { UsageManager } from "./main/modules/UsageStatistics";
 import parseFolder from "./main/core/parseFolder";
 import { sendNotificationToRenderer } from "./main/reusables/messageToRenderer";
@@ -36,7 +35,7 @@ import { initializeApp, resetApp } from "./main/core/utils";
 
 console.log(paths.appFolder);
 
-dialog.showErrorBox = function(title, content) {
+dialog.showErrorBox = function (title, content) {
   sendMessageToRenderer(`dangerMsg`, `⚠Error⚠ 👉${title} ${content}`);
   console.log(`An Error Occurred ⚠`);
   console.log(`${title}\n ${content}`);
@@ -47,7 +46,6 @@ export const fileTracker = new FilesTracker();
 const playlistsTracker = new PlaylistsTracker();
 const playbackStats = new PlaybackStats();
 const settings = new Settings();
-const downloaderManager = new DownloadManager();
 const usageTracker = new UsageManager();
 
 console.log(paths.appFolder);
@@ -103,7 +101,7 @@ async function createWindow() {
     // do some stuff
   });
 
-  win.webContents.on("new-window", function(e, url) {
+  win.webContents.on("new-window", function (e, url) {
     e.preventDefault();
     shell.openExternal(url);
   });
@@ -181,9 +179,6 @@ ipcMain.on("initializeSettings", () => {
   win.webContents.send("userSettings", settings.getSettings);
 });
 ipcMain.on("getFirstTracks", async () => {
-
-
-
   const tracks = await getParsedTracks(settings.getSettings.foldersToScan);
   fileTracker.addMultipleTracks(tracks);
   sendMessageToRenderer("addMultipleTracks", tracks);
@@ -344,12 +339,6 @@ ipcMain.on("importCoverArt", async () => {
   }
 });
 
-ipcMain.on("downloadBingTrack", (e, payload) => {
-  console.log("Sending to download manager");
-  console.log(payload);
-  downloaderManager.downloadTrack(payload);
-});
-
 ipcMain.on("sendUsageStats", () => {
   usageTracker.sendUsageData();
   sendMessageToRenderer("userID", usageTracker.getUsageData.id);
@@ -375,8 +364,7 @@ ipcMain.on("toggleMiniMode", (e, payload) => {
   }
 });
 
-ipcMain.handle('getPlaybackStats', () => playbackStats.getPlayStats)
-
+ipcMain.handle("getPlaybackStats", () => playbackStats.getPlayStats);
 
 async function getParsedTracks(folders: string[] = []) {
   let allTracks: string[] = [];
@@ -416,7 +404,7 @@ export async function writeTags(
       tagChanges.APIC = await downloadFile(
         tagChanges.APIC,
         paths.albumArtFolder,
-        path.parse(filePath).name + '.jpeg'
+        path.parse(filePath).name + ".jpeg"
       );
       sendNotificationToRenderer("Downloading Picture");
     } catch (error) {

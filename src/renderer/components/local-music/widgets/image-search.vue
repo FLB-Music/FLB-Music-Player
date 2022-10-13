@@ -1,9 +1,7 @@
 <template>
   <div class="image_searcher blurred_bg blur20 widget">
     <div class="widget_header">
-      <h1 class="widget_title">
-        Image Searcher
-      </h1>
+      <h1 class="widget_title">Image Searcher</h1>
       <base-button
         icon="x"
         extra-class="widget_close shrink_icon circle shrink8"
@@ -18,7 +16,7 @@
         class="inputElem mb10 w-90"
         placeholder="Search"
         @keyup.enter="searchImage"
-      >
+      />
       <base-button
         :active="true"
         :block="true"
@@ -26,10 +24,7 @@
         @click.native="searchImage"
       />
     </div>
-    <div
-      v-if="searching"
-      class="loadingArea"
-    >
+    <div v-if="searching" class="loadingArea">
       <div class="loadingIndicator" />
     </div>
     <div class="image_results scroll_y pr5 ml5 mt5">
@@ -39,36 +34,36 @@
         :src="cover.url"
         class="round5"
         @click="selectImage(cover.url)"
-      >
+      />
     </div>
   </div>
 </template>
 
 <script>
-import gis from 'g-i-s';
-import { mapMutations } from 'vuex';
-import { sendMessageToNode } from '@/renderer/utils';
+//import gis from 'g-i-s';
+import { mapMutations } from "vuex";
+import { sendMessageToNode } from "@/renderer/utils";
 
 export default {
-  name: 'ImageSearch',
+  name: "ImageSearch",
 
   data() {
     return {
-      query: '',
+      query: "",
       imageResults: [],
       searching: false,
-      selectedImage: ''
+      selectedImage: "",
     };
   },
   methods: {
-    ...mapMutations(['UIcontrollerToggleProperty']),
+    ...mapMutations(["UIcontrollerToggleProperty"]),
     searchImage() {
-      console.log("searching for image")
+      console.log("searching for image");
       this.imageResults = [];
       this.searching = true;
       gis(this.query, (error, results) => {
-        console.log('logging results');
-          this.searching = false
+        console.log("logging results");
+        this.searching = false;
         if (error) {
           console.log(error);
         } else if (results.length > 1) {
@@ -78,9 +73,9 @@ export default {
     },
     selectImage(url) {
       this.selectedImage = url;
-      sendMessageToNode('imageSearcherChoice', this.selectedImage);
-    }
-  }
+      sendMessageToNode("imageSearcherChoice", this.selectedImage);
+    },
+  },
 };
 </script>
 
