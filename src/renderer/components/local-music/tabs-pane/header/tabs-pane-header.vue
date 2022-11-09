@@ -8,7 +8,7 @@
         placeholder="Search"
         class="inputElem bg1"
         @keyup="search(searchQuery)"
-        @keyup.escape="searchQuery = ''"
+        @keyup.escape="cancelSearch"
       />
       <base-button
         v-if="searchQuery"
@@ -36,6 +36,10 @@ export default {
   },
   methods: {
     ...mapMutations(["search"]),
+    cancelSearch(e) {
+      console.log(e.currentElement);
+      this.searchQuery = "";
+    },
   },
 };
 </script>
