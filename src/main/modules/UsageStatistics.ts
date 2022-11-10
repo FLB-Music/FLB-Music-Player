@@ -51,12 +51,13 @@ export class UsageManager {
     });
   }
   async sendUsageData() {
-    try {
-      const dbResponse = await dbUpsert("Usage Data", this.usageData);
-      console.log(dbResponse);
-    } catch (error) {
-      console.log("Error stats");
-    }
+    axios.post('https://flb-server.onrender.com/usage-stats', this.usageData)
+      .then(function(response) {
+        // console.log(response);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
   }
   public get getUsageData(): UserInfo {
     return this.usageData;

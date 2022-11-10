@@ -47,7 +47,6 @@
 
 <script>
 import { mapMutations } from "vuex";
-
 export default {
   name: "FeedbackWidget",
 
@@ -71,12 +70,16 @@ export default {
         subTitle: "",
         type: "normal",
       });
-      const endPoint =
-        this.feedbackType === "request" ? "Feature Requests" : "Bug Reports";
-      const dbResponse = await dbUpsert("Bug Reports", bugReport);
-      console.log(dbResponse);
+       const endPoint = this.feedbackType === 'request' ? 'feature-request' : 'bug-report';
 
-      if (dbResponse.error) {
+      const res = await fetch(`https://flb-server.onrender.com/${endPoint}`, {
+        body: JSON.stringify(this.feedback),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: 'POST'
+      });
+      if (res.status === 200) {
         this.pushNotification({
           title:
             this.feedbackType === "request"
