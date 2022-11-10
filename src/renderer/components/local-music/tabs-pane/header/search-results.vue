@@ -19,6 +19,7 @@
       </div>
     </div>
     <hr>
+    <div class="halfSplit">
     <div
       class="ArtistResults groupedContentTab"
       style="padding: 0px"
@@ -32,7 +33,7 @@
       <div
         v-if="searchResults.artists.length > 0"
         class="grid_auto"
-        style="max-height: 160px; overflow: hidden; overflow-y: scroll"
+        style="max-height: 37%; overflow: hidden; overflow-y: scroll"
       >
         <artist-card
           v-for="artist in searchResults.artists"
@@ -53,7 +54,7 @@
       <div
         v-if="searchResults.albums.length > 0"
         class="grid_auto"
-        style="max-height: 150px; overflow: hidden; overflow-y: scroll"
+        style="max-height: 37%; overflow: hidden; overflow-y: scroll"
       >
         <album-card
           v-for="album in searchResults.albums"
@@ -62,6 +63,7 @@
         />
       </div>
     </div>
+  </div>
   </div>
 </template>
 
@@ -119,8 +121,14 @@ export default {
     margin-bottom: 5px;
   }
   .groupCard {
-    transform: scale(0.8) translateY(-25px);
+    transform: scale(0.9);
   }
+}
+.halfSplit{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap:20px;
+  max-height:40vh;
 }
 @media (max-width: 900px) {
   .searchResults {
