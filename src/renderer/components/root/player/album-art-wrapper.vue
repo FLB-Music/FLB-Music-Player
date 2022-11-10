@@ -75,6 +75,7 @@ export default {
 
         const bgImage = document.querySelector("#bg_fancy");
         const albumArt = document.querySelector("#playing_track_album_art");
+        const blurredAlbumArt = document.querySelector(".album_art_blurred")
         setTimeout(() => {
           if (bgImage) {
             if (bgImage.src.includes("flbdefault")) {
@@ -92,6 +93,15 @@ export default {
             } else {
               albumArt.style.filter = `none`;
               console.log("albumArt hue reset");
+            }
+          }
+          if(blurredAlbumArt){
+            if (blurredAlbumArt.src.includes("flbdefault")) {
+              blurredAlbumArt.style.filter = `hue-rotate(${hueToApply}deg) blur(60px)`;
+              console.log("blurredAlbumArt hue applied");
+            } else {
+              blurredAlbumArt.style.filter = `blur(60px)`;
+              console.log("blurredAlbum hue reset");
             }
           }
         }, 0);
