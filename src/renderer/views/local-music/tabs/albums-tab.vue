@@ -1,15 +1,9 @@
 <template>
   <div class="tab groupedContentTab">
-    <div
-      v-if="albums.length === 0"
-      class="loadingArea"
-    >
-      <div class="loadingIndicator" />
+    <div v-if="albums.length === 0" class="loadingArea">
+      <p>No Albums</p>
     </div>
-    <div
-      v-if="!selectedGroup"
-      class="groupCards grid_auto"
-    >
+    <div v-if="!selectedGroup" class="groupCards grid_auto">
       <album-card
         v-for="album in albums"
         :key="album.name"
@@ -21,10 +15,7 @@
       enter-active-class="animated fadeInUp extrafaster"
       leave-active-class="animated fadeOutDown extrafaster"
     >
-      <div
-        v-if="selectedGroup"
-        class="selectedGroup bg1"
-      >
+      <div v-if="selectedGroup" class="selectedGroup bg1">
         <base-button
           id="backToUnfilteredItems"
           icon-weight="regular"
@@ -47,11 +38,7 @@
               </p>
             </div>
             <div class="sliverBarActions">
-              <base-button
-                icon="play"
-                text="Play"
-                @click.native="playAll"
-              />
+              <base-button icon="play" text="Play" @click.native="playAll" />
               <base-button
                 icon="queue"
                 text="Queue"
@@ -62,11 +49,11 @@
           <img
             class="coverArt"
             :src="'file://' + selectedGroup.tracks[0].albumArt"
-          >
+          />
           <img
             id="blurred"
             :src="'file://' + selectedGroup.tracks[0].albumArt"
-          >
+          />
         </div>
         <div class="cardsWrapper">
           <track-card
@@ -82,39 +69,39 @@
 </template>
 
 <script>
-import { sortArrayOfObjects } from '@/shared-utils';
-import { mapActions, mapMutations } from 'vuex';
+import { sortArrayOfObjects } from "@/shared-utils";
+import { mapActions, mapMutations } from "vuex";
 
 export default {
-  name: 'AlbumsTab',
+  name: "AlbumsTab",
 
   methods: {
     ...mapMutations([
-      'addSelectedTrackToCustomQueue',
-      'addToSelectedTracks',
-      'UIcontrollerSetPropertyValue',
-      'clearSelectedTracks',
-      'selectGroup',
-      'deSelectGroup',
-      'setPlayingTrack',
-      'overWriteCustomQueue',
-      'pushNotification'
+      "addSelectedTrackToCustomQueue",
+      "addToSelectedTracks",
+      "UIcontrollerSetPropertyValue",
+      "clearSelectedTracks",
+      "selectGroup",
+      "deSelectGroup",
+      "setPlayingTrack",
+      "overWriteCustomQueue",
+      "pushNotification",
     ]),
-    ...mapActions(['generateAlbumsData', 'findAndGoToArtist']),
+    ...mapActions(["generateAlbumsData", "findAndGoToArtist"]),
     addTracksToQueue() {
       this.UIcontrollerSetPropertyValue({
-        property: 'currentSidePaneTab',
-        newValue: 'Queue'
+        property: "currentSidePaneTab",
+        newValue: "Queue",
       });
       this.clearSelectedTracks();
-      this.selectedGroup.tracks.forEach(track => {
+      this.selectedGroup.tracks.forEach((track) => {
         this.addToSelectedTracks(track);
       });
       this.addSelectedTrackToCustomQueue();
       this.pushNotification({
-        title: 'Tracks addded to the queue',
+        title: "Tracks addded to the queue",
         subTitle: null,
-        type: 'normal'
+        type: "normal",
       });
     },
     playAll() {
@@ -123,7 +110,7 @@ export default {
       this.pushNotification({
         title: `Playing ${this.selectedGroup.name} album`,
         subTitle: null,
-        type: 'normal'
+        type: "normal",
       });
     },
     playAlbum(album) {
@@ -132,18 +119,18 @@ export default {
       this.pushNotification({
         title: `Playing ${album.name} album`,
         subTitle: null,
-        type: 'normal'
+        type: "normal",
       });
     },
     goToArtist(artist) {
-      document.querySelector('#Artists').click();
+      document.querySelector("#Artists").click();
       this.findAndGoToArtist(artist);
-    }
+    },
   },
   watch: {
     flipSortOrder() {
       this.albumTracks.reverse();
-    }
+    },
   },
   computed: {
     albums() {
@@ -160,11 +147,11 @@ export default {
     },
     reverseSortOrder() {
       return this.$store.state.reverseSortOrder;
-    }
+    },
   },
   mounted() {
     this.generateAlbumsData();
-  }
+  },
 };
 </script>
 
