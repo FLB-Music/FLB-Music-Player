@@ -6,15 +6,17 @@
         :key="folder.path"
         class="folderCard"
         @click="selectGroup(folder)"
+        :title="folder.path"
       >
         <div class="silv">
           <img class="folderIcon" src="@icon/folder.svg" />
           <div class="top3">
-            <!-- <img
-              v-if="folder.tracks[0]"
-              :src="'file://' + folder.tracks[0].albumArt"
+             <!-- <img
+              v-for="track in folder.tracks.slice(0,3)"
+              :key="track.fileLocation"
+              :src="'file://' + track.albumArt"
             />
-            <img
+                    <img
               v-if="folder.tracks[1]"
               :src="'file://' + folder.tracks[1].albumArt"
             />
@@ -181,7 +183,7 @@ export default {
         display: flex;
         flex-direction: column;
         img {
-          width: 25px;
+          width: 30px;
           margin: 5px;
         }
       }
