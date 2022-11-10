@@ -77,20 +77,7 @@ export default {
         .fileLocation;
     },
     compHeight() {
-      const number = this.customQueue.length + 8;
-      const height = number * this.NO_OF_TRACKS_TO_RENDER;
-      let tracksWrapperHeight = 0;
-      try {
-        tracksWrapperHeight = parseInt(
-          getComputedStyle(
-            document.querySelector('.tracksWrapper')
-          ).height.replace('px', ''),
-          10
-        );
-      } catch (error) {
-        console.log('Component not yet rendered');
-      }
-      return `${height - tracksWrapperHeight}px`;
+      return `${this.customQueue.length * 26.5}px`
     }
   },
   watch: {

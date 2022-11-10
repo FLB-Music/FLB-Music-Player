@@ -8,9 +8,9 @@
       class="flex-col center-a"
       style="height: 100%; width: 100%"
     >
-      <p>💬 I did not Find🔎 Any Tracks💨</p>
+      <p>💬 I did not Find any Tracks</p>
       <p>
-        💬 Head over to ⚙Settings⚙ and Add➕ the Folder📂 where your music is at
+        💬 Head over to Settings ⚙ and Add the Folder📂 where your music is at
       </p>
       <!-- <p>💬 Or Just Download⬇ some with FLBing💎</p> -->
     </div>
@@ -59,20 +59,21 @@ export default {
       return this.$store.state.sortParameter;
     },
     compHeight() {
-      const number = this.addedTracks.length - 1;
-      const height = number * this.NO_OF_TRACKS_TO_RENDER;
-      let tracksWrapperHeight = 0;
-      try {
-        tracksWrapperHeight = parseInt(
-          getComputedStyle(
-            document.querySelector('.tracksWrapper')
-          ).height.replace('px', ''),
-          10
-        );
-      } catch (error) {
-        console.log('Component not yet rendered');
-      }
-      return `${height - tracksWrapperHeight}px`;
+      // const number = this.addedTracks.length - 1;
+      // const height = number * this.NO_OF_TRACKS_TO_RENDER;
+      // let tracksWrapperHeight = 0;
+      // try {
+      //   tracksWrapperHeight = parseInt(
+      //     getComputedStyle(
+      //       document.querySelector('.tracksWrapper')
+      //     ).height.replace('px', ''),
+      //     10
+      //   );
+      // } catch (error) {
+      //   console.log('Component not yet rendered');
+      // }
+ //     return `${height - tracksWrapperHeight}px`;
+      return `${this.addedTracks.length * 22.4}px`
     }
   },
   watch: {
@@ -97,7 +98,6 @@ export default {
       this.overWriteCustomQueue(this.addedTracks);
     },
     virtualize() {
-      console.log('Virtualizing');
       const container = document.querySelector('.addedTracksTab');
       const scrollTop = Math.trunc(
         container.scrollTop / this.NO_OF_TRACKS_TO_RENDER
