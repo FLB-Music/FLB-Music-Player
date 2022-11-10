@@ -73,7 +73,7 @@
       </div>
     </div>
 
-    <div class="right_pane_section gap20">
+    <div class="right_pane_section gap10">
       <div class="flex center-v gap20">
         <base-button
           icon="heart"
@@ -429,7 +429,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   width: 20%;
   transition: none;
 }
@@ -484,11 +484,11 @@ export default {
       height: 27vw;
     }
     .track_info {
-    position: fixed;
-    bottom: 115px;
-    left: 50%;
-    transform: translateX(-50%);
-    height: 150px;
+      position: fixed;
+      bottom: 115px;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 150px;
       .track_title {
         font-size: 4rem;
         max-width: 40vw;
@@ -539,7 +539,7 @@ export default {
     .VolumeRocker {
       //transform: rotateX(180deg) translateY(72px) translateX(0px);
       position: absolute;
-      left:20px;
+      left: 20px;
       bottom: 45px;
       svg {
         transform: rotate(90deg);
