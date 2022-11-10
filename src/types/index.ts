@@ -77,16 +77,16 @@ export interface AudioStateType {
   repeat: boolean;
   shuffle: boolean;
 }
-export type audioStateType = 'playing' | 'repeat' | 'shuffle';
+export type audioStateType = "playing" | "repeat" | "shuffle";
 export type tabType =
-  | 'Home'
-  | 'Tracks'
-  | 'Recents'
-  | 'Folders'
-  | 'Playlists'
-  | 'Discover'
-  | 'Albums'
-  | 'Artists';
+  | "Home"
+  | "Tracks"
+  | "Recents"
+  | "Folders"
+  | "Playlists"
+  | "Discover"
+  | "Albums"
+  | "Artists";
 export interface BingDataType {
   tracks: Array<TrackType>;
   artists: Array<ArtistType>;
@@ -105,17 +105,17 @@ export interface NotificationType {
   type: NotificationTypes;
   isPersistent: true;
 }
-export type NotificationTypes = 'normal' | 'success' | 'warning';
+export type NotificationTypes = "normal" | "success" | "warning";
 export type UIcontrollerPropertiesType =
-  | 'showSettings'
-  | 'showTagEditor'
-  | 'showPlaylistWidget';
+  | "showSettings"
+  | "showTagEditor"
+  | "showPlaylistWidget";
 
 export interface SettingsType {
   includeVideo: boolean;
   desktopNotifications: boolean;
   defaultTab: tabType;
-  theme: 'fancy' | 'dark' | 'light';
+  theme: "fancy" | "dark" | "light";
   accentColor: string;
   dynamicAccentColor: boolean;
   volume: 1;
@@ -123,12 +123,12 @@ export interface SettingsType {
 }
 
 export type SettingsPropertiesType =
-  | 'includeVideo'
-  | 'desktopNotifications'
-  | 'defaultTab'
-  | 'theme'
-  | 'accentColor'
-  | 'volume';
+  | "includeVideo"
+  | "desktopNotifications"
+  | "defaultTab"
+  | "theme"
+  | "accentColor"
+  | "volume";
 
 export interface mixTyping {
   name: string;
@@ -141,7 +141,6 @@ export interface ArtistInfoInterface {
   picture: any;
 }
 
-
 export interface UserInfo {
   id: string;
   cpu_no: number;
@@ -151,7 +150,7 @@ export interface UserInfo {
   architecture: string;
   os_release: string;
   os_type: string;
-  app_launches: string[]
+  app_launches: string[];
 }
 
 export interface DeezerArtistData {
@@ -165,4 +164,13 @@ export interface DeezerArtistData {
   picture_xl: string;
   tracklist: string;
   type: string;
+}
+
+export interface UpdateDataPayload {
+  updatedData: {
+    tracks: TrackType[];
+    playlists: PlaylistType[];
+    recents: TrackType[];
+  };
+  path: string;
 }

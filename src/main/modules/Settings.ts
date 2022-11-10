@@ -1,44 +1,46 @@
-import { SettingsType } from '@/types';
-import fs from 'fs';
-import { paths } from './Paths';
+import { SettingsType, UpdateDataPayload } from "@/types";
+import fs from "fs";
+import { writeJsonFile } from "../utils";
+import { paths } from "./Paths";
 
 export class Settings {
   settings: SettingsType = {
     includeVideo: false,
     desktopNotifications: true,
-    defaultTab: 'Home',
-    theme: 'fancy',
-    accentColor: 'accent_0',
+    defaultTab: "Home",
+    theme: "fancy",
+    accentColor: "accent_0",
     dynamicAccentColor: false,
     volume: 1,
-    foldersToScan: [paths.musicFolder]
+    foldersToScan: [paths.musicFolder],
   };
-  constructor () {
+  constructor() {
     if (fs.existsSync(paths.settingsLocation)) {
       try {
         const data = JSON.parse(
-          fs.readFileSync(paths.settingsLocation, 'utf-8')
+          fs.readFileSync(paths.settingsLocation, "utf-8")
         );
         this.settings = data;
       } catch (error) {
-        console.log('An error occurred while reading the settings file');
+        console.log("An error occurred while reading the settings file");
       }
     }
   }
-  updateSettings (payload: SettingsType) {
+  updateSettings(payload: SettingsType) {
     this.settings = payload;
     this.saveSettings();
   }
-  addFolderToScan (folderPath: string) {
+  addFolderToScan(folderPath: string) {
     if (this.settings.foldersToScan.indexOf(folderPath) != -1) return false;
     this.settings.foldersToScan.push(folderPath);
     this.saveSettings();
     return true;
   }
-  removeFromScannedFolders (folderPath: string) {
+  removeFromScannedFolders(payload: UpdateDataPayload) {
     this.settings.foldersToScan.forEach((folder, index) => {
       if (
-        folder.replace(/(.*)[/\\]/, '') === folderPath.replace(/(.*)[/\\]/, '')
+        folder.replace(/(.*)[/\\]/, "") ===
+        payload.path.replace(/(.*)[/\\]/, "")
       ) {
         this.settings.foldersToScan.splice(index, 1);
         return;
@@ -46,7 +48,7 @@ export class Settings {
     });
     this.saveSettings();
   }
-  saveSettings () {
+  saveSettings() {
     fs.writeFile(
       paths.settingsLocation,
       JSON.stringify(this.settings),
@@ -56,7 +58,7 @@ export class Settings {
     );
   }
 
-  public get getSettings (): SettingsType {
+  public get getSettings(): SettingsType {
     return this.settings;
   }
 }

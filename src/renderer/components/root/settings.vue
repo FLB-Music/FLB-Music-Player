@@ -253,7 +253,7 @@
 
 <script>
 import { sendMessageToNode } from "@/renderer/utils/index";
-import { mapMutations } from "vuex";
+import { mapMutations, mapActions } from "vuex";
 import { ipcRenderer } from "electron";
 
 export default {
@@ -298,13 +298,37 @@ export default {
       "setSettingValue",
       "UIcontrollerToggleProperty",
       "UIcontrollerSetPropertyValue",
+      "removeFolderTracks",
+      "pushNotification"
+    ]),
+    ...mapActions([
+      "generateArtistsData",
+      "generateAlbumsData",
+      "generateFoldersData",
     ]),
     addFolder() {
       sendMessageToNode("addScanFolder", "");
     },
     removeFromScannedFolders(path) {
       console.log(path);
-      sendMessageToNode("removeFromScannedFolders", path);
+      this.removeFolderTracks(path);
+      setTimeout(() => {
+        this.generateAlbumsData();
+        this.generateArtistsData();
+        this.generateFoldersData();
+        sendMessageToNode("removeFromScannedFolders", {
+          path,
+          updatedData: {
+            tracks: this.$store.state.TabsManager.tabsData.addedTracks,
+            playlists: this.$store.state.TabsManager.tabsData.playlists,
+          },
+        });
+      this.pushNotification({
+          title: `Removed folder: ${path}`,
+          subTitle: `Tracks from this folder will not be loaded`,
+          type: "danger",
+        })
+      }, 500);
     },
     resetApp() {
       localStorage.removeItem("downloadedArtists");

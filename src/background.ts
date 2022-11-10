@@ -24,8 +24,14 @@ import {
   downloadFile,
   sendMessageToRenderer,
   sendNativeNotification,
+  writeJsonFile,
 } from "./main/utils";
-import { SettingsType, TagChangesType, TrackType } from "@/types";
+import {
+  SettingsType,
+  TagChangesType,
+  TrackType,
+  UpdateDataPayload,
+} from "@/types";
 import { downloadArtistPicture } from "./main/services";
 import { SUPPORTED_FORMATS } from "./main/utils/constants";
 import { UsageManager } from "./main/modules/UsageStatistics";
@@ -100,7 +106,7 @@ async function createWindow() {
   win.on("close", () => {
     // do some stuff
   });
-
+ 
   win.webContents.on("new-window", function (e, url) {
     e.preventDefault();
     shell.openExternal(url);
@@ -150,15 +156,22 @@ app.on("activate", () => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
+//
+let devtools = null;
+
 app.on("ready", async () => {
   createWindow();
   protocol.registerFileProtocol("file", (request, callback) => {
     const pathname = decodeURI(request.url.replace("file:///", ""));
     callback(pathname);
   });
-  // if (isDevelopment) {
-  //   win.openDevTools();
-  // }
+  if (isDevelopment) {
+    devtools = new BrowserWindow();
+    win.webContents.setDevToolsWebContents(devtools.webContents);
+
+    console.log("Opening openDevTools");
+    win.webContents.openDevTools({ mode: "detach" });
+  }
 });
 
 // Exit cleanly on request from parent process in development mode.
@@ -214,9 +227,14 @@ ipcMain.on("addScanFolder", () => {
     });
 });
 
-ipcMain.on("removeFromScannedFolders", (e, payload) => {
-  payload = payload.replace(/\\/g, "\\\\");
+ipcMain.on("removeFromScannedFolders", (e, payload: UpdateDataPayload) => {
+  console.log(payload);
+  payload.path = payload.path.replace(/\\/g, "\\\\");
   settings.removeFromScannedFolders(payload);
+    writeJsonFile(paths.filesTrackerLocation, payload.updatedData.tracks);
+    writeJsonFile(paths.playlistsLocation, payload.updatedData.playlists);
+    playbackStats.playedFiles = playbackStats.playedFiles.filter(file=>file.folderInfo.path != payload.path)
+    playbackStats.saveChanges()
   win.webContents.send("userSettings", settings.getSettings);
 });
 ipcMain.on("refresh", async () => {

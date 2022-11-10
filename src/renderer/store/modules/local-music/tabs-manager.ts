@@ -97,6 +97,28 @@ const mutations = {
     );
     state.tabsData.addedTracks.splice(indexOfDeletedTrack, 1);
   },
+  removeFolderTracks(state: TabsManagerStateInterface, payload: string) {
+    console.log(
+      state.tabsData.addedTracks.filter(
+        (track) => track.folderInfo.path != payload
+      )
+    );
+
+    state.tabsData.addedTracks = state.tabsData.addedTracks.filter(
+      (track) => track.folderInfo.path != payload
+    );
+    state.tabsData.recentlyPlayedTracks =
+      state.tabsData.recentlyPlayedTracks.filter(
+        (track) => track.folderInfo.path != payload
+      );
+
+    state.tabsData.playlists.forEach(
+      (playlist) =>
+        (playlist.tracks = playlist.tracks.filter(
+          (track) => track.folderInfo.path != payload
+        ))
+    );
+  },
   restoreTracks(state: TabsManagerStateInterface, payload: Array<TrackType>) {
     state.tabsData.addedTracks = payload;
   },
