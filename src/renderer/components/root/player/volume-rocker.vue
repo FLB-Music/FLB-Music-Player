@@ -66,7 +66,7 @@ export default {
 <style lang="scss">
 .VolumeRocker {
   position: relative;
-  width: 135px;
+  width: 180px;
   height: 6px;
   border-radius: 10px;
   cursor: pointer;
