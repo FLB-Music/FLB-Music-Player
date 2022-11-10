@@ -1,8 +1,8 @@
-import fs from 'fs';
-import { fileTracker, win } from '../../background';
-import { DownloaderHelper } from 'node-downloader-helper';
-import { ipcMain, Notification } from 'electron';
-import isOnline from 'is-online';
+import fs from "fs";
+import { fileTracker, win } from "../../background";
+import { DownloaderHelper } from "node-downloader-helper";
+import { ipcMain, Notification } from "electron";
+import isOnline from "is-online";
 
 export function writeImageBuffer(imageBuffer: string, savePath: string) {
   fs.writeFileSync(savePath, imageBuffer);
@@ -13,59 +13,68 @@ export async function downloadFile(
   targetFolder: string,
   fileName: string
 ) {
-  return new Promise<string>(resolve => {
+  return new Promise<string>((resolve) => {
     const dl = new DownloaderHelper(url, targetFolder, {
       fileName,
-      override: true
+      override: true,
     });
     dl.start();
-    dl.on('end', () => {
+    dl.on("end", () => {
       resolve(dl.getDownloadPath());
     });
-    dl.on('error', (err: any) => {
-      console.log('Error in downloading the cover')
-      console.log(err)
+    dl.on("error", (err: any) => {
+      console.log("Error in downloading the cover");
+      console.log(err);
     });
   });
 }
 
 export function deleteFile(path: string, quiet: boolean) {
   if (fs.existsSync(path)) {
-    fs.unlink(path.replace('file://', ''), err => {
+    fs.unlink(path.replace("file://", ""), (err) => {
       if (err) {
         console.log(err);
-        return win.webContents.send('errorMsg', 'Error in Deleting File');
+        return win.webContents.send("errorMsg", "Error in Deleting File");
       }
       if (!quiet) {
-        win.webContents.send('normalMsg', `${path} deleted`);
+        win.webContents.send("normalMsg", `${path} deleted`);
       }
     });
-    win.webContents.send('deleteComplete', path);
+    win.webContents.send("deleteComplete", path);
     fileTracker.deleteFile(path);
   } else {
-    console.log('File does not exist');
+    console.log("File does not exist");
   }
 }
 
+export function writeJsonFile(filename: string, data: any) {
+  fs.writeFile(filename, JSON.stringify(data), (err) => {
+    if (err) {
+      console.log("Error writing JSON file")
+      console.log(err)
+    };
+  });
+}
+
 export function extractTitleAndArtist(trackName: string): any {
-  const split = trackName.split('-');
+  const split = trackName.split("-");
   let artist;
   let title;
-  if (trackName.includes('_-')) {
+  if (trackName.includes("_-")) {
     artist = split[0];
     title = split[1];
-  } else if (trackName.includes('-')) {
+  } else if (trackName.includes("-")) {
     artist = split[1];
     title = split[0];
   } else {
-    return { artist: 'unknown', title: null };
+    return { artist: "unknown", title: null };
   }
-  artist = artist.replace(/_/g, ' ').trim();
+  artist = artist.replace(/_/g, " ").trim();
   title = title
-    .replace(/_/g, ' ')
-    .replace(/\(.*\).*/gi, '')
-    .replace(/\[.*\].*/gi, '')
-    .replace(/\)/, '')
+    .replace(/_/g, " ")
+    .replace(/\(.*\).*/gi, "")
+    .replace(/\[.*\].*/gi, "")
+    .replace(/\)/, "")
     .trim();
   return { artist, title };
 }
@@ -75,7 +84,7 @@ export function isValidFileType(path: string) {
 }
 
 export function removeMIME(str: string) {
-  return str.replace(/(\.mp3)|(\.m4a)|(\.ogg)|(\.wav)/gi, '');
+  return str.replace(/(\.mp3)|(\.m4a)|(\.ogg)|(\.wav)/gi, "");
 }
 
 export function sendNativeNotification(
@@ -88,11 +97,11 @@ export function sendNativeNotification(
     subtitle: text,
     body: text,
     silent: true,
-    icon: image
+    icon: image,
   };
   const notification = new Notification(options);
   notification.show();
-  notification.on('click', () => {
+  notification.on("click", () => {
     win.focus();
     win.maximize();
   });
@@ -104,12 +113,12 @@ export function sendMessageToRenderer(listener: string, msg: any) {
 
 export function formatTime(SECONDS: number) {
   if (SECONDS > 3600) {
-    return new Date(SECONDS * 1000).toISOString().substr(11, 8)
+    return new Date(SECONDS * 1000).toISOString().substr(11, 8);
   } else {
-    return new Date(SECONDS * 1000).toISOString().substr(14, 5)
+    return new Date(SECONDS * 1000).toISOString().substr(14, 5);
   }
 }
 
-ipcMain.handle('checkOnline', async () => {
+ipcMain.handle("checkOnline", async () => {
   return isOnline();
 });

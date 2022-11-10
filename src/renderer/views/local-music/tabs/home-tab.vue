@@ -114,13 +114,12 @@ export default {
 <style lang="scss">
 .home {
   overflow: hidden;
-  overflow-y: scroll;
-  padding-right: 10px;
   .stats {
+  padding-right: 10px;
     margin-top: 10px;
     margin-bottom: 10px;
+  overflow-y: scroll;
     .stats_title {
-      // text-align: center;
       margin-left: 5px;
       margin-bottom: 10px;
     }
@@ -131,15 +130,16 @@ export default {
     .statsWrapper {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr 1fr;
-      gap: 20px;
+      gap: 10px;
       align-items: center;
       justify-content: center;
+      
     }
     .statCard {
       background: var(--accentColor);
       padding: 10px;
       width: 90%;
-      max-width: 200px;
+      max-width: 190px;
       align-self: center;
       justify-self: center;
       border-radius: 15px;
@@ -154,8 +154,8 @@ export default {
         transform: translateY(-50%);
       }
       h2 {
-        margin-bottom: 10px;
-        font-size: 1.1rem;
+        font-size: 1.6rem;
+        margin-bottom: 5px;
       }
       p {
         font-size: var(--baseFontSize);
