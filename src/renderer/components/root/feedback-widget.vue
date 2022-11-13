@@ -70,15 +70,19 @@ export default {
         subTitle: "",
         type: "normal",
       });
-       const endPoint = this.feedbackType === 'request' ? 'feature-request' : 'bug-report';
+      const endPoint =
+        this.feedbackType === "request" ? "feature-request" : "bug-report";
 
-      const res = await fetch(`https://flb-server.onrender.com/${endPoint}`, {
-        body: JSON.stringify(this.feedback),
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        method: 'POST'
-      });
+      const res = await fetch(
+        `https://flb_worker.justpatrick.workers.dev/${endPoint}`,
+        {
+          body: JSON.stringify(this.feedback),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+        }
+      );
       if (res.status === 200) {
         this.pushNotification({
           title:
