@@ -13,6 +13,7 @@ export class Settings {
     dynamicAccentColor: false,
     volume: 1,
     foldersToScan: [paths.musicFolder],
+    enableEqualizer: false,
   };
   constructor() {
     if (fs.existsSync(paths.settingsLocation)) {

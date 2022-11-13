@@ -1,6 +1,11 @@
 <template>
   <div class="Equalizer widget blurred_bg blur20">
     <div class="widget_header">
+      <toggle-button
+        :active="enableEqualizer"
+        v-on:toggled="toggleEqualizer"
+        style="position: absolute; top: 2px"
+      />
       <h1 class="widget_title">Equalizer</h1>
       <base-button
         icon="x"
@@ -9,32 +14,37 @@
         @click.native="UIcontrollerToggleProperty('showEqualizerWidget')"
       />
     </div>
-    <div class="presets grid3 gap10">
-      <base-button
-        v-for="preset in equalizerPresets"
-        :key="preset.name"
-        extra-class="bg1"
-        :text="preset.name"
-        :active="currentPreset === preset.name"
-        @click.native.stop="loadPreset(preset)"
-      />
-    </div>
-    <div class="filter_sliders">
-      <div v-for="(band, index) in bands" :key="band.id" class="filter">
-        <p>{{ band.value }}db</p>
-        <filter-slider
-          :target-band="band.id"
-          :band-index="index"
-          :filter-value="band.value"
-          @rangeUpdated="updateBandFilter"
+    <div :class="[enableEqualizer ? '' : 'equalizerOff']">
+      <div class="presets grid3 gap10">
+        <base-button
+          v-for="preset in equalizerPresets"
+          :key="preset.name"
+          extra-class="bg1"
+          :text="preset.name"
+          :active="currentPreset === preset.name"
+          @click.native.stop="setPreset(preset)"
         />
-        <p>{{ band.frequency }}</p>
       </div>
-    </div>
-    <div class="b_t">
-      <triangle-slider filter-name="Bass" @newGainValues="changeBandGains" />
-      <triangle-slider filter-name="Treble" @newGainValues="changeBandGains" />
-      <triangle-slider filter-name="VBoost" title="Boost Volume" />
+      <div class="filter_sliders">
+        <div v-for="(band, index) in bands" :key="band.id" class="filter">
+          <p>{{ band.value }}db</p>
+          <filter-slider
+            :target-band="band.id"
+            :band-index="index"
+            :filter-value="band.value"
+            @rangeUpdated="updateBandFilter"
+          />
+          <p>{{ band.frequency }}</p>
+        </div>
+      </div>
+      <div class="b_t">
+        <triangle-slider filter-name="Bass" @newGainValues="changeBandGains" />
+        <triangle-slider
+          filter-name="Treble"
+          @newGainValues="changeBandGains"
+        />
+        <triangle-slider filter-name="VBoost" title="Boost Volume" />
+      </div>
     </div>
     <!-- <spatializer />  -->
   </div>
@@ -42,9 +52,14 @@
 
 <script>
 import { mapMutations } from "vuex";
+import { setupEqualizer, disableEqualizer } from "../equalizer/equalizer";
 export default {
   name: "Equalizer",
-
+  data() {
+    return {
+      localPreset: null,
+    };
+  },
   computed: {
     bands() {
       return this.$store.state.EqualizerManager.bands;
@@ -55,6 +70,9 @@ export default {
     currentPreset() {
       return this.$store.state.EqualizerManager.currentPreset;
     },
+    enableEqualizer() {
+      return this.$store.state.SettingsManager.settings.enableEqualizer;
+    },
   },
   methods: {
     ...mapMutations([
@@ -62,7 +80,24 @@ export default {
       "updateBandFilter",
       "changeBandGains",
       "loadPreset",
+      "setSettingValue",
     ]),
+    setPreset(preset) {
+      this.loadPreset(preset);
+      this.localPreset = preset;
+    },
+    toggleEqualizer(value) {
+      console.log("Toggling equalizer");
+      this.setSettingValue({ property: "enableEqualizer", newValue: value });
+      if (value) {
+        setupEqualizer();
+        if (this.localPreset) {
+          this.localPreset(this.localPreset);
+        }
+      } else {
+        disableEqualizer();
+      }
+    },
   },
 };
 </script>
@@ -100,5 +135,9 @@ export default {
     align-items: flex-start;
     gap: 0px;
   }
+}
+.equalizerOff {
+  opacity: 0.5;
+  transform: scale(0.85);
 }
 </style>

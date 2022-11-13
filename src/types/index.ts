@@ -120,6 +120,7 @@ export interface SettingsType {
   dynamicAccentColor: boolean;
   volume: 1;
   foldersToScan: Array<string>;
+  enableEqualizer: boolean;
 }
 
 export type SettingsPropertiesType =
