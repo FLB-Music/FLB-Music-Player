@@ -1,6 +1,6 @@
 {
   "name": "flbmusic",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "private": true,
   "description": "A Beautiful and Feature Rich Music Player",
   "repository": {
@@ -14,9 +14,9 @@
   "main": "background.js",
   "scripts": {
     "start": "vue-cli-service electron:serve",
-    "build": "vue-cli-service electron:build --skip-plugins @vue/cli-plugin-eslint",
+    "build": "vue-cli-service electron:build",
     "push-update": "vue-cli-service electron:build -- -p always",
-    "deploy-steps": "git commit -am v1.2.0 && git tag v1.2.0 && git push --tags"
+    "deploy-steps": "git commit -am v1.2.1 && git tag v1.2.1 && git push --tags"
   },
   "dependencies": {
     "animate.css": "4.1.1",
