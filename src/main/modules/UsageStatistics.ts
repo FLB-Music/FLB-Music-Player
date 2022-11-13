@@ -3,8 +3,7 @@ import fs from "fs";
 import os from "os";
 import { paths } from "./Paths";
 import axios from "axios";
-import { sendMessageToRenderer } from "../reusables/messageToRenderer";
-import { dbUpsert } from "./supa";
+// import { sendMessageToRenderer } from "../reusables/messageToRenderer";
 
 export class UsageManager {
   usageData: UserInfo = {
@@ -51,12 +50,17 @@ export class UsageManager {
     });
   }
   async sendUsageData() {
-    axios.post('https://flb-server.onrender.com/usage-stats', this.usageData)
-      .then(function(response) {
-        // console.log(response);
+    console.log("Sending...");
+    axios
+      .post(
+        "https://flb_worker.justpatrick.workers.dev/usage-stats",
+        this.usageData
+      )
+      .then(function (response) {
+        console.log(response.status);
       })
-      .catch(function(error) {
-        console.log(error);
+      .catch((error) => {
+        console.log(error.message);
       });
   }
   public get getUsageData(): UserInfo {
