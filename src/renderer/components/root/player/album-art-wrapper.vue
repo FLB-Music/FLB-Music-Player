@@ -80,28 +80,22 @@ export default {
           if (bgImage) {
             if (bgImage.src.includes("flbdefault")) {
               bgImage.style.filter = `hue-rotate(${hueToApply}deg) blur(50px)`;
-              console.log("bg hue applied");
             } else {
               bgImage.style.filter = `blur(50px)`;
-              console.log("bgImage hue reset");
             }
           }
           if (albumArt) {
             if (albumArt.src.includes("flbdefault")) {
               albumArt.style.filter = `hue-rotate(${hueToApply}deg)`;
-              console.log("albumArt hue applied");
             } else {
               albumArt.style.filter = `none`;
-              console.log("albumArt hue reset");
             }
           }
           if(blurredAlbumArt){
             if (blurredAlbumArt.src.includes("flbdefault")) {
               blurredAlbumArt.style.filter = `hue-rotate(${hueToApply}deg) blur(60px)`;
-              console.log("blurredAlbumArt hue applied");
             } else {
               blurredAlbumArt.style.filter = `blur(60px)`;
-              console.log("blurredAlbum hue reset");
             }
           }
         }, 0);

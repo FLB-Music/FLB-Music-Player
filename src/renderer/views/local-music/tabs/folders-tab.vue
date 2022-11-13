@@ -11,7 +11,7 @@
         <div class="silv">
           <img class="folderIcon" src="@icon/folder.svg" />
           <div class="top3">
-             <!-- <img
+            <!-- <img
               v-for="track in folder.tracks.slice(0,3)"
               :key="track.fileLocation"
               :src="'file://' + track.albumArt"
@@ -85,35 +85,35 @@
 </template>
 
 <script>
-import { sortArrayOfObjects } from '@/shared-utils';
-import { mapActions, mapMutations } from 'vuex';
+import { sortArrayOfObjects } from "@/shared-utils";
+import { mapActions, mapMutations } from "vuex";
 
 export default {
-  name: 'FoldersTab',
+  name: "FoldersTab",
 
   data() {
     return {};
   },
   methods: {
     ...mapMutations([
-      'addSelectedTrackToCustomQueue',
-      'addToSelectedTracks',
-      'UIcontrollerSetPropertyValue',
-      'clearSelectedTracks',
-      'selectGroup',
-      'deSelectGroup',
-      'setPlayingTrack',
-      'overWriteCustomQueue',
-      'pushNotification'
+      "addSelectedTrackToCustomQueue",
+      "addToSelectedTracks",
+      "UIcontrollerSetPropertyValue",
+      "clearSelectedTracks",
+      "selectGroup",
+      "deSelectGroup",
+      "setPlayingTrack",
+      "overWriteCustomQueue",
+      "pushNotification",
     ]),
-    ...mapActions(['generateFoldersData']),
+    ...mapActions(["generateFoldersData"]),
     addTracksToQueue() {
       this.UIcontrollerSetPropertyValue({
-        property: 'currentSidePaneTab',
-        newValue: 'Queue'
+        property: "currentSidePaneTab",
+        newValue: "Queue",
       });
       this.clearSelectedTracks();
-      this.selectedGroup.tracks.forEach(track => {
+      this.selectedGroup.tracks.forEach((track) => {
         this.addToSelectedTracks(track);
       });
       this.addSelectedTrackToCustomQueue();
@@ -122,11 +122,11 @@ export default {
       this.setPlayingTrack({ track: this.selectedGroup.tracks[0], index: 0 });
       this.overWriteCustomQueue(this.selectedGroup.tracks);
       this.pushNotification({
-        title: 'Playing all tracks from',
+        title: "Playing all tracks from",
         subTitle: this.selectedGroup.name,
-        type: 'normal'
+        type: "normal",
       });
-    }
+    },
   },
 
   computed: {
@@ -147,16 +147,16 @@ export default {
     },
     renderedTracks() {
       return this.$store.state.renderedTracks;
-    }
+    },
   },
   watch: {
     flipSortOrder() {
       this.folderTracks.reverse();
-    }
+    },
   },
   mounted() {
     this.generateFoldersData();
-  }
+  },
 };
 </script>
 

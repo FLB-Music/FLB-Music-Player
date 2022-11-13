@@ -141,7 +141,7 @@
 <script>
 import { mapActions, mapMutations } from "vuex";
 import { sendMessageToNode } from "@/renderer/utils";
-import { setupEqualizer } from "../equalizer/equalizer";
+import { initializeAudio } from "../equalizer/equalizer";
 /* eslint-disable */
 const defaultCover = require("@img/flbdefault-cover.png");
 /* eslint-disable */
@@ -284,7 +284,7 @@ export default {
     },
   },
   mounted() {
-    setupEqualizer();
+    initializeAudio()
     window.addEventListener("keydown", (e) => {
       if (!document.activeElement.classList.contains("inputElem")) {
         if (e.code === "Space") {

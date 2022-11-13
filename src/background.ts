@@ -38,7 +38,7 @@ import { UsageManager } from "./main/modules/UsageStatistics";
 import parseFolder from "./main/core/parseFolder";
 import { sendNotificationToRenderer } from "./main/reusables/messageToRenderer";
 import { initializeApp, resetApp } from "./main/core/utils";
-
+ 
 console.log(paths.appFolder);
 
 dialog.showErrorBox = function (title, content) {
