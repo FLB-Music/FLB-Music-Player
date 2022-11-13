@@ -1,6 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 // export local components
 export { default as baseButton } from "./renderer/components/base-components/base-button.vue";
+export { default as toggleButton } from "./renderer/components/base-components/toggle-button.vue";
 export { default as baseIcon } from "./renderer/components/base-components/base-icon.vue";
 export { default as tabWrapper } from "./renderer/components/base-components/base-tab-view/tab-wrapper.vue";
 export { default as tabsView } from "./renderer/components/base-components/base-tab-view/tabs-view.vue";
