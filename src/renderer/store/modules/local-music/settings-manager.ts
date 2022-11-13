@@ -15,7 +15,8 @@ const state = {
     accentColor: 'accent_blue',
     dynamicAccentColor: false,
     volume: 1,
-    scannedFolders: []
+    scannedFolders: [],
+    enableEqualizer: false,
   }
 };
 const mutations = {
