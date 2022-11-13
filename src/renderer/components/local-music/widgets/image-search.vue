@@ -40,7 +40,6 @@
 </template>
 
 <script>
-//import gis from 'g-i-s';
 import { mapMutations } from "vuex";
 import { sendMessageToNode } from "@/renderer/utils";
 
@@ -61,15 +60,14 @@ export default {
       console.log("searching for image");
       this.imageResults = [];
       this.searching = true;
-      gis(this.query, (error, results) => {
-        console.log("logging results");
-        this.searching = false;
-        if (error) {
-          console.log(error);
-        } else if (results.length > 1) {
-          this.imageResults = results.slice(0, 10);
-        }
-      });
+      fetch(`https://flb-server.onrender.com/search-image?query=${this.query}`)
+        .then((response) => response.text())
+        .then((result) => {
+          console.log(result);
+          this.imageResults = JSON.parse(result).slice(0, 10);
+        })
+        .catch((error) => console.log("error", error));
+      this.searching = false;
     },
     selectImage(url) {
       this.selectedImage = url;
