@@ -1,11 +1,11 @@
 
-![Logo](https://i.ibb.co/ry3w6cw/flb-website-min.jpg)
+![preview](https://user-images.githubusercontent.com/56973177/203483783-a312b4a8-2901-4b81-967b-a305065623d5.png)
 
     
 # FLB Music
 
 A Beautiful🌹 and Feature Rich💎 Cross Platform Music Player and Downloader.
-Visit 🔗https://fellthebeat.xyz to download ⬇
+Visit 🔗https://flbmusic.xyz to download ⬇
 
 
 
@@ -20,6 +20,7 @@ Visit 🔗https://fellthebeat.xyz to download ⬇
 - Automatically generates mixes based on your listening 🕺
 - Mini Mode 🤏
 - Equalizer 🎛
+- Dynamic Themes
 
   
 ## Screenshots 😎
