@@ -67,7 +67,7 @@
           <img
             v-if="artistPicture"
             class="coverArt roundImage"
-            :src="'file://' + artistPicture"
+            :src="toFileUrl(artistPicture)"
           >
           <letter-card
             v-else
@@ -77,7 +77,7 @@
             v-if="artistPicture"
             id="blurred"
             class="coverArt"
-            :src="'file://' + artistPicture"
+            :src="toFileUrl(artistPicture)"
           >
         </div>
         <div class="cardsWrapper">
@@ -162,7 +162,7 @@ export default {
       });
       this.addSelectedTrackToCustomQueue();
       this.pushNotification({
-        title: 'Tracks addded to the queue',
+        title: this.t('queue.tracksQueued'),
         subTitle: null,
         type: 'normal'
       });
@@ -171,7 +171,7 @@ export default {
       this.setPlayingTrack({ track: this.selectedGroup.tracks[0], index: 0 });
       this.overWriteCustomQueue(this.selectedGroup.tracks);
       this.pushNotification({
-        title: 'Playing all tracks from',
+        title: this.t('group.playingAllFrom'),
         subTitle: this.selectedGroup.name,
         type: 'normal'
       });
@@ -185,7 +185,7 @@ export default {
       this.setPlayingTrack({ track: album.tracks[0], index: 0 });
       this.overWriteCustomQueue(album.tracks);
       this.pushNotification({
-        title: `Playing ${album.name} album`,
+        title: this.t('group.playingAlbum', { name: album.name }),
         subTitle: null,
         type: 'normal'
       });

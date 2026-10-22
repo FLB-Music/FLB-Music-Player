@@ -3,6 +3,7 @@ import { fileTracker, win } from "../../background";
 import { DownloaderHelper } from "node-downloader-helper";
 import { ipcMain, Notification } from "electron";
 import isOnline from "is-online";
+import { SUPPORTED_FORMATS } from "./constants";
 
 export function writeImageBuffer(imageBuffer: string, savePath: string) {
   fs.writeFileSync(savePath, imageBuffer);
@@ -79,12 +80,9 @@ export function extractTitleAndArtist(trackName: string): any {
   return { artist, title };
 }
 
-export function isValidFileType(path: string) {
-  return path.match(/\.mp3|\.webm|\.m4a|\.ogg/gi);
-}
-
-export function removeMIME(str: string) {
-  return str.replace(/(\.mp3)|(\.m4a)|(\.ogg)|(\.wav)/gi, "");
+export function isValidFileType(filePath: string) {
+  const extension = filePath.slice(filePath.lastIndexOf(".")).toLowerCase();
+  return SUPPORTED_FORMATS.includes(extension);
 }
 
 export function sendNativeNotification(

@@ -104,6 +104,7 @@ export interface NotificationType {
   subTitle: string | null;
   type: NotificationTypes;
   isPersistent: true;
+  values?: Record<string, string | number>;
 }
 export type NotificationTypes = "normal" | "success" | "warning";
 export type UIcontrollerPropertiesType =
@@ -115,13 +116,26 @@ export interface SettingsType {
   includeVideo: boolean;
   desktopNotifications: boolean;
   defaultTab: tabType;
-  theme: "fancy" | "dark" | "light";
+  theme: ThemeType;
   accentColor: string;
   dynamicAccentColor: boolean;
   volume: 1;
   foldersToScan: Array<string>;
   enableEqualizer: boolean;
+  language: LanguageType;
 }
+
+export type ThemeType =
+  | "fancy"
+  | "dark"
+  | "black"
+  | "light"
+  | "nord"
+  | "solarized"
+  | "amoled"
+  | "synthwave";
+
+export type LanguageType = "en" | "pt-BR";
 
 export type SettingsPropertiesType =
   | "includeVideo"

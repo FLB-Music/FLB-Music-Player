@@ -20,11 +20,11 @@ async function getParsedTracks(folders: string[] = []) {
     allTracks = [...allTracks, ...tracks];
   }
   for (const [index, track] of allTracks.entries()) {
-    sendNotificationToRenderer('Loading songs', `${index + 1}/${allTracks.length}`, 'normal', true);
+    sendNotificationToRenderer('notification.loadingSongs', `${index + 1}/${allTracks.length}`, 'normal', true);
     const parsedTrack = await createParsedTrack(track);
     allParsedTracks.push(parsedTrack);
   }
-  sendMessageToRenderer('closeNotification', 'Loading songs');
+  sendMessageToRenderer('closeNotification', 'notification.loadingSongs');
   console.log(allParsedTracks.length + ' tracks parsed');
   return allParsedTracks;
 }
@@ -65,7 +65,7 @@ export async function resetApp() {
   deleteFile(paths.playbackStatsLocation, true);
   deleteFile(paths.playlistsLocation, true);
   deleteFile(paths.settingsLocation, true);
-  sendNotificationToRenderer('Resetting FLB', 'Clearing all data', 'warning');
+  sendNotificationToRenderer('notification.resettingApp', 'notification.clearingData', 'warning');
   setTimeout(() => {
     app.quit();
   }, 3000);

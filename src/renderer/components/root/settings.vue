@@ -1,7 +1,7 @@
 <template>
   <div class="Settings blurred_bg blur40">
     <div class="widget_header">
-      <h1 class="widget_title">Settings</h1>
+      <h1 class="widget_title">{{ t('settings.title') }}</h1>
       <base-button
         icon="x"
         extra-class="shrink8 shrink8 pos-abs top5 right5"
@@ -12,7 +12,7 @@
     <main>
       <section>
         <article class="bg1">
-          <h4>Library 💿</h4>
+          <h4>{{ t('settings.library') }}</h4>
           <div class="folderBoxWrapper">
             <div
               v-for="folder in settings.foldersToScan"
@@ -35,16 +35,21 @@
           </div>
           <div class="uselessWrapper">
             <base-button
-              text="Add Folder"
+              :text="t('settings.addFolder')"
               :block="true"
               :active="true"
               @click.native="addFolder"
+            />
+            <base-button
+              :text="t('settings.repairCovers')"
+              :block="true"
+              @click.native="repairCovers"
             />
           </div>
         </article>
         <article class="bg1">
           <div class="settingBox">
-            <h4>Default Tab 🚪</h4>
+            <h4>{{ t('settings.defaultTab') }}</h4>
             <ul class="grid3 gap20">
               <div
                 v-for="tab in tabs"
@@ -62,7 +67,7 @@
                 "
               >
                 <base-icon class="icon" :icon="tab.icon" />
-                <p>{{ tab.name }}</p>
+                <p>{{ t('tabs.' + tab.name.toLowerCase()) }}</p>
               </div>
             </ul>
           </div>
@@ -73,7 +78,7 @@
             'bg1',
           ]"
         >
-          <h4>Accent Color 🖌</h4>
+          <h4>{{ t('settings.accentColor') }}</h4>
           <ul class="grid5 gap10">
             <div
               v-for="(color, index) in accentColors"
@@ -101,14 +106,14 @@
           ]"
           @click="toggleDynamicAccentColor"
         >
-          <p>Dynamic Accent Color</p>
-          <p v-if="settings.dynamicAccentColor">On</p>
-          <p v-else>Off</p>
+          <p>{{ t('settings.dynamicAccentColor') }}</p>
+          <p v-if="settings.dynamicAccentColor">{{ t('settings.on') }}</p>
+          <p v-else>{{ t('settings.off') }}</p>
         </div>
       </section>
       <section>
         <article class="bg1">
-          <h4>Theme 🎨</h4>
+          <h4>{{ t('settings.theme') }}</h4>
           <ul class="grid2 gap20">
             <div
               :class="[
@@ -117,13 +122,13 @@
               ]"
               @click="setSettingValue({ property: 'theme', newValue: 'fancy' })"
             >
-              <p>Fancy dancy 🍷</p>
+              <p>{{ t('settings.theme.fancy') }}</p>
             </div>
             <div
               :class="[settings.theme === 'dark' ? 'activeSetting' : '', 'bg2']"
               @click="setSettingValue({ property: 'theme', newValue: 'dark' })"
             >
-              <p>Fake Black 🏴</p>
+              <p>{{ t('settings.theme.dark') }}</p>
             </div>
             <div
               :class="[
@@ -132,7 +137,7 @@
               ]"
               @click="setSettingValue({ property: 'theme', newValue: 'black' })"
             >
-              <p>Utter Black 🏴‍☠️</p>
+              <p>{{ t('settings.theme.black') }}</p>
             </div>
             <div
               :class="[
@@ -141,28 +146,85 @@
               ]"
               @click="setSettingValue({ property: 'theme', newValue: 'light' })"
             >
-              <p>Eye Killer 👁‍🗨</p>
+              <p>{{ t('settings.theme.light') }}</p>
+            </div>
+            <div
+              :class="[
+                settings.theme === 'nord' ? 'activeSetting' : '',
+                'bg2',
+              ]"
+              @click="setSettingValue({ property: 'theme', newValue: 'nord' })"
+            >
+              <p>{{ t('settings.theme.nord') }}</p>
+            </div>
+            <div
+              :class="[
+                settings.theme === 'solarized' ? 'activeSetting' : '',
+                'bg2',
+              ]"
+              @click="setSettingValue({ property: 'theme', newValue: 'solarized' })"
+            >
+              <p>{{ t('settings.theme.solarized') }}</p>
+            </div>
+            <div
+              :class="[
+                settings.theme === 'amoled' ? 'activeSetting' : '',
+                'bg2',
+              ]"
+              @click="setSettingValue({ property: 'theme', newValue: 'amoled' })"
+            >
+              <p>{{ t('settings.theme.amoled') }}</p>
+            </div>
+            <div
+              :class="[
+                settings.theme === 'synthwave' ? 'activeSetting' : '',
+                'bg2',
+              ]"
+              @click="setSettingValue({ property: 'theme', newValue: 'synthwave' })"
+            >
+              <p>{{ t('settings.theme.synthwave') }}</p>
+            </div>
+          </ul>
+        </article>
+        <article class="bg1">
+          <h4>{{ t('settings.language') }}</h4>
+          <ul class="grid2 gap20">
+            <div
+              v-for="language in languages"
+              :key="language.value"
+              :class="[
+                settings.language === language.value ? 'activeSetting' : '',
+                'bg2',
+              ]"
+              @click="
+                setSettingValue({
+                  property: 'language',
+                  newValue: language.value,
+                })
+              "
+            >
+              <p>{{ t('settings.language.' + language.value) }}</p>
             </div>
           </ul>
         </article>
         <div class="grid2">
           <article class="bg1">
-            <h3 class="mb5">Shortcuts ✂</h3>
+            <h3 class="mb5">{{ t('settings.shortcuts') }}</h3>
             <div class="pb5 mb5 border_split">
-              <p class="text-small-0">Pause and Play</p>
+              <p class="text-small-0">{{ t('settings.shortcuts.play') }}</p>
               <pre class="text-small-1">Space🔘</pre>
             </div>
             <div class="pb5 mb5 border_split">
-              <p class="text-small-0">Next/Previous Track</p>
+              <p class="text-small-0">{{ t('settings.shortcuts.next') }}</p>
               <pre class="text-small-1">Arrows ◀ ▶   </pre>
             </div>
             <div class="pb5 mb5 border_split">
-              <p class="text-small-0">Search Tracks</p>
+              <p class="text-small-0">{{ t('settings.shortcuts.search') }}</p>
               <pre class="text-small-1">Tab 🧈</pre>
             </div>
           </article>
           <article class="bg1">
-            <h3 class="mb5">About 🐲</h3>
+            <h3 class="mb5">{{ t('settings.about') }}</h3>
             <div class="infos">
               <div class="pb5 border_split mb5">
                 <p class="text-small-0">App Version 💽</p>
@@ -255,6 +317,7 @@
 import { sendMessageToNode } from "@/renderer/utils/index";
 import { mapMutations, mapActions } from "vuex";
 import { ipcRenderer } from "electron";
+import { availableLanguages } from "@/renderer/i18n";
 
 export default {
   name: "Settings",
@@ -262,6 +325,7 @@ export default {
   data() {
     return {
       appVersion: "0.0.1",
+      languages: availableLanguages,
       tabs: [
         { name: "Home", icon: "house" },
         { name: "Tracks", icon: "music-note-simple" },
@@ -309,6 +373,15 @@ export default {
     addFolder() {
       sendMessageToNode("addScanFolder", "");
     },
+    repairCovers() {
+      this.pushNotification({
+        title: this.t('settings.repairingCovers'),
+        subTitle: this.t('settings.repairingCoversHint'),
+        type: "normal",
+        isPersistent: true,
+      });
+      sendMessageToNode("repairCovers", "");
+    },
     removeFromScannedFolders(path) {
       console.log(path);
       this.removeFolderTracks(path);
@@ -324,8 +397,8 @@ export default {
           },
         });
       this.pushNotification({
-          title: `Removed folder: ${path}`,
-          subTitle: `Tracks from this folder will not be loaded`,
+          title: this.t('settings.removedFolder', { path }),
+          subTitle: this.t('settings.folderRemovedHint'),
           type: "danger",
         })
       }, 500);

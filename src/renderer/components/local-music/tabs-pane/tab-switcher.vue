@@ -12,7 +12,7 @@
         class="icon"
         :size="16"
       />
-      <p>{{ tab.name }}</p>
+      <p>{{ t('tabs.' + tab.name.toLowerCase()) }}</p>
     </div>
   </div>
 </template>

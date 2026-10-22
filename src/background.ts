@@ -38,6 +38,12 @@ import { UsageManager } from "./main/modules/UsageStatistics";
 import parseFolder from "./main/core/parseFolder";
 import { sendNotificationToRenderer } from "./main/reusables/messageToRenderer";
 import { initializeApp, resetApp } from "./main/core/utils";
+import {
+  getCoverArtFileName,
+  isCoverArtUsable,
+} from "./main/core/coverArt";
+import { findSiblingCoverArt } from "./main/core/siblingCover";
+import { fetchOnlineCoverArt } from "./main/core/onlineCover";
  
 console.log(paths.appFolder);
 
@@ -112,22 +118,22 @@ async function createWindow() {
     shell.openExternal(url);
   });
   autoUpdater.on("checking-for-update", () => {
-    sendNotificationToRenderer("Checking for update...");
+    sendNotificationToRenderer("notification.checkingForUpdate");
   });
   autoUpdater.on("update-available", () => {
-    sendNotificationToRenderer("Update available.");
+    sendNotificationToRenderer("notification.updateAvailable");
     setTimeout(() => {
       sendNotificationToRenderer("Downloading available.");
     }, 1000);
   });
   autoUpdater.on("update-not-available", () => {
-    sendNotificationToRenderer("No Update available.");
+    sendNotificationToRenderer("notification.noUpdate");
   });
   autoUpdater.on("error", (err) => {
-    sendNotificationToRenderer("Error in auto-updater.", "", "warning");
+    sendNotificationToRenderer("notification.updateError", "", "warning");
   });
   autoUpdater.on("update-downloaded", () => {
-    sendNotificationToRenderer("Update Downloaded 🚀");
+    sendNotificationToRenderer("notification.updateDownloaded");
   });
   autoUpdater.on("download-progress", () => {
     win.webContents.send("downloadingUpdate", "");
@@ -221,7 +227,7 @@ ipcMain.on("addScanFolder", () => {
           sendMessageToRenderer("addMultipleTracks", tracks);
           fileTracker.saveChanges();
         } else {
-          sendNotificationToRenderer("Folder already added");
+          sendNotificationToRenderer("notification.folderAlreadyAdded");
         }
       }
     });
@@ -238,11 +244,91 @@ ipcMain.on("removeFromScannedFolders", (e, payload: UpdateDataPayload) => {
   win.webContents.send("userSettings", settings.getSettings);
 });
 ipcMain.on("refresh", async () => {
-  sendNotificationToRenderer("Refreshing...", "", "success");
+  sendNotificationToRenderer("notification.refreshing", "", "success");
   const tracks = await getParsedTracks(settings.getSettings.foldersToScan);
   fileTracker.addMultipleTracks(tracks);
   sendMessageToRenderer("addMultipleTracks", tracks);
   fileTracker.saveChanges();
+});
+
+/**
+ * Re extracts the cover art of every track that has no usable cover
+ * (missing file, wrong format, ...). Useful after upgrading the app or
+ * after clearing the album art folder.
+ */
+ipcMain.on("repairCovers", async () => {
+  sendNotificationToRenderer("notification.repairingCovers", "", "normal");
+  const allTracks = fileTracker.getTracks;
+  const tracksToRepair = allTracks.filter(
+    (track) => !isCoverArtUsable(track.albumArt)
+  );
+  const repairedTracks: TrackType[] = [];
+
+  // 1. Extract the embedded cover art again
+  for (const [index, track] of tracksToRepair.entries()) {
+    sendNotificationToRenderer(
+      "notification.repairingCovers",
+      `${index + 1}/${tracksToRepair.length}`,
+      "normal",
+      true
+    );
+    if (!fs.existsSync(track.fileLocation)) continue;
+    try {
+      const repairedTrack = await createParsedTrack(track.fileLocation);
+      if (!repairedTrack.albumArt) continue;
+      repairedTrack.dateAdded = track.dateAdded;
+      fileTracker.updateFile(repairedTrack, false);
+      repairedTracks.push(repairedTrack);
+    } catch (error) {
+      console.log("Could not repair the cover of", track.fileLocation);
+      console.log(error);
+    }
+  }
+
+  // 2. Use the cover of another track of the same album
+  const stillMissing = fileTracker.getTracks.filter(
+    (track) => !isCoverArtUsable(track.albumArt)
+  );
+  for (const track of stillMissing) {
+    const siblingCover = findSiblingCoverArt(track, fileTracker.getTracks);
+    if (!siblingCover) continue;
+    track.albumArt = siblingCover;
+    fileTracker.updateFile(track, false);
+    repairedTracks.push(track);
+  }
+
+  // 3. Look the cover art up online
+  const withoutCover = fileTracker.getTracks.filter(
+    (track) => !isCoverArtUsable(track.albumArt)
+  );
+  for (const [index, track] of withoutCover.entries()) {
+    sendNotificationToRenderer(
+      "notification.searchingCovers",
+      `${index + 1}/${withoutCover.length}`,
+      "normal",
+      true
+    );
+    try {
+      const onlineCover = await fetchOnlineCoverArt(track);
+      if (!onlineCover) continue;
+      track.albumArt = onlineCover;
+      fileTracker.updateFile(track, false);
+      repairedTracks.push(track);
+    } catch (error) {
+      console.log("Could not fetch the cover of", track.fileLocation);
+    }
+  }
+
+  sendMessageToRenderer("closeNotification", "notification.repairingCovers");
+  await fileTracker.saveChanges();
+  win.webContents.send("coversRepaired", repairedTracks);
+  sendNotificationToRenderer(
+    "notification.coversRepaired",
+    "notification.coversRepairedCount",
+    "success",
+    false,
+    { count: repairedTracks.length }
+  );
 });
 
 ipcMain.on("playingTrack", async (e, track: TrackType) => {
@@ -363,7 +449,7 @@ ipcMain.on("sendUsageStats", () => {
 });
 
 ipcMain.on("checkForUpdate", () => {
-  sendNotificationToRenderer("Checking For Update");
+  sendNotificationToRenderer("notification.checkingForUpdate");
   checkForUpdates();
 });
 
@@ -391,22 +477,31 @@ async function getParsedTracks(folders: string[] = []) {
     const tracks = parseFolder(folder);
     allTracks = [...allTracks, ...tracks];
   }
+  const alreadyParsed = new Set(
+    fileTracker.getTracks.map((track) => track.fileLocation)
+  );
   for (const [index, track] of allTracks.entries()) {
     sendNotificationToRenderer(
-      "Loading songs",
+      "notification.loadingSongs",
       `${index + 1}/${allTracks.length}`,
       "normal",
       true
     );
-    const alreadyParsed = fileTracker.getTracks.map(
-      (track) => track.fileLocation
-    );
-    if (!alreadyParsed.includes(track)) {
+    if (!alreadyParsed.has(track)) {
       const parsedTrack = await createParsedTrack(track);
       allParsedTracks.push(parsedTrack);
     }
   }
-  sendMessageToRenderer("closeNotification", "Loading songs");
+  sendMessageToRenderer("closeNotification", "notification.loadingSongs");
+  // Tracks without an embedded picture borrow the cover of another track
+  // of the same album
+  for (const track of allParsedTracks) {
+    if (track.albumArt) continue;
+    const siblingCover = findSiblingCoverArt(track, allParsedTracks);
+    if (siblingCover) {
+      track.albumArt = siblingCover;
+    }
+  }
   console.log(allParsedTracks.length + " tracks parsed");
   return allParsedTracks;
 }
@@ -422,7 +517,7 @@ export async function writeTags(
       tagChanges.APIC = await downloadFile(
         tagChanges.APIC,
         paths.albumArtFolder,
-        path.parse(filePath).name + ".jpeg"
+        getCoverArtFileName(filePath, "jpeg")
       );
       sendNotificationToRenderer("Downloading Picture");
     } catch (error) {

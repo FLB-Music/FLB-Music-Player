@@ -3,7 +3,7 @@
     <base-button
       id="sort_toggle_button"
       icon="sort-ascending"
-      text="Sort"
+      :text="t('sort.sort')"
       size="16"
     />
     <section class="sortParamsWrapper blurred_bg blur20">
@@ -18,7 +18,7 @@
       />
       <base-button
         extra-class="param"
-        text="Flip"
+        :text="t('sort.flip')"
         :active="tracksAreReversed"
         :transparent="true"
         @click.native.stop="reverseSortOrder"
@@ -36,11 +36,11 @@ export default {
   data() {
     return {
       sortOptions: [
-        { name: 'Title', value: 'defaultTitle' },
-        { name: 'Artist', value: 'defaultArtist' },
-        { name: 'Date', value: 'dateAdded' }
+        { name: this.t('sort.title'), value: 'defaultTitle' },
+        { name: this.t('sort.artist'), value: 'defaultArtist' },
+        { name: this.t('sort.date'), value: 'dateAdded' }
       ],
-      selectedSortOption: 'Date',
+      selectedSortOption: 'dateAdded',
       tracksAreReversed: false
     };
   },

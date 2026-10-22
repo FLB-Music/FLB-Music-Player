@@ -2,7 +2,7 @@
   <div class="searchResults blurred_bg blur20 no_scroll">
     <div class="TracksResults">
       <div class="sectionHeading">
-        <h3>Tracks</h3>
+        <h3>{{ t('search.tracks') }}</h3>
         <div class="line" />
         <h4>{{ searchResults.tracks.length }}</h4>
       </div>
@@ -26,7 +26,7 @@
       @click="closeSearch"
     >
       <div class="sectionHeading">
-        <h3>Artists</h3>
+        <h3>{{ t('search.artists') }}</h3>
         <div class="line" />
         <h4>{{ searchResults.artists.length }}</h4>
       </div>
@@ -47,7 +47,7 @@
       @click="closeSearch"
     >
       <div class="sectionHeading">
-        <h3>Albums</h3>
+        <h3>{{ t('search.albums') }}</h3>
         <div class="line" />
         <h4>{{ searchResults.albums.length }}</h4>
       </div>

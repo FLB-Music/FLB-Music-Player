@@ -13,7 +13,7 @@
           src="@img/lamma.gif"
         >
         <div class="intro">
-          <h1>Welcome To FLB Music</h1>
+          <h1>{{ t('onboard.welcome') }}</h1>
           <p>Beauty🌹, Simplicity📃, Functionality🏹</p>
         </div>
         <base-button
@@ -29,7 +29,7 @@
         class="slide"
       >
         <article>
-          <h2>Add your Music Folders</h2>
+          <h2>{{ t('onboard.addFolders') }}</h2>
           <br>
           <div class="folderBoxWrapper">
             <div
@@ -53,7 +53,7 @@
           <div style="width: 75%; margin-top: 10px">
             <base-button
               :active="true"
-              text="Add another Folder"
+              :text="t('onboard.addAnotherFolder')"
               :block="true"
               @click.native="addFolder"
             />

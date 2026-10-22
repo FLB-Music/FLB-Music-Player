@@ -6,7 +6,7 @@
         v-on:toggled="toggleEqualizer"
         style="position: absolute; top: 2px"
       />
-      <h1 class="widget_title">Equalizer</h1>
+      <h1 class="widget_title">{{ t('equalizer.title') }}</h1>
       <base-button
         icon="x"
         class="widget_close circle shrink8"
@@ -20,7 +20,7 @@
           v-for="preset in equalizerPresets"
           :key="preset.name"
           extra-class="bg1"
-          :text="preset.name"
+          :text="t('equalizer.preset.' + presetKey(preset.name))"
           :active="currentPreset === preset.name"
           @click.native.stop="setPreset(preset)"
         />
@@ -43,7 +43,7 @@
           filter-name="Treble"
           @newGainValues="changeBandGains"
         />
-        <triangle-slider filter-name="VBoost" title="Boost Volume" />
+        <triangle-slider filter-name="VBoost" :title="t('equalizer.boostVolume')" />
       </div>
     </div>
     <!-- <spatializer />  -->
@@ -85,6 +85,12 @@ export default {
     setPreset(preset) {
       this.loadPreset(preset);
       this.localPreset = preset;
+    },
+    /**
+     * The name of the preset is used as the key of the translation
+     */
+    presetKey(name) {
+      return name.toLowerCase().replace(/\s+/g, "");
     },
     toggleEqualizer(value) {
       console.log("Toggling equalizer");

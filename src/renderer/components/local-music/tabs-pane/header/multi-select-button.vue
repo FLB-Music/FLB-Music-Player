@@ -1,8 +1,8 @@
 <template>
   <base-button
-    title="Select Multiple Tracks"
+    :title="t('select.multiple')"
     icon="selection-background"
-    text="Select"
+    :text="t('select.select')"
     :active="multiSelectOn"
     @click.native="toggleMultiSelect()"
   />

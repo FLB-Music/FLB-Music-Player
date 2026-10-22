@@ -14,7 +14,7 @@
       <img
         v-if="track.albumArt"
         class="card_image"
-        :src="'file://' + track.albumArt"
+        :src="toFileUrl(track.albumArt)"
       >
       <img
         v-else

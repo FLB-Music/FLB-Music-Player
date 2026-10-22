@@ -26,14 +26,14 @@
       >
         <base-button
           icon="book-open"
-          title="Open Playlist"
-          text="Open"
+          :title="t('playlist.openTitle')"
+          :text="t('playlist.open')"
           @click.native="openPlaylist"
         />
         <base-button
           icon="play"
-          title="Play All"
-          text="Play"
+          :title="t('playlist.playAll')"
+          :text="t('playlist.play')"
           @click.native="playAll"
         />
       </div>
@@ -76,7 +76,7 @@ export default {
       this.setPlayingTrack({ track: this.playlist.tracks[0], index: 0 });
       this.overWriteCustomQueue(this.playlist.tracks);
       this.pushNotification({
-        title: 'Playing all tracks from',
+        title: this.t('group.playingAllFrom'),
         subTitle: this.playlist.name,
         type: 'normal'
       });

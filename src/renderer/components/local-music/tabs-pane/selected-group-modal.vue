@@ -17,23 +17,23 @@
           @click="playAll"
         >
           <base-icon icon="skip-forward" />
-          <p>Play All</p>
+          <p>{{ t('group.playAll') }}</p>
         </button>
         <button
           class="btWithIcon"
           @click="addTracksToQueue"
         >
           <base-icon icon="queue" />
-          <p>Add To Queue</p>
+          <p>{{ t('group.addToQueue') }}</p>
         </button>
       </div>
       <img
         class="coverArt"
-        :src="'file://' + selectedGroup.tracks[0].albumArt"
+        :src="toFileUrl(selectedGroup.tracks[0].albumArt)"
       >
       <img
         id="blurred"
-        :src="'file://' + selectedGroup.tracks[0].albumArt"
+        :src="toFileUrl(selectedGroup.tracks[0].albumArt)"
       >
       <div class="groupedCard_info">
         <p class="groupedInfo_title">
@@ -85,7 +85,7 @@ export default {
       });
       this.addSelectedTrackToCustomQueue();
       this.pushNotification({
-        title: 'Tracks addded to the queue',
+        title: this.t('queue.tracksQueued'),
         subTitle: null,
         type: 'normal'
       });
@@ -94,7 +94,7 @@ export default {
       this.setPlayingTrack({ track: this.selectedGroup.tracks[0], index: 0 });
       this.overWriteCustomQueue(this.selectedGroup.tracks);
       this.pushNotification({
-        title: `Playing ${this.selectedGroup.name} album`,
+        title: this.t('group.playingAlbum', { name: this.selectedGroup.name }),
         subTitle: null,
         type: 'normal'
       });

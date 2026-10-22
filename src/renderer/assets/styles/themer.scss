@@ -48,6 +48,8 @@ html {
   --diplomaColor: rgba(255, 255, 255, 0.104);
   --degreeColor: rgba(255, 255, 255, 0.179);
   --hoverColor: rgba(255, 255, 255, 0.056);
+  --appBackground: rgb(0, 0, 0);
+  --borderColor: rgba(255, 255, 255, 0.356);
 }
 * {
   color: var(--textColor);
@@ -85,4 +87,52 @@ html {
   input::placeholder {
     color: black !important;
   }
+}
+
+/* Nord, a cool and calm palette */
+.nord_theme {
+  --textColor: #eceff4;
+  --appBackground: #2e3440;
+  --primaryColor: rgba(59, 66, 82, 0.55);
+  --secondaryColor: rgba(67, 76, 94, 0.65);
+  --diplomaColor: rgba(76, 86, 106, 0.75);
+  --degreeColor: rgba(94, 129, 172, 0.55);
+  --hoverColor: rgba(136, 192, 208, 0.16);
+  --borderColor: rgba(236, 239, 244, 0.16);
+}
+
+/* Solarized, the classic dark palette */
+.solarized_theme {
+  --textColor: #eee8d5;
+  --appBackground: #002b36;
+  --primaryColor: rgba(7, 54, 66, 0.6);
+  --secondaryColor: rgba(7, 54, 66, 0.85);
+  --diplomaColor: rgba(38, 139, 210, 0.18);
+  --degreeColor: rgba(101, 123, 131, 0.45);
+  --hoverColor: rgba(181, 137, 0, 0.18);
+  --borderColor: rgba(238, 232, 213, 0.18);
+}
+
+/* Amoled, pure black for oled screens */
+.amoled_theme {
+  --textColor: #f2f2f2;
+  --appBackground: #000000;
+  --primaryColor: rgba(255, 255, 255, 0.045);
+  --secondaryColor: rgba(255, 255, 255, 0.075);
+  --diplomaColor: rgba(255, 255, 255, 0.12);
+  --degreeColor: rgba(255, 255, 255, 0.2);
+  --hoverColor: rgba(255, 255, 255, 0.09);
+  --borderColor: rgba(255, 255, 255, 0.14);
+}
+
+/* Synthwave, the retro neon look */
+.synthwave_theme {
+  --textColor: #f4e9ff;
+  --appBackground: #170f2e;
+  --primaryColor: rgba(42, 27, 77, 0.7);
+  --secondaryColor: rgba(60, 36, 105, 0.75);
+  --diplomaColor: rgba(255, 106, 213, 0.16);
+  --degreeColor: rgba(57, 255, 205, 0.2);
+  --hoverColor: rgba(255, 106, 213, 0.18);
+  --borderColor: rgba(255, 106, 213, 0.3);
 }

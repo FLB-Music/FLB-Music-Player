@@ -98,7 +98,7 @@ body {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: rgb(0, 0, 0);
+  background: var(--appBackground, rgb(0, 0, 0));
 }
 ::-webkit-scrollbar {
   background: rgba(0, 0, 0, 0);

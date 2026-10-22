@@ -35,7 +35,7 @@
             >
               <img
                 class="flexImage"
-                :src="'file://' + albumArt"
+                :src="toFileUrl(albumArt)"
               >
             </div>
           </div>

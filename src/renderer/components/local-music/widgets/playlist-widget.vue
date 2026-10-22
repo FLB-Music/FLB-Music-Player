@@ -15,12 +15,12 @@
       <input
         v-model="newPlaylistName"
         class="inputElem w-90"
-        placeholder="Create new playlist"
+        :placeholder="t('playlist.createPlaceholder')"
         type="text"
       >
       <base-button
       v-if="newPlaylistName!==''"
-        text="Create"
+        :text="t('playlist.create')"
         :active="true"
         class="w-100 mt10"
         @click.native="createNewPlaylist()"
@@ -74,7 +74,7 @@ export default {
       this.addSelectedTracksToPlaylist(playlistName);
       this.UIcontrollerToggleProperty('showPlaylistWidget');
       this.pushNotification({
-        title: `Added to ${playlistName} playlist`,
+        title: this.t('playlist.addedTo', { name: playlistName }),
         subTitle: `${this.selectedTracks[0].defaultTitle}`,
         type: 'normal'
       });

@@ -42,12 +42,19 @@ const store: StoreOptions<any> = {
       TabsManager.state.tabsData.addedTracks.reverse();
     },
     removeSelectedTracksFromAppState ({ state }) {
-      TrackSelector.state.selectedTracks.forEach((selectedTrack: TrackType) => {
-        state.tabsData.addedTracks.filter(
-          (track: TrackType) => track.fileLocation === selectedTrack.fileLocation
-        );
-        state.tabsData.recentTracks.filter(
-          (track: TrackType) => track.fileLocation === selectedTrack.fileLocation
+      const selectedLocations = TrackSelector.state.selectedTracks.map(
+        (selectedTrack: TrackType) => selectedTrack.fileLocation
+      );
+      const { tabsData } = TabsManager.state;
+      tabsData.addedTracks = tabsData.addedTracks.filter(
+        (track: TrackType) => !selectedLocations.includes(track.fileLocation)
+      );
+      tabsData.recentlyPlayedTracks = tabsData.recentlyPlayedTracks.filter(
+        (track: TrackType) => !selectedLocations.includes(track.fileLocation)
+      );
+      tabsData.playlists.forEach((playlist) => {
+        playlist.tracks = playlist.tracks.filter(
+          (track: TrackType) => !selectedLocations.includes(track.fileLocation)
         );
       });
       TrackSelector.state.selectedTracks = [];

@@ -2,15 +2,15 @@
   <div class="trackOptions blurred_bg blur20" @click="close">
     <div class="option hideOnMultiSelectMode" @click.stop="playNext">
       <base-icon icon="skip-forward" />
-      <p class="weight300">Play Next</p>
+      <p class="weight300">{{ t('context.playNext') }}</p>
     </div>
     <div class="option" @click.stop="queueTrack">
       <base-icon icon="list-plus" />
-      <p class="weight300">Add to Queue</p>
+      <p class="weight300">{{ t('context.addToQueue') }}</p>
     </div>
     <div class="option" @click.stop="addToFavorites">
       <base-icon icon="heart" />
-      <p class="weight300">Add to Favorites</p>
+      <p class="weight300">{{ t('context.addToFavorites') }}</p>
     </div>
     <div
       v-if="currentTab !== 'Playlists'"
@@ -18,7 +18,7 @@
       @click.stop="showPlaylistWidget"
     >
       <base-icon icon="playlist" />
-      <p class="weight300">Add to Playlist</p>
+      <p class="weight300">{{ t('context.addToPlaylist') }}</p>
     </div>
     <div
       v-if="currentTab === 'Playlists'"
@@ -26,15 +26,15 @@
       @click.stop="removeFromPlaylist"
     >
       <base-icon icon="x-circle" />
-      <p class="weight300">Remove from Playlist</p>
+      <p class="weight300">{{ t('context.removeFromPlaylist') }}</p>
     </div>
     <div class="option" @click.stop="deleteSelectedTracks">
       <base-icon icon="trash-simple" />
-      <p class="weight300">Delete Permanently</p>
+      <p class="weight300">{{ t('context.deletePermanently') }}</p>
     </div>
     <div class="option hideOnMultiSelectMode" @click.stop="showTagEditor">
       <base-icon icon="pencil-simple" />
-      <p class="weight300">Edit Tags</p>
+      <p class="weight300">{{ t('context.editTags') }}</p>
     </div>
   </div>
 </template>
@@ -79,7 +79,7 @@ export default {
         newValue: "Queue",
       });
       this.pushNotification({
-        title: "Track(s) added to queue",
+        title: this.t('context.tracksQueued'),
         subTitle: null,
         type: "normal",
       });
@@ -88,7 +88,7 @@ export default {
     playNext() {
       this.setSelectedTrackToPlayNext();
       this.pushNotification({
-        title: `Playing that track Next`,
+        title: this.t('context.playingNext'),
         subTitle: null,
         type: "normal",
       });
@@ -111,7 +111,7 @@ export default {
       this.deleteSelectedTrackFromPlaylist();
       this.close();
       this.pushNotification({
-        title: `Removed from Favorites ${this.selectedGroup.name}`,
+        title: this.t('context.removedFromFavorites', { name: this.selectedGroup.name }),
         subTitle: `${this.selectedTracks[0].defaultTitle}`,
         type: "danger",
       });
@@ -120,7 +120,7 @@ export default {
     addToFavorites() {
       this.addSelectedTracksToPlaylist("Favorites");
       this.pushNotification({
-        title: `Added to Favorites`,
+        title: this.t('player.addedToFavorites'),
         subTitle: `${this.selectedTracks[0].defaultTitle}`,
         type: "normal",
       });

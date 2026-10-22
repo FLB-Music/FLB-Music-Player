@@ -1,144 +1,174 @@
-import fs from 'fs';
-import path from 'path';
-import NodeID3 from 'node-id3';
-import { TrackType } from '@/types';
-import { paths } from '../modules/Paths';
-import { fileTracker } from '../../background';
-import { extractTitleAndArtist, formatTime, removeMIME, writeImageBuffer } from '../utils';
-const mm = require('music-metadata');
+import fs from "fs";
+import path from "path";
+import NodeID3 from "node-id3";
+import { TrackType } from "@/types";
+import { extractTitleAndArtist, formatTime } from "../utils";
+import { pickBestPicture, writeCoverArt } from "./coverArt";
+const mm = require("music-metadata");
 
-export function createParsedTrack(fileLocation: string) {
-  return new Promise<TrackType>((resolve) => {
-    const track: TrackType = {
-      r_fileLocation: '',
-      fileLocation: '',
-      albumArt: '',
-      album: '',
-      title: '',
-      artist: '',
-      extractedTitle: '',
-      defaultTitle: '',
-      extractedArtist: '',
-      defaultArtist: '',
-      fileName: '',
-      formattedLength: '',
-      duration: '',
-      dateAdded: 0,
-      folderInfo: {
-        name: path.parse(path.parse(fileLocation).dir).base,
-        path: path.parse(fileLocation).dir
+interface ParsedTags {
+  title?: string | null;
+  artist?: string | null;
+  album?: string | null;
+  duration?: number | null;
+  pictures: any[];
+}
+
+/**
+ * Names commonly used for the cover art that sits next to the audio files.
+ * Used when a track does not carry an embedded picture.
+ */
+const FALLBACK_COVER_NAMES = [
+  "cover",
+  "folder",
+  "front",
+  "album",
+  "albumart",
+  "albumartsmall",
+  "thumb",
+];
+
+function findFolderCoverArt(fileLocation: string): Buffer | null {
+  try {
+    const folder = path.dirname(fileLocation);
+    const entries = fs.readdirSync(folder);
+    for (const entry of entries) {
+      const extension = path.extname(entry).toLowerCase();
+      if (![".jpg", ".jpeg", ".png", ".bmp", ".gif", ".webp"].includes(extension)) {
+        continue;
       }
+      const name = path.basename(entry, extension).toLowerCase();
+      if (FALLBACK_COVER_NAMES.includes(name)) {
+        return fs.readFileSync(path.join(folder, entry));
+      }
+    }
+  } catch (error) {
+    // The folder may not be readable, no big deal.
+  }
+  return null;
+}
+
+/**
+ * Reads the tags of a file. music-metadata handles almost every container,
+ * node-id3 is only used as a fallback for plain mp3 files.
+ */
+async function readTags(fileLocation: string): Promise<ParsedTags> {
+  try {
+    const metadata = await mm.parseFile(fileLocation);
+    return {
+      title: metadata.common.title,
+      artist: metadata.common.artist,
+      album: metadata.common.album,
+      duration: metadata.format ? metadata.format.duration : null,
+      pictures: metadata.common.picture || [],
     };
-    track.fileLocation = fileLocation;
-    track.r_fileLocation = 'file://' + fileLocation;
-    track.fileName = path.parse(fileLocation).name;
-    console.log('Parsing: ' + track.fileName);
-    (async () => {
-      try {
-        const metadata = await mm.parseFile(fileLocation);
-        console.log(metadata)
-        track.title = metadata.common.title || null
-        track.extractedTitle = extractTitleAndArtist(track.fileName).title;
+  } catch (error) {
+    console.error("Could not read tags with music-metadata:", fileLocation);
+    console.error(error.message);
+  }
 
-        track.artist = metadata.common.artist || null
-        track.extractedArtist = extractTitleAndArtist(track.fileName).artist;
+  // Fallback: ID3 tags (mp3 only)
+  try {
+    const tags = await new Promise<any>((resolve) => {
+      NodeID3.read(fileLocation, (error: any, id3Tags: any) => {
+        resolve(error || !id3Tags ? null : id3Tags);
+      });
+    });
+    if (tags) {
+      return {
+        title: tags.title,
+        artist: tags.artist,
+        album: tags.album,
+        duration: null,
+        pictures:
+          tags.image && tags.image.imageBuffer
+            ? [{ format: tags.image.mime, data: tags.image.imageBuffer }]
+            : [],
+      };
+    }
+  } catch (error) {
+    console.error("Could not read tags with node-id3:", fileLocation);
+  }
 
-        track.album = metadata.common.album || 'unknown'
+  return { pictures: [] };
+}
 
-        track.defaultTitle =
-          track.title || track.extractedTitle || track.fileName;
+/**
+ * Extracts the cover art of a track and stores it in the album art folder.
+ * Never throws, a track without a cover art is perfectly valid.
+ */
+async function extractCoverArt(
+  fileLocation: string,
+  pictures: any[]
+): Promise<string> {
+  const bestPicture = pickBestPicture(pictures);
+  if (bestPicture && bestPicture.data) {
+    const albumArtPath = await writeCoverArt(fileLocation, bestPicture.data);
+    if (albumArtPath) return albumArtPath;
+  }
 
-        track.defaultArtist = track.artist || track.extractedArtist;
+  // No embedded picture, look for a cover file sitting next to the track.
+  const folderCover = findFolderCoverArt(fileLocation);
+  if (folderCover) {
+    return await writeCoverArt(fileLocation, folderCover);
+  }
 
-        track.duration = metadata.format.duration;
-        track.formattedLength = formatTime(track.duration)
+  return "";
+}
 
-        if (metadata.common.picture) {
-          const albumArtPath = path.join(
-            paths.albumArtFolder,
-            `${removeMIME(track.fileName)}.${metadata.common.picture[0].format.replace(/image\//g, '')}`
-          );
+export async function createParsedTrack(
+  fileLocation: string
+): Promise<TrackType> {
+  const track: TrackType = {
+    r_fileLocation: "",
+    fileLocation: "",
+    albumArt: "",
+    album: "",
+    title: "",
+    artist: "",
+    extractedTitle: "",
+    defaultTitle: "",
+    extractedArtist: "",
+    defaultArtist: "",
+    fileName: "",
+    formattedLength: "",
+    duration: "",
+    dateAdded: 0,
+    folderInfo: {
+      name: path.parse(path.parse(fileLocation).dir).base,
+      path: path.parse(fileLocation).dir,
+    },
+  };
 
-          writeImageBuffer(metadata.common.picture[0].data, albumArtPath);
-          track.albumArt = albumArtPath;
+  track.fileLocation = fileLocation;
+  track.r_fileLocation = "file://" + fileLocation;
+  track.fileName = path.parse(fileLocation).name;
+  console.log("Parsing: " + track.fileName);
 
-        }
+  const tags = await readTags(fileLocation);
 
-        fs.stat(track.fileLocation, (err, stats) => {
-          track.dateAdded = stats.ctimeMs;
-        });
+  track.title = tags.title || null;
+  track.extractedTitle = extractTitleAndArtist(track.fileName).title;
 
-        fileTracker.addFile(track);
-        resolve(track);
+  track.artist = tags.artist || null;
+  track.extractedArtist = extractTitleAndArtist(track.fileName).artist;
 
-      } catch (error) {
-        console.error(error.message);
-        NodeID3.read(fileLocation, async (err: any, tags: any) => {
-          if (tags && tags.image && tags.image.imageBuffer) {
-            tags.image.mime = tags.image.mime
-              ? tags.image.mime.replace(/image\//g, '')
-              : 'jpg';
-            const albumArtPath = path.join(
-              paths.albumArtFolder,
-              `${removeMIME(track.fileName)}.${tags.image.mime}`
-            );
-            writeImageBuffer(tags.image.imageBuffer, albumArtPath);
-            track.albumArt = albumArtPath;
-          }
-          track.title = tags.title;
-          track.extractedTitle = extractTitleAndArtist(track.fileName).title;
+  track.album = tags.album || "unknown";
 
-          track.artist = tags.artist;
-          track.extractedArtist = extractTitleAndArtist(track.fileName).artist;
+  track.defaultTitle = track.title || track.extractedTitle || track.fileName;
+  track.defaultArtist = track.artist || track.extractedArtist;
 
-          track.album = tags.album || 'unknown';
+  track.duration = tags.duration || 0;
+  track.formattedLength = formatTime(track.duration);
 
-          track.defaultTitle =
-            track.title || track.extractedTitle || track.fileName;
+  track.albumArt = await extractCoverArt(fileLocation, tags.pictures);
 
-          track.defaultArtist = track.artist || track.extractedArtist;
+  try {
+    const stats = fs.statSync(track.fileLocation);
+    track.dateAdded = stats.ctimeMs;
+  } catch (error) {
+    track.dateAdded = Date.now();
+  }
 
-          track.duration = "0:00"
-          fs.stat(track.fileLocation, (err, stats) => {
-            track.dateAdded = stats.ctimeMs;
-          });
-
-          fileTracker.addFile(track);
-          resolve(track);
-        });
-      }
-    })();
-    // NodeID3.read(fileLocation, async (err: any, tags: any) => {
-    //   if (tags && tags.image && tags.image.imageBuffer) {
-    //     tags.image.mime = tags.image.mime
-    //       ? tags.image.mime.replace(/image\//g, '')
-    //       : 'jpg';
-    //     const albumArtPath = path.join(
-    //       paths.albumArtFolder,
-    //       `${removeMIME(track.fileName)}.${tags.image.mime}`
-    //     );
-    //     writeImageBuffer(tags.image.imageBuffer, albumArtPath);
-    //     track.albumArt = albumArtPath;
-    //   }
-    // track.title = tags.title;
-    // track.extractedTitle = extractTitleAndArtist(track.fileName).title;
-
-    // track.artist = tags.artist;
-    // track.extractedArtist = extractTitleAndArtist(track.fileName).artist;
-
-    // track.album = tags.album || 'unknown';
-
-    //   track.defaultTitle =
-    //     track.title || track.extractedTitle || track.fileName;
-
-    //   track.defaultArtist = track.artist || track.extractedArtist;
-
-    //   fs.stat(track.fileLocation, (err, stats) => {
-    //     track.dateAdded = stats.ctimeMs;
-    //   });
-
-    //   fileTracker.addFile(track);
-    //   resolve(track);
-    // });
-  });
+  return track;
 }

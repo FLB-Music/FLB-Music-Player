@@ -6,7 +6,7 @@
       style="height: 100%"
     >
       <img width="300px" src="@img/no_recents.svg" />
-      <p style="font-family: inherit">You still haven't played anything</p>
+      <p style="font-family: inherit">{{ t('recents.empty') }}</p>
     </div>
     <div @click="addTracksToQueue">
       <track-card

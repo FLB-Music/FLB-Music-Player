@@ -7,6 +7,21 @@ const hexColorRegex = /^([\da-f]{3}){1,2}$/i;
 export function sendMessageToNode (message: string, payload: any) {
   ipcRenderer.send(message, payload);
 }
+
+/**
+ * Turns a file system path into an url the renderer can load.
+ * Windows paths use backslashes and can contain spaces or characters that
+ * have to be escaped, so building the url by hand breaks the images.
+ */
+export function toFileUrl (filePath: string) {
+  if (!filePath) return '';
+  if (/^(https?|file|blob|data):/i.test(filePath)) return filePath;
+  let normalized = filePath.replace(/\\/g, '/');
+  if (!normalized.startsWith('/')) normalized = `/${normalized}`;
+  return `file://${encodeURI(normalized)
+    .replace(/#/g, '%23')
+    .replace(/\?/g, '%3F')}`;
+}
 export function isHexColor (s = '') {
   return hexColorRegex.test(s);
 }

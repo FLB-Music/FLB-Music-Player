@@ -2,12 +2,12 @@
   <div class="home tab scroll_y">
     <div class="stats">
       <div class="stats_title">
-        <h1>Library Stats</h1>
+        <h1>{{ t('home.stats') }}</h1>
       </div>
       <div class="statsWrapper">
         <div class="statCard" @click="routeTo('Tracks')">
           <h2>{{ tabsData.addedTracks.length }}</h2>
-          <p>Tracks</p>
+          <p>{{ t('home.tracks') }}</p>
           <base-icon
             class="fade_to_7 stat_icon"
             icon="music-note-simple"
@@ -16,17 +16,17 @@
         </div>
         <div class="statCard" @click="routeTo('Albums')">
           <h2>{{ tabsData.albums.length }}</h2>
-          <p>Albums</p>
+          <p>{{ t('home.albums') }}</p>
           <base-icon class="fade_to_7 stat_icon" :size="40" icon="disc" />
         </div>
         <div class="statCard stat_icon" @click="routeTo('Artists')">
           <h2>{{ tabsData.artists.length }}</h2>
-          <p>Artists</p>
+          <p>{{ t('home.artists') }}</p>
           <base-icon icon="user" :size="40" class="stat_icon fade_to_7" />
         </div>
         <div class="statCard" @click="routeTo('Folders')">
           <h2>{{ tabsData.folders.length }}</h2>
-          <p>Folders</p>
+          <p>{{ t('home.folders') }}</p>
           <base-icon
             icon="folder-simple"
             :size="40"
@@ -38,7 +38,7 @@
     <hr />
     <div class="stats">
       <div class="stats_title">
-        <h1>Daily Mixes</h1>
+        <h1>{{ t('home.mixes') }}</h1>
       </div>
       <div class="mixesWrapper">
         <mix-card

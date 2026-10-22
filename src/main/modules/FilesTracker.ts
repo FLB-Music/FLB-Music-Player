@@ -26,12 +26,16 @@ export class FilesTracker {
   addMultipleTracks(tracks: TrackType[]) {
     this.processedFiles = [...this.processedFiles, ...tracks];
   }
-  updateFile(track: TrackType) {
+  updateFile(track: TrackType, save = true) {
     const index = this.processedFiles.findIndex(
-      track => track.fileLocation === track.fileLocation
+      processedTrack => processedTrack.fileLocation === track.fileLocation
     );
-    this.processedFiles[index] = track;
-    this.saveChanges()
+    if (index === -1) {
+      this.processedFiles.unshift(track);
+    } else {
+      this.processedFiles[index] = track;
+    }
+    if (save) this.saveChanges()
   }
   checkForDeletedTracks() {
     console.log('Checking for deleted tracks');
@@ -46,6 +50,7 @@ export class FilesTracker {
     const indexOfDeletedTrack = this.processedFiles.findIndex(
       track => track.fileLocation === pathToTrack
     );
+    if (indexOfDeletedTrack === -1) return;
     this.processedFiles.splice(indexOfDeletedTrack, 1);
   }
   clearData() {

@@ -40,6 +40,7 @@ export default {
       "addTrack",
       "addMultipleTracks",
       "updateTrack",
+      "updateTrackCover",
       "deleteTrack",
       "restoreTracks",
       "restoreRecentlyPlayed",
@@ -119,6 +120,15 @@ export default {
       console.log(updatedTrack);
       this.updateTrack(updatedTrack);
     });
+    ipcRenderer.on("coversRepaired", (e, repairedTracks) => {
+      if (!repairedTracks || !repairedTracks.length) return;
+      repairedTracks.forEach((track) => {
+        this.updateTrackCover(track);
+      });
+      this.generateAlbumsData();
+      this.generateArtistsData();
+      this.generateFoldersData();
+    });
     ipcRenderer.on("deleteComplete", (e, pathToTrack) => {
       this.deleteTrack(pathToTrack);
     });
@@ -169,7 +179,7 @@ export default {
         console.log(total);
       }
       this.pushNotification({
-        title: "Adding tracks",
+        title: this.t('notification.addingTracks'),
         subTitle: `${currentIndex}/${total}`,
         type: "persist",
       });

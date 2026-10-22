@@ -10,7 +10,7 @@
       <img
         v-if="playingTrack.albumArt"
         id="tag_albumArt"
-        :src="'file://' + playingTrack.albumArt"
+        :src="toFileUrl(playingTrack.albumArt)"
       >
       <p v-if="!playingTrack.albumArt">
         No Album Art

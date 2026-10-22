@@ -1,7 +1,7 @@
 <template>
   <div class="tab groupedContentTab">
     <div v-if="albums.length === 0" class="loadingArea">
-      <p>No Albums</p>
+      <p>{{ t('albums.empty') }}</p>
     </div>
     <div v-if="!selectedGroup" class="groupCards grid_auto">
       <album-card
@@ -48,11 +48,11 @@
           </div>
           <img
             class="coverArt"
-            :src="'file://' + selectedGroup.tracks[0].albumArt"
+            :src="toFileUrl(selectedGroup.tracks[0].albumArt)"
           />
           <img
             id="blurred"
-            :src="'file://' + selectedGroup.tracks[0].albumArt"
+            :src="toFileUrl(selectedGroup.tracks[0].albumArt)"
           />
         </div>
         <div class="cardsWrapper">
@@ -99,7 +99,7 @@ export default {
       });
       this.addSelectedTrackToCustomQueue();
       this.pushNotification({
-        title: "Tracks addded to the queue",
+        title: this.t('queue.tracksQueued'),
         subTitle: null,
         type: "normal",
       });
@@ -108,7 +108,7 @@ export default {
       this.setPlayingTrack({ track: this.selectedGroup.tracks[0], index: 0 });
       this.overWriteCustomQueue(this.selectedGroup.tracks);
       this.pushNotification({
-        title: `Playing ${this.selectedGroup.name} album`,
+        title: this.t('group.playingAlbum', { name: this.selectedGroup.name }),
         subTitle: null,
         type: "normal",
       });
@@ -117,7 +117,7 @@ export default {
       this.setPlayingTrack({ track: album.tracks[0], index: 0 });
       this.overWriteCustomQueue(album.tracks);
       this.pushNotification({
-        title: `Playing ${album.name} album`,
+        title: this.t('group.playingAlbum', { name: album.name }),
         subTitle: null,
         type: "normal",
       });

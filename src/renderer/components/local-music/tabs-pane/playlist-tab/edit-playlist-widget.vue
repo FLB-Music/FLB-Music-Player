@@ -4,11 +4,11 @@
       v-model="newPlaylistName"
       class="inputElem"
       type="text"
-      placeholder="New Playlist Name"
+      :placeholder="t('playlist.newName')"
     >
     <base-button
       v-if="newPlaylistName"
-      text="Save"
+      :text="t('playlist.save')"
       @click.native="emitNewPlaylistName"
     />
   </div>

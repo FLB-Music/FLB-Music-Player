@@ -18,7 +18,7 @@
             icon="music-notes-simple"
           />
           <p v-if="!isCollapsed">
-            My Music
+            {{ t('nav.myMusic') }}
           </p>
         </router-link>
       </div>
@@ -37,7 +37,7 @@
             src="@icon/meld.svg"
           >
           <p v-if="!isCollapsed">
-            Meld
+            {{ t('nav.meld') }}
           </p>
         </router-link>
       </div>
@@ -53,7 +53,7 @@
             class="icon"
             icon="gear-six"
           />
-          <p v-if="!isCollapsed">Settings</p>
+          <p v-if="!isCollapsed">{{ t('nav.settings') }}</p>
         </a>
       </div>
       <div
@@ -67,7 +67,7 @@
             class="animated infinite icon"
             :size="24"
           />
-          <p v-if="!isCollapsed">Refresh</p>
+          <p v-if="!isCollapsed">{{ t('nav.refresh') }}</p>
         </a>
       </div>
     </div>
@@ -105,8 +105,8 @@ export default {
     },
     giveHope() {
       this.pushNotification({
-        title: `Meld is still under development`,
-        subTitle: 'Coming in the next Release',
+        title: this.t('meld.underDevelopment'),
+        subTitle: this.t('meld.comingSoon'),
         type: 'danger'
       });
     },

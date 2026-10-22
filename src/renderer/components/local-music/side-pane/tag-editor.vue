@@ -1,7 +1,7 @@
 <template>
   <div class="TagEditor widget blurred_bg blur10">
     <div class="widget_header">
-      <h1 class="widget_title">Tag Editor</h1>
+      <h1 class="widget_title">{{ t('tagEditor.title') }}</h1>
       <base-button
         icon="x"
         extra-class="widget_close shrink_icon circle shrink8"
@@ -11,21 +11,24 @@
     </div>
     <div class="trackTags">
       <div class="tag flex-col center-a">
-        <img id="coverArtTag" :src="'file://' + targetTrack.albumArt" />
+        <img
+          id="coverArtTag"
+          :src="targetTrack.albumArt ? toFileUrl(targetTrack.albumArt) : defaultCover"
+        />
         <p v-if="!targetTrack.albumArt" style="margin-top: 10px">
-          No Album Art 🖼
+          {{ t('tagEditor.noAlbumArt') }}
         </p>
         <div class="grid2 gap10">
-          <base-button text="Import Picture" @click.native="importCover" />
+          <base-button :text="t('tagEditor.importPicture')" @click.native="importCover" />
           <base-button
-            text="Search Online"
+            :text="t('tagEditor.searchOnline')"
             @click.native="UIcontrollerToggleProperty('showImageSearcher')"
           />
         </div>
       </div>
       <div class="tag bg1">
         <div class="flex-col gap10">
-          <p>Title🖊</p>
+          <p>{{ t('tagEditor.titleLabel') }}</p>
           <p
             style="
               white-space: nowrap;
@@ -41,13 +44,13 @@
         <input
           id="titleTag"
           v-model="newTitle"
-          placeholder="New Title"
+          :placeholder="t('tagEditor.newTitle')"
           class="inputElem"
         />
       </div>
       <div class="tag bg1">
         <div class="flex-col gap10">
-          <p>Artist🎙</p>
+          <p>{{ t('tagEditor.artistLabel') }}</p>
           <p class="text-small-1">
             {{ targetTrack.artist || 'unknown' }}
           </p>
@@ -55,13 +58,13 @@
         <input
           id="artistTag"
           v-model="newArtist"
-          placeholder="New Artist"
+          :placeholder="t('tagEditor.newArtist')"
           class="inputElem"
         />
       </div>
       <div class="tag bg1">
         <div class="flex-col gap10">
-          <p>Album🧊</p>
+          <p>{{ t('tagEditor.albumLabel') }}</p>
           <p class="text-small-1">
             {{ targetTrack.album }}
           </p>
@@ -69,7 +72,7 @@
         <input
           id="albumTag"
           v-model="newAlbum"
-          placeholder="New Album"
+          :placeholder="t('tagEditor.newAlbum')"
           class="inputElem"
         />
       </div>
@@ -77,7 +80,7 @@
     <base-button
       :active="true"
       :block="true"
-      text="Save Changes"
+      :text="t('tagEditor.saveChanges')"
       @click.native="saveChanges"
     />
   </div>
@@ -86,12 +89,16 @@
 <script>
 import { ipcRenderer } from 'electron';
 import { mapMutations } from 'vuex';
+import { toFileUrl } from '@/renderer/utils';
+
+const defaultCover = require('@img/flbdefault-cover.png');
 
 export default {
   name: 'TagEditor',
 
   data() {
     return {
+      defaultCover,
       possibleAlbumArt: [],
       selectedCover: '',
       isOnline: false,
@@ -154,11 +161,14 @@ export default {
     }
   },
   created() {
-    const fileType = this.targetTrack.fileLocation.split('.')[1].toLowerCase();
+    const fileType = this.targetTrack.fileLocation
+      .split('.')
+      .pop()
+      .toLowerCase();
     if (fileType !== 'mp3') {
       this.pushNotification({
-        title: 'The Tag Editor Only Supports mp3 files',
-        subTitle: 'Support for other file types is coming',
+        title: this.t('tagEditor.onlyMp3'),
+        subTitle: this.t('tagEditor.onlyMp3Hint'),
         type: 'warning',
         isPersistent: true
       });
@@ -167,7 +177,7 @@ export default {
   },
   mounted() {
     ipcRenderer.on('importedCoverArt', (e, payload) => {
-      document.querySelector('#coverArtTag').src = 'file://' + payload;
+      document.querySelector('#coverArtTag').src = toFileUrl(payload);
       this.importedAlbumArt = payload;
     });
     ipcRenderer.on('urlImage', (e, payload) => {

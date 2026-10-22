@@ -14,15 +14,15 @@
             <!-- <img
               v-for="track in folder.tracks.slice(0,3)"
               :key="track.fileLocation"
-              :src="'file://' + track.albumArt"
+              :src="toFileUrl(track.albumArt)"
             />
                     <img
               v-if="folder.tracks[1]"
-              :src="'file://' + folder.tracks[1].albumArt"
+              :src="toFileUrl(folder.tracks[1].albumArt)"
             />
             <img
               v-if="folder.tracks[2]"
-              :src="'file://' + folder.tracks[2].albumArt"
+              :src="toFileUrl(folder.tracks[2].albumArt)"
             /> -->
           </div>
         </div>
@@ -62,7 +62,7 @@
           <img
             v-if="selectedGroup.tracks[0].albumArt"
             id="blurred"
-            :src="'file://' + selectedGroup.tracks[0].albumArt"
+            :src="toFileUrl(selectedGroup.tracks[0].albumArt)"
           />
           <img
             v-if="!selectedGroup.tracks[0].albumArt"
@@ -122,7 +122,7 @@ export default {
       this.setPlayingTrack({ track: this.selectedGroup.tracks[0], index: 0 });
       this.overWriteCustomQueue(this.selectedGroup.tracks);
       this.pushNotification({
-        title: "Playing all tracks from",
+        title: this.t('group.playingAllFrom'),
         subTitle: this.selectedGroup.name,
         type: "normal",
       });

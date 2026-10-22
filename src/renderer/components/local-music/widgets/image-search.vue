@@ -1,7 +1,7 @@
 <template>
   <div class="image_searcher blurred_bg blur20 widget">
     <div class="widget_header">
-      <h1 class="widget_title">Image Searcher</h1>
+      <h1 class="widget_title">{{ t('imageSearch.title') }}</h1>
       <base-button
         icon="x"
         extra-class="widget_close shrink_icon circle shrink8"
@@ -20,7 +20,7 @@
       <base-button
         :active="true"
         :block="true"
-        text="Search"
+        :text="t('imageSearch.search')"
         @click.native="searchImage"
       />
     </div>

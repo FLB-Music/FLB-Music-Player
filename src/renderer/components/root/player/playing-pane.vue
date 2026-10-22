@@ -13,7 +13,7 @@
             {{ playingTrack.defaultTitle }}
           </p>
           <p
-            title="Go To Artist"
+            :title="t('player.goToArtist')"
             class="track_artist"
             @click="goToArtist(playingTrack.defaultArtist)"
           >
@@ -46,7 +46,7 @@
             />
             <base-button
               v-if="audioState.playing"
-              id="prev_bt"
+              id="pause_bt"
               icon="pause"
               :icon-size="23"
               @click="toggleIsPlaying"
@@ -85,14 +85,14 @@
           :small="true"
           icon="playlist"
           :active="showPlaylistWidget"
-          title="Playlist"
+          :title="t('player.playlist')"
           @click.native="showPlaylistAdder"
         />
         <base-button
           :small="true"
           icon="faders"
           :active="showEqualizerWidget"
-          title="Equalizer"
+          :title="t('player.equalizer')"
           @click.native="UIcontrollerToggleProperty('showEqualizerWidget')"
         />
         <base-button
@@ -100,7 +100,7 @@
           :small="true"
           icon="crop"
           :active="miniMode"
-          title="Mini Mode"
+          :title="t('player.miniMode')"
           @click.native="toggleMiniMode"
         />
       </div>
@@ -118,7 +118,7 @@
       id="lyrics_bt"
       icon="microphone"
       :active="showLyrics"
-      title="Lyrics"
+      :title="t('player.lyrics')"
       @click.native="showLyrics = !showLyrics"
     />
     <transition enter-active-class="animated fadeInUp faster">
@@ -126,12 +126,12 @@
         v-if="playingPaneExpanded && !showLyrics"
         class="que_wrappers round15"
       >
-        <h1>Queue</h1>
+        <h1>{{ t('player.queue') }}</h1>
         <div class="toggle_queue" />
         <queued-tracks />
       </div>
       <div v-if="playingPaneExpanded && showLyrics" class="lyrics_wrappers">
-        <h1>Lyrics</h1>
+        <h1>{{ t('player.lyrics') }}</h1>
         <lyrics />
       </div>
     </transition>
@@ -140,7 +140,7 @@
 
 <script>
 import { mapActions, mapMutations } from "vuex";
-import { sendMessageToNode } from "@/renderer/utils";
+import { sendMessageToNode, toFileUrl } from "@/renderer/utils";
 import { initializeAudio } from "../equalizer/equalizer";
 /* eslint-disable */
 const defaultCover = require("@img/flbdefault-cover.png");
@@ -194,7 +194,7 @@ export default {
       const playingTrackAlbumArt =
         this.$store.state.PlaybackManger.playingTrackInfo.track.albumArt;
       if (playingTrackAlbumArt) {
-        return `file://${playingTrackAlbumArt}`;
+        return toFileUrl(playingTrackAlbumArt);
       }
       return defaultCover;
     },
@@ -244,7 +244,7 @@ export default {
       this.toggleShuffler();
       const state = this.audioState.shuffle ? "On" : "Off";
       this.pushNotification({
-        title: `Shuffle ${state}`,
+        title: this.t(state === 'On' ? 'player.shuffleOn' : 'player.shuffleOff'),
         subTitle: null,
         type: "normal",
       });
@@ -260,14 +260,14 @@ export default {
       if (this.isInFavorites) {
         this.deleteSelectedTrackFromPlaylist(this.playingTrack);
         this.pushNotification({
-          title: `Removed from Favorites`,
+          title: this.t('player.removedFromFavorites'),
           subTitle: `${this.playingTrack.defaultTitle}`,
           type: "danger",
         });
       } else {
         this.addSelectedTracksToPlaylist("Favorites");
         this.pushNotification({
-          title: `Added to Favorites`,
+          title: this.t('player.addedToFavorites'),
           subTitle: `${this.playingTrack.defaultTitle}`,
           type: "normal",
         });
@@ -277,7 +277,7 @@ export default {
       this.toggleRepeat();
       const state = this.audioState.repeat ? "On" : "Off";
       this.pushNotification({
-        title: `Repeat ${state}`,
+        title: this.t(state === 'On' ? 'player.repeatOn' : 'player.repeatOff'),
         subTitle: null,
         type: "normal",
       });

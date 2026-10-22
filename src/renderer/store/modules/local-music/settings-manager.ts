@@ -1,5 +1,14 @@
 import { sendMessageToNode } from '@/renderer/utils';
 import { FolderInfoType, SettingsType } from '@/types';
+import { LanguageType } from '@/renderer/i18n';
+import Vue from 'vue';
+
+/**
+ * The language of the app. It lives in its own reactive object because the
+ * settings object is replaced when the settings are restored, the components
+ * that show a translated text would not be updated otherwise.
+ */
+export const currentLanguage = Vue.observable({ value: 'en' as LanguageType });
 
 interface SettingPayloadType {
   property: string;
@@ -17,18 +26,26 @@ const state = {
     volume: 1,
     scannedFolders: [],
     enableEqualizer: false,
+    language: 'en',
   }
 };
 const mutations = {
   setSettingValue (state: any, payload: SettingPayloadType) {
-    state.settings[payload.property] = payload.newValue;
+    // Vue.set is needed for the settings that were not part of the file yet
+    Vue.set(state.settings, payload.property, payload.newValue);
+    if (payload.property === 'language') {
+      currentLanguage.value = payload.newValue;
+    }
     sendMessageToNode('updateSettings', state.settings);
   },
   restoreSettings (state: any, payload: SettingsType) {
-    state.settings = payload;
+    // the settings of an older version do not have every option, the missing
+    // ones keep their default value
+    state.settings = { ...state.settings, ...payload };
+    currentLanguage.value = state.settings.language || 'en';
   },
   setScannedFolders (state: any, payload: Array<FolderInfoType>) {
-    state.settings.scannedFolders = payload;
+    Vue.set(state.settings, 'scannedFolders', payload);
   }
 };
 

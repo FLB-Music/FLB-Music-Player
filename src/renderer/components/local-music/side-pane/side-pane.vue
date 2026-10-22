@@ -39,7 +39,7 @@
           :icon="tab.icon"
           class="icon"
         />
-        <p>{{ tab.name }}</p>
+        <p>{{ t('player.' + tab.name.toLowerCase()) }}</p>
       </div>
     </div>
     <track-info

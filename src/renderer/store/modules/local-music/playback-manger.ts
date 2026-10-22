@@ -4,7 +4,7 @@ import UIController from "./uicontroller";
 import TabsManager from "./tabs-manager";
 import TrackSelector from "./track-selector";
 import { sendMessageToNode } from "@/renderer/utils";
-import { removeDuplicates } from "@/shared-utils";
+import { removeDuplicates, sortArrayOfObjects } from "@/shared-utils";
 import { geniusSongType, TrackLyricsType, TrackType } from "@/types";
 import { updateMediaInfo } from "@/renderer/global-activities/update-windows-media-info";
 
@@ -52,7 +52,7 @@ const mutations = {
       ) {
         TabsManager.state.tabsData.recentlyPlayedTracks.unshift(payload.track);
         TabsManager.state.tabsData.recentlyPlayedTracks =
-          TabsManager.state.tabsData.recentlyPlayedTracks.splice(0, 20);
+          TabsManager.state.tabsData.recentlyPlayedTracks.slice(0, 20);
         TabsManager.state.tabsData.recentlyPlayedTracks = removeDuplicates(
           TabsManager.state.tabsData.recentlyPlayedTracks,
           "defaultTitle"
@@ -110,6 +110,9 @@ const mutations = {
       document.querySelector("audio")?.pause();
     }
   },
+  setPlayingState(state: any, payload: boolean) {
+    state.audioState.playing = payload;
+  },
 };
 const actions: ActionTree<PlaybackManagerStateInterface, any> = {
   toggleIsPlaying({ state }) {
@@ -159,46 +162,76 @@ const actions: ActionTree<PlaybackManagerStateInterface, any> = {
       }
     });
   },
-  determineNextTrack({ state, commit }, direction) {
-    const indexOfPlayingTrack = state.customQueue.findIndex(
-      (track) =>
-        track.fileLocation === state.playingTrackInfo.track?.fileLocation
-    );
+  determineNextTrack({ state, commit, rootState }, direction) {
+    const playingTrack = state.playingTrackInfo.track;
+    if (!playingTrack) return;
+
     if (state.audioState.repeat) {
       const audio = document.querySelector("audio") as HTMLAudioElement;
-      audio.currentTime = 0;
+      if (audio) audio.currentTime = 0;
       return;
     }
+
+    const indexIn = (list: TrackType[]) =>
+      list.findIndex(
+        (track) => track.fileLocation === playingTrack.fileLocation
+      );
+    const hasNext = (list: TrackType[], index: number) =>
+      direction === "next" ? index + 1 < list.length : index - 1 >= 0;
+
+    // The playback follows the queue, but the queue regularly does not have
+    // the track that is playing or the next one. When that happens the
+    // library is used so the buttons keep working.
+    let list: TrackType[] = state.customQueue;
+    let index = indexIn(list);
+
+    if (index === -1 || !hasNext(list, index)) {
+      const library = [...TabsManager.state.tabsData.addedTracks];
+      sortArrayOfObjects(library, rootState.sortParameter);
+      if (rootState.flipSortOrder) library.reverse();
+      const libraryIndex = indexIn(library);
+      if (libraryIndex !== -1 && hasNext(library, libraryIndex)) {
+        list = library;
+        index = libraryIndex;
+      }
+    }
+
+    if (index === -1) return;
+
     if (state.audioState.shuffle) {
-      let randomIndex = Math.floor(Math.random() * state.customQueue.length);
-      if (indexOfPlayingTrack === randomIndex) {
-        randomIndex = Math.floor(Math.random() * state.customQueue.length);
+      let randomIndex = Math.floor(Math.random() * list.length);
+      if (randomIndex === index) {
+        randomIndex = (randomIndex + 1) % list.length;
       }
       commit("setPlayingTrack", {
-        track: state.customQueue[randomIndex],
+        track: list[randomIndex],
         index: randomIndex,
       });
       return;
     }
+
     if (direction === "next") {
-      if (indexOfPlayingTrack === state.customQueue["length"] - 1) {
+      if (index === list.length - 1) {
+        // last track of the list
         return;
       }
-      const nextTrack = state.customQueue[indexOfPlayingTrack + 1];
       commit("setPlayingTrack", {
-        track: nextTrack,
-        index: indexOfPlayingTrack + 1,
+        track: list[index + 1],
+        index: index + 1,
       });
       return;
     }
+
     if (direction === "prev") {
-      if (indexOfPlayingTrack === 0) {
+      if (index === 0) {
+        // restart the track that is playing
+        const audio = document.querySelector("audio") as HTMLAudioElement;
+        if (audio) audio.currentTime = 0;
         return;
       }
-      const nextTrack = state.customQueue[indexOfPlayingTrack - 1];
       commit("setPlayingTrack", {
-        track: nextTrack,
-        index: indexOfPlayingTrack - 1,
+        track: list[index - 1],
+        index: index - 1,
       });
       return;
     }

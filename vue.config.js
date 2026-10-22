@@ -19,6 +19,11 @@ module.exports = {
         '@fonts': rendererDir('assets', 'fonts')
       }
     },
+    externals: {
+      // jimp is only used to convert the few cover arts the browser cannot
+      // display, keeping it external avoids bloating the main bundle
+      jimp: 'commonjs jimp'
+    },
     plugins: [
       new WebpackBar({
         name: 'Building FLB Music Player',

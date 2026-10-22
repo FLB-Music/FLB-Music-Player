@@ -2,7 +2,7 @@
   <div class="TrackBar">
     <audio
       id="audioTag"
-      :src="playingTrack.r_fileLocation || playingTrack.previewURL"
+      :src="audioSource"
       autoplay
       ref="audioTag"
     />
@@ -28,6 +28,7 @@
 
 <script>
 import { mapActions, mapMutations } from "vuex";
+import { toFileUrl } from "@/renderer/utils";
 import "@/renderer/components/root/equalizer/equalizer";
 
 export default {
@@ -49,8 +50,32 @@ export default {
     playingTrack() {
       return this.$store.state.PlaybackManger.playingTrackInfo.track;
     },
+    audioState() {
+      return this.$store.state.PlaybackManger.audioState;
+    },
+    audioSource() {
+      const track = this.playingTrack || {};
+      if (track.fileLocation) {
+        return toFileUrl(track.fileLocation);
+      }
+      if (track.previewURL) {
+        return track.previewURL;
+      }
+      return track.r_fileLocation || "";
+    },
   },
   watch: {
+    // makes sure the new track starts playing right away
+    playingTrack() {
+      this.$nextTick(() => {
+        const audio = document.querySelector("#audioTag");
+        if (!audio) return;
+        if (this.audioState.playing) {
+          const playing = audio.play();
+          if (playing && playing.catch) playing.catch(() => {});
+        }
+      });
+    },
     remainingTime(value) {
       if (value < 14) {
         //this.crossFade();
@@ -136,9 +161,10 @@ export default {
       this.remainingTime = Math.floor(audio.duration - audio.currentTime);
       const percent = Math.floor((audio.currentTime / audio.duration) * 100);
       this.seekBarWidth = `${percent}%`;
-      if (audio.currentTime === audio.duration) {
-        this.determineNextTrack("next");
-      }
+    });
+    // the next track starts as soon as the current one is over
+    audio.addEventListener("ended", () => {
+      this.determineNextTrack("next");
     });
     progressBar.addEventListener("mousemove", (e) => {
       const posX = e.clientX - progressBar.getBoundingClientRect().x;
@@ -153,10 +179,14 @@ export default {
         percentageSeek - 2
       }%`;
     });
-    // handle being pause by os
+    // handle being paused by the os
     audio.addEventListener("pause", () => {
-      const playIcon = document.querySelector("#playIcon");
-      if (playIcon) playIcon.click();
+      const track = this.$store.state.PlaybackManger.playingTrackInfo.track;
+      if (!track) return;
+      // the pause of the track that just ended must not change the state of
+      // the track that is playing now
+      if (audio.src !== toFileUrl(track.fileLocation)) return;
+      this.$store.commit("setPlayingState", false);
     });
   },
 };

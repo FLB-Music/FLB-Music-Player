@@ -9,6 +9,7 @@
 
 <script>
 /* eslint-disable */
+import { toFileUrl } from '@/renderer/utils';
 const defaultCover = require('@img/flbdefault-cover.png');
 /* eslint-disable */
 export default {
@@ -23,7 +24,7 @@ export default {
     },
     albumArt() {
       if (this.playingTrack?.albumArt) {
-        return `file://${this.playingTrack.albumArt}`;
+        return toFileUrl(this.playingTrack.albumArt);
       }
       return defaultCover;
     }

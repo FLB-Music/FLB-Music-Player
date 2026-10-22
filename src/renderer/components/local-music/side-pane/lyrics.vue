@@ -85,7 +85,7 @@
         <div>
           <base-button
             id="autoScroll"
-            text="Auto Scroll"
+            :text="t('lyrics.autoScroll')"
             :active="autoScroll"
             @click.native="autoScroll = !autoScroll"
           />
@@ -116,7 +116,7 @@
           :tiny="true"
           icon="crop"
           :active="bigLyrics"
-          title="Big Lyrics"
+          :title="t('lyrics.bigLyrics')"
           @click.native="bigLyrics = !bigLyrics"
         />
       </div>

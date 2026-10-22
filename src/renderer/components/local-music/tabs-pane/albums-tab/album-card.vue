@@ -6,7 +6,7 @@
     <img
       v-if="album.tracks[0].albumArt"
       class="coverArt"
-      :src="'file://' + album.tracks[0].albumArt"
+      :src="toFileUrl(album.tracks[0].albumArt)"
     >
     <img
       v-if="!album.tracks[0].albumArt"

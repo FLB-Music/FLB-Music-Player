@@ -5,7 +5,7 @@
       <input
         id="search"
         v-model="searchQuery"
-        placeholder="Search"
+        :placeholder="t('search.placeholder')"
         class="inputElem bg1"
         @keyup="search(searchQuery)"
         @keyup.escape="cancelSearch"

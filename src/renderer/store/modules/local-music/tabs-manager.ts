@@ -91,10 +91,29 @@ const mutations = {
     //   PlaybackManger.state.playingTrackInfo.track.albumArt = payload.albumArt;
     // }
   },
+  /**
+   * Updates the cover art of a track in place, the rest of the track data
+   * stays untouched.
+   */
+  updateTrackCover(state: TabsManagerStateInterface, payload: TrackType) {
+    const updateCover = (tracks: Array<TrackType>) => {
+      tracks.forEach((track) => {
+        if (track.fileLocation === payload.fileLocation) {
+          track.albumArt = payload.albumArt;
+        }
+      });
+    };
+    updateCover(state.tabsData.addedTracks);
+    updateCover(state.tabsData.recentlyPlayedTracks);
+    state.tabsData.playlists.forEach((playlist) => {
+      updateCover(playlist.tracks);
+    });
+  },
   deleteTrack(state: TabsManagerStateInterface, payload: string) {
     const indexOfDeletedTrack = state.tabsData.addedTracks.findIndex(
       (track) => track.fileLocation === payload
     );
+    if (indexOfDeletedTrack === -1) return;
     state.tabsData.addedTracks.splice(indexOfDeletedTrack, 1);
   },
   removeFolderTracks(state: TabsManagerStateInterface, payload: string) {

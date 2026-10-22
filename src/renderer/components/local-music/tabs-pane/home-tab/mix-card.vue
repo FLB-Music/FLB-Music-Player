@@ -5,7 +5,7 @@
         <h2>{{ cardTitle }}</h2>
         <base-button
           icon="play"
-          text="Play Mix"
+          :text="t('home.playMix')"
           @click.native="playMix"
         />
       </div>

@@ -5,13 +5,12 @@
       class="queue-actions blurred_bg blur20 zIndex2 w-100 flex center-a"
     >
       <base-button
-        text="Clear Queue"
+        :text="t('queue.clear')"
         @click.native="clearCustomQueue"
       />
     </div>
     <div
       class="queuedTracksWrapper round20 h-90"
-      @scroll="virtualize($event)"
     >
       <div class="tracksWrapper">
         <draggable
@@ -21,17 +20,13 @@
           @end="drag = false"
         >
           <que-track
-            v-for="(track, index) in tracksToRender"
+            v-for="track in customQueue"
             :key="track.fileLocation"
             :track="track"
-            :index="index"
+            :index="getQueueIndex(track)"
           />
         </draggable>
       </div>
-      <div
-        :style="{ height: compHeight }"
-        class="filler"
-      />
     </div>
   </div>
 </template>
@@ -44,9 +39,7 @@ export default {
 
   data() {
     return {
-      queue: [],
-      tracksToRender: [],
-      NO_OF_TRACKS_TO_RENDER: 30
+      queue: []
     };
   },
   computed: {
@@ -75,14 +68,6 @@ export default {
       this.scrollToPlayingTrack();
       return this.$store.state.PlaybackManger.playingTrackInfo.track
         .fileLocation;
-    },
-    compHeight() {
-      return `${this.customQueue.length * 26.5}px`
-    }
-  },
-  watch: {
-    customQueue() {
-      this.virtualize();
     }
   },
   methods: {
@@ -95,16 +80,17 @@ export default {
     playQueuedTrack(track) {
       this.setPlayingTrack({ track, index: 0 });
     },
-    virtualize() {
-      console.log('Virtualizing Queue');
-      const container = document.querySelector('.queuedTracksWrapper');
-      const scrollTop = Math.trunc(
-        container.scrollTop / this.NO_OF_TRACKS_TO_RENDER
+    /**
+     * The displayed queue can contain the currently playing track even when
+     * it is not part of the real queue, the index has to point to the real
+     * queue so the right track gets removed.
+     */
+    getQueueIndex(track) {
+      const realQueue = this.$store.state.PlaybackManger.customQueue;
+      const index = realQueue.findIndex(
+        queuedTrack => queuedTrack.fileLocation === track.fileLocation
       );
-      const start = scrollTop;
-      const end = scrollTop + this.NO_OF_TRACKS_TO_RENDER;
-      console.log(start, end);
-      this.tracksToRender = this.customQueue.slice(start, end);
+      return index === -1 ? 0 : index;
     },
     scrollToPlayingTrack() {
       // setTimeout(() => {
@@ -115,12 +101,6 @@ export default {
       //   console.log(index);
       // }, 100);
     }
-  },
-  mounted() {
-    this.tracksToRender = this.customQueue.slice(
-      0,
-      this.NO_OF_TRACKS_TO_RENDER
-    );
   }
 };
 </script>
@@ -142,13 +122,11 @@ export default {
     border-radius: 0px 0px 20px 20px;
   }
   .tracksWrapper {
-    overflow: hidden;
-    position: sticky;
+    position: relative;
     top: 0px;
     left: 0px;
     right: 0px;
     width: 100%;
-    height: 100%;
     &:last-child {
       border-bottom: none !important;
     }

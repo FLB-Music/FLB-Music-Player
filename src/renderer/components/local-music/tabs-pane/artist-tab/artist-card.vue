@@ -7,7 +7,7 @@
       <img
         v-if="artistPicture"
         class="coverArt roundImage"
-        :src="'file://' + artistPicture"
+        :src="toFileUrl(artistPicture)"
       >
       <letter-card
         v-if="!artistPicture"

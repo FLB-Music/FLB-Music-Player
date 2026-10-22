@@ -14,6 +14,7 @@ export class Settings {
     volume: 1,
     foldersToScan: [paths.musicFolder],
     enableEqualizer: false,
+    language: "en",
   };
   constructor() {
     if (fs.existsSync(paths.settingsLocation)) {
@@ -21,7 +22,9 @@ export class Settings {
         const data = JSON.parse(
           fs.readFileSync(paths.settingsLocation, "utf-8")
         );
-        this.settings = data;
+        // the settings of an older version do not have every option, the
+        // missing ones keep their default value
+        this.settings = { ...this.settings, ...data };
       } catch (error) {
         console.log("An error occurred while reading the settings file");
       }

@@ -1,72 +1,53 @@
-interface FolderContent {
-  name: string;
-  extension: string;
-}
+import fs from "fs";
+import path from "path";
+import { SUPPORTED_FORMATS } from "../utils/constants";
 
-interface ParsedPath {
-  root: string;
-  dir: string;
-  base: string;
-  ext: string;
-  name: string;
-}
+/**
+ * Walks through a folder (and all of its sub folders) and collects every
+ * audio file it finds.
+ */
+export default function parseFolder(folder: string): string[] {
+  console.log("**********" + folder + "**********");
 
-import fs from 'fs';
-import path from 'path';
+  const foundFiles: string[] = [];
+  const foldersToVisit: string[] = [folder];
+  const visitedFolders = new Set<string>();
 
-export default function parseFolder (
-  folder: string,
-  isStartingFolder = true,
-  subFolderStack: string[] = [],
-  filesStack: string[] = []
-): string[] {
-  console.log('**********' + folder + '**********');
-  if (!isStartingFolder && subFolderStack.length === 0) {
-    console.log('===================Done====================');
-    return filesStack;
+  while (foldersToVisit.length) {
+    const currentFolder = foldersToVisit.shift() as string;
+    if (!currentFolder || visitedFolders.has(currentFolder)) continue;
+    visitedFolders.add(currentFolder);
+
+    let entries: string[] = [];
+    try {
+      entries = fs.readdirSync(currentFolder);
+    } catch (error) {
+      console.log("Skipped " + currentFolder + " because");
+      console.log(error);
+      continue;
+    }
+
+    for (const entry of entries) {
+      const entryPath = path.join(currentFolder, entry);
+      let stats: fs.Stats;
+      try {
+        stats = fs.statSync(entryPath);
+      } catch (error) {
+        continue;
+      }
+
+      if (stats.isDirectory()) {
+        foldersToVisit.push(entryPath);
+        continue;
+      }
+
+      const extension = path.extname(entry).toLowerCase();
+      if (SUPPORTED_FORMATS.includes(extension)) {
+        foundFiles.push(entryPath);
+      }
+    }
   }
-  const supportedFileTypes = [
-    '.mp3',
-    '.wav',
-    '.ogg',
-    '.aac',
-    '.flac',
-    '.webm',
-    '.m4a'
-  ];
-  try {
-    const folderContents: FolderContent[] = fs
-      .readdirSync(folder)
-      .map((content: string) => path.join(folder, content))
-      .map((content: string) => path.parse(content))
-      .map((pathObject: ParsedPath) => {
-        const po: FolderContent = { name: pathObject.name, extension: pathObject.ext };
-        return po;
-      });
 
-    const subFolders: string[] = folderContents
-      .filter(content => content.extension === '')
-      .map(subFolder => path.join(folder, subFolder.name));
-
-    const files = folderContents
-      .filter(
-        content =>
-          content.extension !== '' &&
-          supportedFileTypes.includes(content.extension)
-      )
-      .map(file => path.join(folder, file.name) + file.extension);
-
-    filesStack = [...filesStack, ...files];
-
-    subFolderStack = [...subFolderStack, ...subFolders];
-  } catch (error) {
-    console.log('Skipped ' + folder + ' because');
-    console.log(error);
-    subFolderStack.shift();
-  } finally {
-    const firstSubFolder: string = subFolderStack.shift() || '';
-    // eslint-disable-next-line no-unsafe-finally
-    return parseFolder(firstSubFolder, false, subFolderStack, filesStack);
-  }
+  console.log("===================Done====================");
+  return foundFiles;
 }
-

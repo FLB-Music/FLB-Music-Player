@@ -31,6 +31,7 @@
     "genius-lyrics-api": "3.0.6",
     "glob": "7.1.7",
     "is-online": "^9.0.1",
+    "jimp": "^0.22.12",
     "json5": "2.2.0",
     "lodash": "4.17.21",
     "music-metadata": "7.11.4",

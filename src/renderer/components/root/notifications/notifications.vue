@@ -38,7 +38,7 @@ export default {
       this.pushNotification(notification);
     });
     ipcRenderer.on('closeNotification', (e, title) => {
-      this.removeNotification(title);
+      this.removeNotification(this.t(title));
     });
   }
 };
