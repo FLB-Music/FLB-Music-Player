@@ -110,9 +110,15 @@ export default {
   width: 100%;
   height: 95%;
   .queuedTracksWrapper {
-    width: 103%;
+    // the side pane clips whatever goes past it, the old 103% width pushed
+    // the scrollbar outside of the pane, where it was cut in half and could
+    // not be grabbed
+    box-sizing: border-box;
+    width: 100%;
     height: 100%;
+    overflow-x: hidden;
     overflow-y: scroll;
+    scroll-behavior: auto !important;
   }
   .queue-actions {
     position: absolute;

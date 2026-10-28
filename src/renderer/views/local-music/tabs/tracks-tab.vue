@@ -41,8 +41,11 @@
 import { mapMutations } from 'vuex';
 import { sortArrayOfObjects } from '@/shared-utils';
 
-// Space the row of the track that is playing needs on top of a normal row
-const PLAYING_TRACK_SPACE = 12;
+// Space the row of the track that is playing needs on top of a normal row.
+// The playing row gets a 5px top margin and loses its 1px bottom border, so
+// it only grows by 4px. Adding more than that would push the end of the
+// scroll range past the point where the last track can be reached.
+const PLAYING_TRACK_SPACE = 4;
 
 export default {
   name: 'TracksTab',
@@ -58,7 +61,9 @@ export default {
       // range too short and hid the last tracks of the library.
       rowHeight: 22.4,
       windowSize: 30,
-      overscan: 5,
+      // Rows rendered above and below the visible area. They are what keeps
+      // the list from showing empty gaps while a flick is still settling
+      overscan: 7,
       scrollFrame: null,
       scrollTimeout: null,
       measureTimer: null,
@@ -254,8 +259,14 @@ export default {
   // the browser must not try to compensate the scroll position when the
   // rendered part of the list changes
   overflow-anchor: none;
-  width: 102%;
-  margin-left: -10px;
+  // the global `* { scroll-behavior: smooth }` makes every scroll animate,
+  // which fights with the virtual list and makes the movement feel laggy
+  scroll-behavior: auto !important;
+  // the tab clips whatever hangs outside of it, an overhang of a couple of
+  // pixels is all it takes to cut the scrollbar in half and make it
+  // impossible to grab
+  box-sizing: border-box;
+  width: 100%;
   .virtualList {
     position: relative;
     width: 100%;
@@ -263,10 +274,20 @@ export default {
   .tracksWrapper {
     position: absolute;
     top: 0;
-    left: 10px;
+    left: 0;
     right: 0;
     padding: 0 10px;
     will-change: transform;
+    // the global `* { transition: 0.2s ease }` also animates the transform
+    // used to place the window, so the rows kept chasing the scroll bar.
+    // The window has to jump, never glide
+    transition: none !important;
+  }
+  // only the hover colour may animate on a row, animating anything else
+  // (margins, transforms) makes the rows drift out of the grid while the
+  // list is moving
+  .TrackCard {
+    transition: background-color 0.15s ease;
   }
   .showHiddenActions {
     background: #0062ff !important;
@@ -277,8 +298,11 @@ export default {
   }
   .trackActions {
     position: sticky;
-    background-color: rgba(0, 0, 0, 0.247);
-    backdrop-filter: blur(10px);
+    background-color: rgba(0, 0, 0, 0.42);
+    // a sticky bar with a big backdrop blur is re-blurred on every frame the
+    // list moves under it, the radius was lowered and the background made
+    // a bit more opaque to keep the same look for a fraction of the cost
+    backdrop-filter: blur(6px);
     top: 0;
     left: 0;
     width: 100%;
