@@ -17,6 +17,12 @@
     >
       <settings v-if="showSettings" />
     </transition>
+    <transition
+      enter-active-class="animated slideInUp extrafaster"
+      leave-active-class="animated slideOutDown extrafaster"
+    >
+      <party-panel v-if="showPartyWidget" />
+    </transition>
     <on-board v-if="showOnboard" @closeOnBoard="showOnboard = false" />
     <notifications />
     <section id="main-view" class="flex flex-col h-100">
@@ -51,6 +57,9 @@ export default {
     },
     showSettings() {
       return this.$store.state.UIController.UIProperties.showSettings;
+    },
+    showPartyWidget() {
+      return this.$store.state.UIController.UIProperties.showPartyWidget;
     },
     accentColor() {
       return this.$store.state.SettingsManager.settings.accentColor;

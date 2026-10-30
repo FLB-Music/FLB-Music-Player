@@ -5,6 +5,7 @@ import { app } from 'electron';
 const APP_DATA_FOLDER = app.getPath('userData');
 const ALBUM_ART_FOLDER = path.join(APP_DATA_FOLDER, 'Album Art');
 const ARTIST_PICTURE_FOLDER = path.join(APP_DATA_FOLDER, 'Artist Pictures');
+const LYRICS_FOLDER = path.join(APP_DATA_FOLDER, 'Lyrics');
 const MUSIC_FOLDER = path.join(os.homedir(), 'Music');
 const FLBING_FOLDER = path.join(MUSIC_FOLDER, 'FLBing');
 try {
@@ -15,6 +16,9 @@ try {
   if (!fs.existsSync(ARTIST_PICTURE_FOLDER)) {
     fs.mkdirSync(ARTIST_PICTURE_FOLDER);
   }
+  if (!fs.existsSync(LYRICS_FOLDER)) {
+    fs.mkdirSync(LYRICS_FOLDER);
+  }
 } catch (error) {
   console.log('Error Creating Folders');
   console.log(error);
@@ -24,6 +28,7 @@ export const paths = {
   appFolder: APP_DATA_FOLDER,
   albumArtFolder: ALBUM_ART_FOLDER,
   artistPictureFolder: ARTIST_PICTURE_FOLDER,
+  lyricsFolder: LYRICS_FOLDER,
   musicFolder: MUSIC_FOLDER,
   flbingFolder: FLBING_FOLDER,
   filesTrackerLocation: path.join(APP_DATA_FOLDER, 'processedFiles.json'),

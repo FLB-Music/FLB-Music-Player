@@ -34,6 +34,7 @@ export { default as filterSlider } from "./renderer/components/root/equalizer/fi
 export { default as triangleSlider } from "./renderer/components/root/equalizer/triangle-slider.vue";
 export { default as spatializer } from "./renderer/components/root/equalizer/spatializer.vue";
 export { default as feedbackWidget } from "./renderer/components/root/feedback-widget.vue";
+export { default as partyPanel } from "./renderer/components/root/party/party-panel.vue";
 export { default as ipcListener } from "./renderer/components/root/ipc-listener.vue";
 export { default as baseNotification } from "./renderer/components/root/notifications/base-notification.vue";
 export { default as notifications } from "./renderer/components/root/notifications/notifications.vue";
@@ -84,6 +85,7 @@ export { default as PhMusicNoteSimple } from "phosphor-vue/src/components/PhMusi
 export { default as PhMusicNotesSimple } from "phosphor-vue/src/components/PhMusicNotesSimple.vue";
 export { default as PhPencilSimple } from "phosphor-vue/src/components/PhPencilSimple.vue";
 export { default as PhPlay } from "phosphor-vue/src/components/PhPlay.vue";
+export { default as PhPlus } from "phosphor-vue/src/components/PhPlus.vue";
 export { default as PhPlaylist } from "phosphor-vue/src/components/PhPlaylist.vue";
 export { default as PhQueue } from "phosphor-vue/src/components/PhQueue.vue";
 export { default as PhRepeat } from "phosphor-vue/src/components/PhRepeat.vue";
@@ -95,4 +97,5 @@ export { default as PhSortAscending } from "phosphor-vue/src/components/PhSortAs
 export { default as PhTrashSimple } from "phosphor-vue/src/components/PhTrashSimple.vue";
 export { default as PhXCircle } from "phosphor-vue/src/components/PhXCircle.vue";
 export { default as PhUser } from "phosphor-vue/src/components/PhUser.vue";
+export { default as PhUserPlus } from "phosphor-vue/src/components/PhUserPlus.vue";
 export { default as PhX } from "phosphor-vue/src/components/PhX.vue";

@@ -14,6 +14,12 @@
       <p class="card_subTitle weight300 text-small-2">
         {{ track.defaultArtist }}
       </p>
+      <p
+        v-if="track.suggestedBy"
+        class="card_subTitle weight300 text-small-2 party_suggestion"
+      >
+        🎉 {{ t('party.suggestedBy', { name: track.suggestedBy.guestName }) }}
+      </p>
     </div>
     <base-button
       icon="x"
@@ -61,6 +67,10 @@ export default {
   }
   .card_title {
     width: 90%;
+  }
+
+  .party_suggestion {
+    color: var(--accentColor);
   }
 
   .removeBt {

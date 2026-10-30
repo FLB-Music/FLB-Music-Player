@@ -33,6 +33,7 @@ export default {
   data() {
     return {
       statsSent: false,
+      queuePushTimer: null,
     };
   },
   methods: {
@@ -56,6 +57,8 @@ export default {
       "updatePendingTrackState",
       "seIstOnlineState",
       "setPlayingTrack",
+      "queueTracksFromGuest",
+      "removeQueuedTracksByGuest",
     ]),
     ...mapActions([
       "generateAlbumsData",
@@ -81,10 +84,34 @@ export default {
         console.log("playing last track");
       }
     },
+    /**
+     * Sends the current queue to the main process so the party server can
+     * share it with the guests. Only the host of the party pushes this.
+     */
+    pushPartyQueueSnapshot() {
+      if (this.$store.state.PartyManager.mode !== "host") return;
+      clearTimeout(this.queuePushTimer);
+      this.queuePushTimer = setTimeout(() => {
+        const playback = this.$store.state.PlaybackManger;
+        ipcRenderer.send("partyQueueUpdate", {
+          queue: playback.customQueue,
+          nowPlaying: playback.playingTrackInfo.track,
+          playing: playback.audioState.playing,
+        });
+      }, 250);
+    },
   },
   computed: {
     appIsOnline() {
       return this.$store.state.appIsOnline;
+    },
+    /** Changes in any of these mean the party queue has to be pushed. */
+    partyQueueSnapshotSource() {
+      return {
+        queue: this.$store.state.PlaybackManger.customQueue,
+        nowPlaying: this.$store.state.PlaybackManger.playingTrackInfo.track,
+        playing: this.$store.state.PlaybackManger.audioState.playing,
+      };
     },
   },
   watch: {
@@ -94,10 +121,36 @@ export default {
         this.getLyrics();
       }
     },
+    partyQueueSnapshotSource: {
+      deep: true,
+      handler() {
+        this.pushPartyQueueSnapshot();
+      },
+    },
   },
   mounted() {
     ipcRenderer.send("initializeSettings");
     ipcRenderer.send("initializeApp");
+
+    // PARTY MODE LISTENERS
+    ipcRenderer.on("partyGuestTrackRequested", (e, payload) => {
+      const { fileLocation, suggestedBy, uploadedTrack } = payload;
+      if (uploadedTrack) {
+        this.queueTracksFromGuest([{ ...uploadedTrack, suggestedBy }]);
+        return;
+      }
+      const track = this.$store.state.TabsManager.tabsData.addedTracks.find(
+        (candidate) => candidate.fileLocation === fileLocation
+      );
+      if (track) this.queueTracksFromGuest([{ ...track, suggestedBy }]);
+    });
+    ipcRenderer.on("partyGuestLeft", (e, payload) => {
+      this.removeQueuedTracksByGuest(payload.guestId);
+    });
+    ipcRenderer.on("partyGuestsUpdate", (e, guests) => {
+      this.$store.commit("setGuests", guests);
+    });
+
     ipcRenderer.on("newTrack", (e, newTrack) => {
       this.addTrack(newTrack);
     });

@@ -107,8 +107,6 @@
           @click="toggleDynamicAccentColor"
         >
           <p>{{ t('settings.dynamicAccentColor') }}</p>
-          <p v-if="settings.dynamicAccentColor">{{ t('settings.on') }}</p>
-          <p v-else>{{ t('settings.off') }}</p>
         </div>
       </section>
       <section>
@@ -207,57 +205,8 @@
             </div>
           </ul>
         </article>
-        <div class="grid2">
-          <article class="bg1">
-            <h3 class="mb5">{{ t('settings.shortcuts') }}</h3>
-            <div class="pb5 mb5 border_split">
-              <p class="text-small-0">{{ t('settings.shortcuts.play') }}</p>
-              <pre class="text-small-1">Space🔘</pre>
-            </div>
-            <div class="pb5 mb5 border_split">
-              <p class="text-small-0">{{ t('settings.shortcuts.next') }}</p>
-              <pre class="text-small-1">Arrows ◀ ▶   </pre>
-            </div>
-            <div class="pb5 mb5 border_split">
-              <p class="text-small-0">{{ t('settings.shortcuts.search') }}</p>
-              <pre class="text-small-1">Tab 🧈</pre>
-            </div>
-          </article>
-          <article class="bg1">
-            <h3 class="mb5">{{ t('settings.about') }}</h3>
-            <div class="infos">
-              <div class="pb5 border_split mb5">
-                <p class="text-small-0">App Version 💽</p>
-                <p class="text-small-1">
-                  {{ appVersion }}
-                </p>
-              </div>
-              <!-- <div class="pb5 border_split mb5">
-              <p class="text-small-0">Made with 🤍 By</p>
-              <p class="text-small-1">Patrick Waweru</p>
-            </div> -->
-              <div class="pb5 border_split mb5">
-                <p class="text-small-0">Twitter🐦</p>
-                <a
-                  target="_blank"
-                  class="text-small-1"
-                  href="https://twitter.com/PnTX10"
-                  >@PnTX10</a
-                >
-              </div>
-              <div class="">
-                <p class="text-small-0">Email📬</p>
-                <a
-                  target="_blank"
-                  class="text-small-1"
-                  href="https://mail.google.com"
-                  >pntx200@gmail.com</a
-                >
-              </div>
-            </div>
-          </article>
-        </div>
-        <div class="grid2 gap10 pa10 border_split">
+
+        <div class="switchList">
           <div
             :class="[
               settings.desktopNotifications ? 'activeBtn' : '',
@@ -270,38 +219,79 @@
               })
             "
           >
-            <p>Notifications💬</p>
-            <p v-if="settings.desktopNotifications">On</p>
-            <p v-if="!settings.desktopNotifications">Off</p>
+            <p>{{ t('settings.notifications') }}</p>
           </div>
           <div
             :class="[settings.videoSupport ? 'activeBtn' : '', 'switch bg1']"
             @click="toggleVideoSupport"
           >
-            <p>Video Support ß</p>
-            <p v-if="settings.videoSupport">On</p>
-            <p v-if="!settings.videoSupport">Off</p>
+            <p>{{ t('settings.videoSupport') }}</p>
           </div>
-        </div>
-        <div class="grid2 gap10 pa10">
-          <div class="switch bg1" @click="checkForUpdate">
-            <p>Check for Update 🚀</p>
-          </div>
-          <div class="switch bg1">
-            <a target="_blank" href="https://t.me/flbmusiccommunity">
-              <p>Join us on Telegram 🦅</p>
-            </a>
-          </div>
-          <div class="switch bg1" @click="selectFeedbackType('request')">
-            <p>Request a Feature 💎</p>
-          </div>
-          <div class="switch bg1" @click="selectFeedbackType('issue')">
-            <p>Report a Bug 🐜</p>
+          <div
+            :class="[settings.volumeBoost ? 'activeBtn' : '', 'switch bg1']"
+            @click="toggleVolumeBoost"
+          >
+            <p>{{ t('settings.volumeBoost') }}</p>
           </div>
         </div>
       </section>
-      <section style="border: none">
-        <div class="grid2 gap10" />
+      <section>
+        <div class="grid2 gap10 pa10">
+          <div class="switch bg1" @click="checkForUpdate">
+            <p>{{ t('settings.checkForUpdate') }}</p>
+          </div>
+          <div class="switch bg1">
+            <a target="_blank" href="https://t.me/flbmusiccommunity">
+              <p>{{ t('settings.telegram') }}</p>
+            </a>
+          </div>
+          <div class="switch bg1" @click="selectFeedbackType('request')">
+            <p>{{ t('settings.requestFeature') }}</p>
+          </div>
+          <div class="switch bg1" @click="selectFeedbackType('issue')">
+            <p>{{ t('settings.reportBug') }}</p>
+          </div>
+        </div>
+        <article class="bg1">
+          <h3 class="mb5">{{ t('settings.shortcuts') }}</h3>
+          <div class="pb5 mb5 border_split">
+            <p class="text-small-0">{{ t('settings.shortcuts.play') }}</p>
+            <pre class="text-small-1">Space🔘</pre>
+          </div>
+          <div class="pb5 mb5 border_split">
+            <p class="text-small-0">{{ t('settings.shortcuts.next') }}</p>
+            <pre class="text-small-1">Arrows ◀ ▶</pre>
+          </div>
+          <div class="pb5 mb5 border_split">
+            <p class="text-small-0">{{ t('settings.shortcuts.search') }}</p>
+            <pre class="text-small-1">Tab 🧈</pre>
+          </div>
+        </article>
+        <article class="bg1">
+          <h3 class="mb5">{{ t('settings.about') }}</h3>
+          <div class="infos">
+            <div class="pb5 border_split mb5">
+              <p class="text-small-0">{{ t('settings.version') }}</p>
+              <p class="text-small-1">
+                {{ appVersion }}
+              </p>
+            </div>
+            <div class="pb5 border_split mb5">
+              <p class="text-small-0">{{ t('settings.aboutThisVersion') }}</p>
+              <p class="text-small-1">
+                {{ t('settings.aboutThisVersionInfo') }}
+              </p>
+            </div>
+            <div class="">
+              <p class="text-small-0">{{ t('settings.email') }}</p>
+              <a
+                class="text-small-1"
+                href="mailto:hirutortx@gmail.com"
+                >hirutortx@gmail.com</a
+              >
+            </div>
+          </div>
+        </article>
       </section>
     </main>
     <transition enter-active-class="animated fadeInUp extrafaster">
@@ -420,6 +410,14 @@ export default {
       console.log(this.settings.videoSupport);
       sendMessageToNode("toggleVideoSupport");
     },
+    toggleVolumeBoost() {
+      this.setSettingValue({
+        property: "volumeBoost",
+        newValue: !this.settings.volumeBoost,
+      });
+      // the volume rocker watches the boost setting and brings the gain back
+      // to the normal limit of 100% when the mode is turned off
+    },
     toggleDynamicAccentColor() {
       console.log(this.settings.dynamicAccentColor);
       this.setSettingValue({
@@ -452,6 +450,10 @@ export default {
 .Settings {
   position: fixed;
   overflow: hidden;
+  // the panel is a column so the content area can take whatever height is
+  // left and scroll inside of it
+  display: flex;
+  flex-direction: column;
   top: 40px;
   left: 10px;
   height: 90%;
@@ -465,8 +467,17 @@ export default {
     grid-template-columns: 1fr 1fr 1fr;
     width: 100%;
     gap: 10px;
+    // the panel used to clip everything that did not fit in 90vh. The new
+    // themes and the language section pushed the content past that limit
+    // and the bottom of the panel became unreachable
+    flex: 1;
+    min-height: 0;
+    align-content: start;
+    overflow-y: auto;
     section {
-      height: 90vh;
+      // the columns are now as tall as their content and the whole panel
+      // scrolls, instead of every column being cut at a fixed height
+      height: auto;
       p {
         font-family: inherit;
       }
@@ -482,6 +493,14 @@ export default {
         padding: 15px;
         padding-top: 0px;
         padding-bottom: 0px;
+      }
+      // the switches are one under the other so the label has room, the
+      // accent color of the button is what says if it is on or off
+      .switchList {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin: 10px;
       }
     }
     article {

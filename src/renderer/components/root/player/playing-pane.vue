@@ -202,6 +202,8 @@ export default {
   watch: {
     playingTrack() {
       this.showLyrics = false;
+      // the lyrics of the new track are searched online, like the covers
+      this.getLyrics();
     },
   },
   methods: {
@@ -221,6 +223,7 @@ export default {
       "toggleIsPlaying",
       "determineNextTrack",
       "findAndGoToArtist",
+      "getLyrics",
     ]),
     togglePlayerMode() {
       document.body.classList.toggle("fullScreenPlayingPane");
@@ -285,6 +288,8 @@ export default {
   },
   mounted() {
     initializeAudio()
+    // the lyrics of the track that was restored with the app
+    this.getLyrics();
     window.addEventListener("keydown", (e) => {
       if (!document.activeElement.classList.contains("inputElem")) {
         if (e.code === "Space") {

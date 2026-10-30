@@ -5,7 +5,7 @@
         type="range"
         min="0"
         max="15"
-        value="0"
+        :value="sliderValue"
         @input="updateInput($event)"
       />
       <div
@@ -23,7 +23,7 @@
 
 <script>
 import { mapMutations } from "vuex";
-import { gainNode } from "./equalizer";
+import { setMasterVolume } from "./equalizer";
 
 export default {
   name: "TriangleSlider",
@@ -36,6 +36,17 @@ export default {
   computed: {
     userSetVolume() {
       return this.$store.state.SettingsManager.settings.volume;
+    },
+    volumeBoost() {
+      return !!this.$store.state.SettingsManager.settings.volumeBoost;
+    },
+    // the slider of the volume boost shows the value of the saved volume so
+    // it does not start at zero on every launch while the volume is boosted
+    sliderValue() {
+      if (this.filterName !== "VBoost") return 0;
+      const savedVolume = parseFloat(this.userSetVolume);
+      if (Number.isNaN(savedVolume) || savedVolume <= 1) return 0;
+      return Math.round((savedVolume - 1) * 15);
     },
     barHeightForVolumeBoost() {
       const h = this.userSetVolume * 100 - 100;
@@ -84,15 +95,13 @@ export default {
     },
     adjustVolumeBoost(filterValue) {
       const boostedVolume = 1 + parseInt(filterValue, 10) / 15;
-      if (boostedVolume > 1) {
-        this.setSettingValue({
-          property: "volume",
-          newValue: boostedVolume,
-        });
-        gainNode.gain.value = 1 + parseInt(filterValue, 10) / 15;
-      } else {
-        this.setSettingValue({ property: "volume", newValue: 1 });
-      }
+      // without the boost mode in the settings the volume stays inside the
+      // normal limit of 100%, with it on it goes up to 200%
+      const appliedVolume = setMasterVolume(boostedVolume, this.volumeBoost);
+      this.setSettingValue({
+        property: "volume",
+        newValue: appliedVolume,
+      });
     },
   },
   props: {

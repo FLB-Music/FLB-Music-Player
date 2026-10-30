@@ -14,19 +14,49 @@
         width="200px"
         src="@img/no_lyrics.svg"
       >
-      <p
-        v-if="allLyrics.length === 0"
-        style="text-align: center; font-family: inherit"
-      >
-        Comeback here for lyrics. A small dose of internet and bam💥 I'll have
-        all the lyrics
-      </p>
-      <p
-        v-else
-        style="text-align: center; font-family: inherit"
-      >
-        I haven't found the lyrics for this one, yet
-      </p>
+      <template v-if="lyricsSearching">
+        <p class="emptyLyrics">
+          {{ t('lyrics.searching') }}
+        </p>
+      </template>
+      <template v-else-if="showManualInput">
+        <textarea
+          v-model="manualLyrics"
+          class="manualLyricsInput"
+          :placeholder="t('lyrics.manualPlaceholder')"
+        />
+        <div class="flex center-a gap10 mt5">
+          <base-button
+            :text="t('lyrics.save')"
+            :active="true"
+            :small="true"
+            @click.native="saveManualLyrics"
+          />
+          <base-button
+            :text="t('lyrics.cancel')"
+            :small="true"
+            @click.native="showManualInput = false"
+          />
+        </div>
+      </template>
+      <template v-else>
+        <p class="emptyLyrics">
+          {{ searchMissed ? t('lyrics.notFound') : t('lyrics.emptyHint') }}
+        </p>
+        <div class="flex center-a gap10">
+          <base-button
+            :text="t('lyrics.download')"
+            :active="true"
+            :small="true"
+            @click.native="downloadLyrics"
+          />
+          <base-button
+            :text="t('lyrics.add')"
+            :small="true"
+            @click.native="openManualInput"
+          />
+        </div>
+      </template>
     </div>
     <div
       v-if="playingTrackLyrics && autoScroll"
@@ -92,7 +122,7 @@
         </div>
         <div class="flex flex-col center-a">
           <p class="text-small-2">
-            Offset
+            {{ t('lyrics.offset') }}
           </p>
           <div class="flex_evenly center-v">
             <base-button
@@ -125,15 +155,48 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 
 export default {
   name: 'Lyrics',
 
   methods: {
-    ...mapActions(['getLyrics']),
+    ...mapActions({
+      getLyrics: 'getLyrics',
+      saveLyrics: 'saveManualLyrics',
+    }),
+    ...mapMutations(['pushNotification']),
+    /**
+     * The timestamps of the synced lyrics and the section tags like [Chorus]
+     * are removed line by line. The old version removed the whole line after
+     * a bracket, which showed nothing when the lyrics came timestamped.
+     */
     verseLines(verse) {
-      return verse.replace(/\[.*\].*/gi, '').split(/\n/);
+      return verse
+        .split('\n')
+        .map((line) => line.replace(/\s*\[[^\]]*\]/g, '').trim())
+        .filter((line) => line !== '');
+    },
+    /**
+     * Asks for the lyrics of the track that is playing again and saves the
+     * answer in a file, like the covers.
+     */
+    downloadLyrics() {
+      this.getLyrics({ force: true });
+    },
+    openManualInput() {
+      this.manualLyrics = '';
+      this.showManualInput = true;
+    },
+    async saveManualLyrics() {
+      if (!this.manualLyrics.trim()) return;
+      await this.saveLyrics({ text: this.manualLyrics });
+      this.showManualInput = false;
+      this.pushNotification({
+        title: this.t('lyrics.saved'),
+        subTitle: this.playingTrack ? this.playingTrack.defaultTitle : null,
+        type: 'normal',
+      });
     },
     autoScrollContainer() {
       console.log("Auto Scrolling")
@@ -154,8 +217,18 @@ export default {
     return {
       offset: 50,
       autoScroll: false,
-      bigLyrics: false
+      bigLyrics: false,
+      showManualInput: false,
+      manualLyrics: ''
     };
+  },
+  watch: {
+    // the form of manual input belongs to the track that was playing when
+    // it was opened, it closes when another track starts
+    playingTrack() {
+      this.showManualInput = false;
+      this.manualLyrics = '';
+    }
   },
   computed: {
     playingTrack() {
@@ -172,6 +245,20 @@ export default {
     },
     allLyrics() {
       return this.$store.state.PlaybackManger.allLyrics;
+    },
+    lyricsSearching() {
+      return this.$store.state.PlaybackManger.lyricsSearching;
+    },
+    lyricsMissedTrack() {
+      return this.$store.state.PlaybackManger.lyricsMissedTrack;
+    },
+    // the search looked for the track that is playing and found nothing
+    searchMissed() {
+      return (
+        this.lyricsMissedTrack !== '' &&
+        this.playingTrack !== null &&
+        this.lyricsMissedTrack === this.playingTrack.defaultTitle
+      );
     }
   },
   mounted() {
@@ -225,6 +312,16 @@ export default {
   scroll-behavior: smooth;
   width: 100%;
   height: 92%;
+}
+.emptyLyrics {
+  text-align: center;
+  font-family: inherit;
+  max-width: 90%;
+}
+.manualLyricsInput {
+  width: 90%;
+  height: 130px;
+  resize: vertical;
 }
 .lyrics {
   font-family: inherit;

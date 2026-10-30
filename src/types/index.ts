@@ -14,6 +14,38 @@ export interface TrackType {
   duration: any;
   dateAdded: number;
   folderInfo: FolderInfoType;
+  /**
+   * Only set on tracks that entered the queue of a party through a guest:
+   * either uploaded by them or suggested from the library of the host.
+   */
+  suggestedBy?: PartySuggestedByType;
+}
+export interface PartySuggestedByType {
+  guestId: string;
+  guestName: string;
+}
+export interface PartyGuestInfoType {
+  id: string;
+  name: string;
+  addedTracks: number;
+  joinedAt: number;
+}
+/** The shape of a track a guest of the party is allowed to see. */
+export interface PartyTrackDTOType {
+  /** Public id of the track, used to ask the host to add it. */
+  id: string | null;
+  title: string;
+  artist: string;
+  album: string;
+  formattedLength: string;
+  duration: number;
+  artId: string | null;
+  suggestedBy?: PartySuggestedByType;
+}
+export interface PartyQueuePayloadType {
+  queue: PartyTrackDTOType[];
+  nowPlaying: PartyTrackDTOType | null;
+  playing: boolean;
 }
 export interface TrackStatType {
   trackLocation: string;
@@ -110,7 +142,8 @@ export type NotificationTypes = "normal" | "success" | "warning";
 export type UIcontrollerPropertiesType =
   | "showSettings"
   | "showTagEditor"
-  | "showPlaylistWidget";
+  | "showPlaylistWidget"
+  | "showPartyWidget";
 
 export interface SettingsType {
   includeVideo: boolean;
@@ -120,6 +153,7 @@ export interface SettingsType {
   accentColor: string;
   dynamicAccentColor: boolean;
   volume: 1;
+  volumeBoost: boolean;
   foldersToScan: Array<string>;
   enableEqualizer: boolean;
   language: LanguageType;

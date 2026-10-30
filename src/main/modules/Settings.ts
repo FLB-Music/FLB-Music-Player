@@ -12,6 +12,7 @@ export class Settings {
     accentColor: "accent_0",
     dynamicAccentColor: false,
     volume: 1,
+    volumeBoost: false,
     foldersToScan: [paths.musicFolder],
     enableEqualizer: false,
     language: "en",

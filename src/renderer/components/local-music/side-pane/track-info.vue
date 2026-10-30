@@ -124,6 +124,19 @@ export default {
     top: 0px;
     left: 10%;
     backdrop-filter: blur(10px);
+    // the pencil that repairs the cover waits hidden over the artwork and
+    // eases into place with a soft fade when the pointer comes over the
+    // info pane
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.3s ease,
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), background 0.2s ease,
+      border-radius 0.2s ease;
+  }
+  &:hover #toggleTagEditor,
+  #toggleTagEditor:focus {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 </style>

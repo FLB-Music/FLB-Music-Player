@@ -14,6 +14,15 @@ export const availableLanguages: { value: LanguageType; label: string }[] = [
 ];
 
 /**
+ * Removes the differences that are easy to make by hand when a key is built
+ * from a name: case, spaces, dashes and underscores. "Hip Hop", "hipHop" and
+ * "hip-hop" all become "hiphop".
+ */
+function looseKey(key: string): string {
+  return key.toLowerCase().replace(/[\s_-]+/g, "");
+}
+
+/**
  * Translates a key, the english string is used when the key is unknown in
  * the selected language.
  */
@@ -25,6 +34,24 @@ export function translate(
   const locale = translations[language] || translations.en;
   let text = locale[key];
   if (text === undefined) text = translations.en[key];
+
+  // A key that is built from a name (a preset, a tab, a language) can miss
+  // the exact casing. Showing the raw key to the user looks broken, so the
+  // same key with the case and the separators ignored is looked up before
+  // giving up.
+  if (text === undefined) {
+    const wanted = looseKey(key);
+    const sameKeyIgnoringCase = (dictionary: Record<string, string>) => {
+      const candidate = Object.keys(dictionary).find(
+        (name) => looseKey(name) === wanted
+      );
+      return candidate ? dictionary[candidate] : undefined;
+    };
+    const looseMatch =
+      sameKeyIgnoringCase(locale) || sameKeyIgnoringCase(translations.en);
+    if (looseMatch !== undefined) text = looseMatch;
+  }
+
   if (text === undefined) return key;
 
   Object.keys(values).forEach((valueKey) => {

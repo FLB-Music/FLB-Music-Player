@@ -87,10 +87,16 @@ export default {
       this.localPreset = preset;
     },
     /**
-     * The name of the preset is used as the key of the translation
+     * The name of the preset is used as the key of the translation. It is
+     * turned into camelCase so it matches the keys of the translation files,
+     * "Hip Hop" has to become "hipHop" and not "hiphop". Without this the
+     * button showed the raw key and, being that long, broke the layout of
+     * the widget.
      */
     presetKey(name) {
-      return name.toLowerCase().replace(/\s+/g, "");
+      return String(name)
+        .toLowerCase()
+        .replace(/\s+(.)/g, (_, character) => character.toUpperCase());
     },
     toggleEqualizer(value) {
       console.log("Toggling equalizer");
@@ -117,6 +123,11 @@ export default {
   flex-direction: column;
   align-items: center;
   z-index: 50;
+  // the widget sits 108px above the bottom of the window and it is taller
+  // than that space on short windows, where it used to stick out of the top
+  // of the screen. It now shrinks at that limit and scrolls inside of itself
+  max-height: calc(100vh - 124px);
+  overflow: auto;
   .filter_sliders {
     padding: 10px;
     display: flex;

@@ -24,6 +24,7 @@ const state = {
     accentColor: 'accent_blue',
     dynamicAccentColor: false,
     volume: 1,
+    volumeBoost: false,
     scannedFolders: [],
     enableEqualizer: false,
     language: 'en',

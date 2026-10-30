@@ -44,6 +44,8 @@ import {
 } from "./main/core/coverArt";
 import { findSiblingCoverArt } from "./main/core/siblingCover";
 import { fetchOnlineCoverArt } from "./main/core/onlineCover";
+import { PartyServer, PartyQueueSnapshot } from "./main/modules/party/PartyServer";
+import { discoverPartyHost } from "./main/modules/party/partyDiscovery";
  
 console.log(paths.appFolder);
 
@@ -331,6 +333,98 @@ ipcMain.on("repairCovers", async () => {
   );
 });
 
+/**
+ * The lyrics are kept as files in the app data folder, the same way the
+ * covers are. Every file starts with a line that says which track it belongs
+ * to, the rest is plain text so the lyrics can be read and edited outside of
+ * the app.
+ */
+const LYRICS_FILE_HEADER = "# flb-lyrics |";
+
+interface StoredLyricsPayload {
+  trackName: string;
+  artist: string;
+  lyrics: string;
+}
+
+function lyricsFileName(trackName: string, artist: string) {
+  const safe = (value: string) =>
+    (value || "unknown")
+      .replace(/[<>:"/\\|?*\x00-\x1f]/g, "_")
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, 80) || "unknown";
+  return `${safe(trackName)} - ${safe(artist)}.txt`;
+}
+
+function writeLyricsFile(payload: StoredLyricsPayload) {
+  const fileContent = `${LYRICS_FILE_HEADER} ${payload.trackName} | ${
+    payload.artist || ""
+  }\n\n${payload.lyrics}`;
+  fs.writeFileSync(
+    path.join(paths.lyricsFolder, lyricsFileName(payload.trackName, payload.artist)),
+    fileContent,
+    "utf-8"
+  );
+}
+
+ipcMain.handle("saveLyricsFile", (e, payload: StoredLyricsPayload) => {
+  try {
+    if (!fs.existsSync(paths.lyricsFolder)) fs.mkdirSync(paths.lyricsFolder);
+    writeLyricsFile(payload);
+    return true;
+  } catch (error) {
+    console.log("Could not save the lyrics of", payload.trackName);
+    console.log(error);
+    return false;
+  }
+});
+
+// the lyrics of the old versions of the app, that lived in the browser
+// storage, are moved to files the first time they are loaded
+ipcMain.handle("saveLyricsBatch", (e, payloads: StoredLyricsPayload[]) => {
+  try {
+    if (!fs.existsSync(paths.lyricsFolder)) fs.mkdirSync(paths.lyricsFolder);
+    for (const payload of payloads) {
+      if (!payload.trackName || !payload.lyrics) continue;
+      writeLyricsFile(payload);
+    }
+    return true;
+  } catch (error) {
+    console.log("Could not save the lyrics batch");
+    console.log(error);
+    return false;
+  }
+});
+
+ipcMain.handle("loadLyricsFiles", () => {
+  const loadedLyrics: StoredLyricsPayload[] = [];
+  try {
+    if (!fs.existsSync(paths.lyricsFolder)) return loadedLyrics;
+    for (const fileName of fs.readdirSync(paths.lyricsFolder)) {
+      if (!fileName.endsWith(".txt")) continue;
+      const content = fs.readFileSync(
+        path.join(paths.lyricsFolder, fileName),
+        "utf-8"
+      );
+      const firstLine = content.split("\n")[0];
+      if (!firstLine.startsWith(LYRICS_FILE_HEADER)) continue;
+      const parts = firstLine.split("|");
+      const trackName = (parts[1] || "").trim();
+      const artist = parts.slice(2).join("|").trim();
+      const lyricsText = content
+        .slice(content.indexOf("\n") + 1)
+        .trim();
+      if (!trackName || !lyricsText) continue;
+      loadedLyrics.push({ trackName, artist, lyrics: lyricsText });
+    }
+  } catch (error) {
+    console.log("Could not load the lyrics files");
+    console.log(error);
+  }
+  return loadedLyrics;
+});
+
 ipcMain.on("playingTrack", async (e, track: TrackType) => {
   playbackStats.addFile(track);
   if (!appIsFocused && settings.getSettings.desktopNotifications) {
@@ -469,6 +563,26 @@ ipcMain.on("toggleMiniMode", (e, payload) => {
 });
 
 ipcMain.handle("getPlaybackStats", () => playbackStats.getPlayStats);
+
+/**
+ * Party mode: a collaborative queue where the guests of the local network
+ * can only suggest music. The server lives here in the main process, the
+ * host keeps every control (removing, reordering, playback) in the app.
+ */
+const partyServer = new PartyServer({
+  getLibraryTracks: () => fileTracker.getTracks,
+  requestQueueAdd: (payload) =>
+    win.webContents.send("partyGuestTrackRequested", payload),
+  notifyRenderer: (channel, payload) => win.webContents.send(channel, payload),
+});
+
+ipcMain.handle("partyStart", () => partyServer.start());
+ipcMain.on("partyStop", () => partyServer.stop());
+ipcMain.on("partyQueueUpdate", (e, snapshot: PartyQueueSnapshot) =>
+  partyServer.updateQueue(snapshot)
+);
+/** Used by a guest: finds the host with an open room on the LAN. */
+ipcMain.handle("partyDiscover", () => discoverPartyHost());
 
 async function getParsedTracks(folders: string[] = []) {
   let allTracks: string[] = [];

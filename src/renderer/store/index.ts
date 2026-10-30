@@ -9,6 +9,7 @@ import TabsManager from './modules/local-music/tabs-manager';
 import TrackSelector from './modules/local-music/track-selector';
 import UIController from './modules/local-music/uicontroller';
 import EqualizerManager from './modules/local-music/equalizer-manager';
+import PartyManager from './modules/local-music/party-manager';
 import BingDownloadManager from './modules/flbing/bing-download-manager';
 
 import { TrackType } from '@/types';
@@ -70,6 +71,7 @@ const store: StoreOptions<any> = {
     TrackSelector,
     EqualizerManager,
     UIController,
+    PartyManager,
     BingDownloadManager
   }
 };

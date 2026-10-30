@@ -23,7 +23,7 @@
         </router-link>
       </div>
       <div
-      @click="giveHope()"
+        @click="giveHope()"
         id="FLBing"
         :class="[
           currentPage === 'FLBing' ? 'active-sideNav-group' : '',
@@ -40,6 +40,24 @@
             {{ t('nav.meld') }}
           </p>
         </router-link>
+      </div>
+      <div
+        :class="[
+          showPartyWidget ? 'active-sideNav-group' : '',
+          'sideNav-group'
+        ]"
+        @click="UIcontrollerToggleProperty('showPartyWidget')"
+      >
+        <a>
+          <base-icon
+            :size="24"
+            class="icon"
+            icon="users-three"
+          />
+          <p v-if="!isCollapsed">
+            {{ t('nav.party') }}
+          </p>
+        </a>
       </div>
     </div>
     <div>
@@ -89,6 +107,9 @@ export default {
   computed: {
     currentPage() {
       return this.$store.state.UIController.UIProperties.currentPage;
+    },
+    showPartyWidget() {
+      return this.$store.state.UIController.UIProperties.showPartyWidget;
     }
   },
   methods: {
