@@ -34,6 +34,7 @@ export default {
     return {
       statsSent: false,
       queuePushTimer: null,
+      partyPositionTimer: null,
     };
   },
   methods: {
@@ -87,17 +88,26 @@ export default {
     /**
      * Sends the current queue to the main process so the party server can
      * share it with the guests. Only the host of the party pushes this.
+     * The playback position is part of the snapshot so the phones of the
+     * guests follow the progress of the song.
      */
+    buildPartySnapshot() {
+      const playback = this.$store.state.PlaybackManger;
+      const audio = document.querySelector("audio");
+      return {
+        queue: playback.customQueue,
+        nowPlaying: playback.playingTrackInfo.track,
+        playing: playback.audioState.playing,
+        position: audio ? audio.currentTime || 0 : 0,
+        duration: audio && audio.duration ? audio.duration : 0,
+        volume: audio ? audio.volume : 1,
+      };
+    },
     pushPartyQueueSnapshot() {
       if (this.$store.state.PartyManager.mode !== "host") return;
       clearTimeout(this.queuePushTimer);
       this.queuePushTimer = setTimeout(() => {
-        const playback = this.$store.state.PlaybackManger;
-        ipcRenderer.send("partyQueueUpdate", {
-          queue: playback.customQueue,
-          nowPlaying: playback.playingTrackInfo.track,
-          playing: playback.audioState.playing,
-        });
+        ipcRenderer.send("partyQueueUpdate", this.buildPartySnapshot());
       }, 250);
     },
   },
@@ -150,6 +160,22 @@ export default {
     ipcRenderer.on("partyGuestsUpdate", (e, guests) => {
       this.$store.commit("setGuests", guests);
     });
+    // A guest got blocked: their suggestions leave the queue of the host
+    ipcRenderer.on("partyGuestBlocked", (e, payload) => {
+      this.removeQueuedTracksByGuest(payload.guestId);
+    });
+    ipcRenderer.on("partyPendingUpdate", (e, list) => {
+      this.$store.commit("setPendingList", list);
+    });
+    ipcRenderer.on("partyBlockedUpdate", (e, list) => {
+      this.$store.commit("setBlockedList", list);
+    });
+    // While hosting a party the playback position goes out every few
+    // seconds, this is what makes the progress bar of the guests move
+    this.partyPositionTimer = setInterval(() => {
+      if (this.$store.state.PartyManager.mode !== "host") return;
+      ipcRenderer.send("partyQueueUpdate", this.buildPartySnapshot());
+    }, 3000);
 
     ipcRenderer.on("newTrack", (e, newTrack) => {
       this.addTrack(newTrack);

@@ -166,6 +166,17 @@ export default {
     audio.addEventListener("ended", () => {
       this.determineNextTrack("next");
     });
+    // A track that cannot be played (broken file, upload already gone)
+    // must not stop the party: the next one starts and everybody knows why
+    audio.addEventListener("error", () => {
+      if (!this.audioSource) return;
+      this.$store.commit("pushNotification", {
+        title: this.t("party.trackFailedTitle"),
+        subTitle: this.playingTrack ? this.playingTrack.defaultTitle : "",
+        type: "warning",
+      });
+      this.determineNextTrack("next");
+    });
     progressBar.addEventListener("mousemove", (e) => {
       const posX = e.clientX - progressBar.getBoundingClientRect().x;
       const percentageSeek = Math.ceil(

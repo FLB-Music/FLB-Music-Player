@@ -1,0 +1,8 @@
+{
+  "appId": "com.flb.music",
+  "appName": "FLB Music",
+  "webDir": "mobile/www",
+  "android": {
+    "allowMixedContent": true
+  }
+}

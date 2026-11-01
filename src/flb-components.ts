@@ -34,7 +34,7 @@ export { default as filterSlider } from "./renderer/components/root/equalizer/fi
 export { default as triangleSlider } from "./renderer/components/root/equalizer/triangle-slider.vue";
 export { default as spatializer } from "./renderer/components/root/equalizer/spatializer.vue";
 export { default as feedbackWidget } from "./renderer/components/root/feedback-widget.vue";
-export { default as partyPanel } from "./renderer/components/root/party/party-panel.vue";
+export { default as partyView } from "./renderer/views/party/party-view.vue";
 export { default as ipcListener } from "./renderer/components/root/ipc-listener.vue";
 export { default as baseNotification } from "./renderer/components/root/notifications/base-notification.vue";
 export { default as notifications } from "./renderer/components/root/notifications/notifications.vue";
@@ -68,6 +68,7 @@ export { default as PhArrowClockwise } from "phosphor-vue/src/components/PhArrow
 export { default as PhBookOpen } from "phosphor-vue/src/components/PhBookOpen.vue";
 export { default as PhCaretDown } from "phosphor-vue/src/components/PhCaretDown.vue";
 export { default as PhCaretLeft } from "phosphor-vue/src/components/PhCaretLeft.vue";
+export { default as PhCaretRight } from "phosphor-vue/src/components/PhCaretRight.vue";
 export { default as PhCaretUp } from "phosphor-vue/src/components/PhCaretUp.vue";
 export { default as PhClockClockwise } from "phosphor-vue/src/components/PhClockClockwise.vue";
 export { default as PhCloudArrowDown } from "phosphor-vue/src/components/PhCloudArrowDown.vue";
@@ -98,4 +99,7 @@ export { default as PhTrashSimple } from "phosphor-vue/src/components/PhTrashSim
 export { default as PhXCircle } from "phosphor-vue/src/components/PhXCircle.vue";
 export { default as PhUser } from "phosphor-vue/src/components/PhUser.vue";
 export { default as PhUserPlus } from "phosphor-vue/src/components/PhUserPlus.vue";
+export { default as PhUserMinus } from "phosphor-vue/src/components/PhUserMinus.vue";
+export { default as PhCheck } from "phosphor-vue/src/components/PhCheck.vue";
+export { default as PhProhibit } from "phosphor-vue/src/components/PhProhibit.vue";
 export { default as PhX } from "phosphor-vue/src/components/PhX.vue";

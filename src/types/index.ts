@@ -30,6 +30,32 @@ export interface PartyGuestInfoType {
   addedTracks: number;
   joinedAt: number;
 }
+/**
+ * How the suggestions of the guests enter the queue: straight in ("free")
+ * or waiting for the host to accept them ("approval").
+ */
+export type PartyEntryModeType = "free" | "approval";
+/** One device blocked by the host, kept only while the party lasts. */
+export interface PartyBlockedInfoType {
+  token: string;
+  name: string;
+}
+/** A suggestion of a guest waiting for the host to decide. */
+export interface PartyPendingDTOType {
+  id: string;
+  guestId: string;
+  guestName: string;
+  submittedAt: number;
+  track: PartyTrackDTOType;
+  /** Only sent to the host renderer, the path of the cover on this machine. */
+  localArt?: string;
+}
+/** What a guest has sent, so their screen can show the state of each one. */
+export interface PartySubmissionType {
+  id: string;
+  track: PartyTrackDTOType | null;
+  status: "pending" | "accepted" | "refused";
+}
 /** The shape of a track a guest of the party is allowed to see. */
 export interface PartyTrackDTOType {
   /** Public id of the track, used to ask the host to add it. */
@@ -46,6 +72,12 @@ export interface PartyQueuePayloadType {
   queue: PartyTrackDTOType[];
   nowPlaying: PartyTrackDTOType | null;
   playing: boolean;
+  /** Playback position in seconds, so the guests can follow the progress. */
+  position: number;
+  duration: number;
+  volume: number;
+  roomName: string;
+  entryMode: PartyEntryModeType;
 }
 export interface TrackStatType {
   trackLocation: string;
@@ -142,8 +174,7 @@ export type NotificationTypes = "normal" | "success" | "warning";
 export type UIcontrollerPropertiesType =
   | "showSettings"
   | "showTagEditor"
-  | "showPlaylistWidget"
-  | "showPartyWidget";
+  | "showPlaylistWidget";
 
 export interface SettingsType {
   includeVideo: boolean;

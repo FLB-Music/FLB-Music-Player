@@ -576,10 +576,27 @@ const partyServer = new PartyServer({
   notifyRenderer: (channel, payload) => win.webContents.send(channel, payload),
 });
 
-ipcMain.handle("partyStart", () => partyServer.start());
+ipcMain.handle("partyStart", (e, options) => partyServer.start(options));
 ipcMain.on("partyStop", () => partyServer.stop());
 ipcMain.on("partyQueueUpdate", (e, snapshot: PartyQueueSnapshot) =>
   partyServer.updateQueue(snapshot)
+);
+/** Admin actions of the host, all of them local, no HTTP involved. */
+ipcMain.handle("partyKickGuest", (e, guestId: string) =>
+  partyServer.kickGuest(guestId)
+);
+ipcMain.handle("partyBlockGuest", (e, guestId: string) =>
+  partyServer.blockGuest(guestId)
+);
+ipcMain.handle("partyUnblockGuest", (e, deviceToken: string) =>
+  partyServer.unblockGuest(deviceToken)
+);
+ipcMain.on("partySetEntryMode", (e, mode) => partyServer.setEntryMode(mode));
+ipcMain.on("partyPendingResolve", (e, payload) =>
+  partyServer.resolvePending(
+    String(payload && payload.pendingId),
+    !!(payload && payload.accept)
+  )
 );
 /** Used by a guest: finds the host with an open room on the LAN. */
 ipcMain.handle("partyDiscover", () => discoverPartyHost());

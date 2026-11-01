@@ -17,23 +17,19 @@
     >
       <settings v-if="showSettings" />
     </transition>
-    <transition
-      enter-active-class="animated slideInUp extrafaster"
-      leave-active-class="animated slideOutDown extrafaster"
-    >
-      <party-panel v-if="showPartyWidget" />
-    </transition>
     <on-board v-if="showOnboard" @closeOnBoard="showOnboard = false" />
     <notifications />
     <section id="main-view" class="flex flex-col h-100">
-      <div v-if="!miniMode" id="sub-view-1" class="flex h-100">
+      <div v-if="!miniMode && !partyPage" id="sub-view-1" class="flex h-100">
         <side-nav />
         <router-view />
       </div>
+      <!-- The party takes over the whole page, with the rules of the mode -->
+      <party-view v-if="!miniMode && partyPage" class="h-100" />
     </section>
     <playing-pane
       class="mb5 mt5"
-      v-if="playingTrack"
+      v-if="playingTrack && !guestInParty"
       @fullPlayer="reactToFullPlayer"
     />
     <bg v-if="theme === 'fancy'" />
@@ -58,8 +54,12 @@ export default {
     showSettings() {
       return this.$store.state.UIController.UIProperties.showSettings;
     },
-    showPartyWidget() {
-      return this.$store.state.UIController.UIProperties.showPartyWidget;
+    partyPage() {
+      return this.$store.state.UIController.UIProperties.currentPage === 'Party';
+    },
+    /** Guests of a party only watch, the local player is out of the way. */
+    guestInParty() {
+      return this.$store.state.PartyManager.mode === 'guest';
     },
     accentColor() {
       return this.$store.state.SettingsManager.settings.accentColor;

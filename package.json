@@ -15,10 +15,15 @@
   "scripts": {
     "start": "vue-cli-service electron:serve",
     "build": "vue-cli-service electron:build",
+    "build:mobile": "node mobile/build.mjs",
+    "android:sync": "npm run build:mobile && cap sync android",
+    "android:open": "cap open android",
     "push-update": "vue-cli-service electron:build -- -p always",
     "deploy-steps": "git commit -am v1.2.1 && git tag v1.2.1 && git push --tags"
   },
   "dependencies": {
+    "@capacitor/android": "^8.6.0",
+    "@capacitor/core": "^8.6.0",
     "animate.css": "4.1.1",
     "axios": "0.21.1",
     "color-thief-browser": "2.0.2",
@@ -33,6 +38,7 @@
     "is-online": "^9.0.1",
     "jimp": "^0.22.12",
     "json5": "2.2.0",
+    "jsqr": "^1.4.0",
     "lodash": "4.17.21",
     "music-metadata": "7.11.4",
     "node-downloader-helper": "1.0.18",
@@ -49,6 +55,7 @@
     "vuex": "3.6.2"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.6.0",
     "@types/electron-devtools-installer": "2.2.0",
     "@vue/cli-plugin-babel": "4.5.13",
     "@vue/cli-plugin-router": "4.5.13",

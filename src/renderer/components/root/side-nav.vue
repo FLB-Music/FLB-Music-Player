@@ -43,17 +43,16 @@
       </div>
       <div
         :class="[
-          showPartyWidget ? 'active-sideNav-group' : '',
+          currentPage === 'Party' ? 'active-sideNav-group' : '',
           'sideNav-group'
         ]"
-        @click="UIcontrollerToggleProperty('showPartyWidget')"
+        @click="switchPage('Party')"
       >
         <a>
-          <base-icon
-            :size="24"
+          <img
             class="icon"
-            icon="users-three"
-          />
+            src="@icon/party.svg"
+          >
           <p v-if="!isCollapsed">
             {{ t('nav.party') }}
           </p>
@@ -107,9 +106,6 @@ export default {
   computed: {
     currentPage() {
       return this.$store.state.UIController.UIProperties.currentPage;
-    },
-    showPartyWidget() {
-      return this.$store.state.UIController.UIProperties.showPartyWidget;
     }
   },
   methods: {
